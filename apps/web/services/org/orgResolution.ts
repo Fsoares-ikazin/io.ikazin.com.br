@@ -233,5 +233,11 @@ export async function getOrgSlug(): Promise<string | null> {
     return legacyCookie.value
   }
 
+  // Fallback: if multi-org is disabled, use default org
+  const multiOrg = process.env.NEXT_PUBLIC_LEARNHOUSE_MULTI_ORG
+  if (!multiOrg || multiOrg.toLowerCase() === 'false') {
+    return process.env.NEXT_PUBLIC_LEARNHOUSE_DEFAULT_ORG || 'default'
+  }
+
   return null
 }
