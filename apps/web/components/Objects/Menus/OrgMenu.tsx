@@ -141,7 +141,7 @@ export const OrgMenu = (props: any) => {
       <div className="backdrop-blur-lg h-[60px] blur-3xl" style={{ zIndex: 'var(--z-behind)', marginTop: topOffset }}></div>
       <nav
         aria-label="Top navigation"
-        className={`backdrop-blur-lg fixed left-0 right-0 h-[60px] ${!primaryColor ? 'bg-white/90 nice-shadow' : ''}`}
+        className={`backdrop-blur-lg fixed left-0 right-0 h-[60px] ${!primaryColor ? 'bg-[#0F1419]/90 border-b border-[#2D2D2D]' : ''}`}
         style={{
           zIndex: 'var(--z-nav)',
           backgroundColor: primaryColor || undefined,
@@ -373,7 +373,7 @@ export const OrgMenu = (props: any) => {
         </div>
       </nav>
       <div
-        className={`fixed inset-x-0 bg-white/80 backdrop-blur-lg md:hidden shadow-lg transition-all duration-300 ease-in-out ${
+        className={`fixed inset-x-0 bg-[#0F1419]/95 backdrop-blur-lg border-b border-[#2D2D2D] md:hidden shadow-lg transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'opacity-100' : '-top-full opacity-0'
         }`}
         style={{
@@ -389,7 +389,7 @@ export const OrgMenu = (props: any) => {
           <div className='py-4'>
             <MenuLinks orgslug={orgslug} />
           </div>
-          <div className="border-t border-gray-200">
+          <div className="border-t border-[#2D2D2D]">
             <HeaderProfileBox />
           </div>
         </div>

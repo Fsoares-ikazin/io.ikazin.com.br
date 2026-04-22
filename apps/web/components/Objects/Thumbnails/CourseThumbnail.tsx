@@ -130,7 +130,7 @@ function CourseThumbnail({ course, orgslug, customLink, isDashboard = false, isS
   const courseLink = customLink ? customLink : getUriWithOrg(orgslug, `/course/${removeCoursePrefix(course.course_uuid)}`)
 
   return (
-    <div className={`group relative flex flex-col bg-white rounded-xl nice-shadow overflow-hidden w-full transition-all duration-300 hover:scale-[1.01] ${isSelected ? 'ring-2 ring-black ring-offset-2' : ''}`}>
+    <div className={`group relative flex flex-col bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] hover:border-[rgba(53,135,164,0.25)] overflow-hidden w-full transition-all duration-300 hover:scale-[1.01] ${isSelected ? 'ring-2 ring-[#3587A4] ring-offset-2 ring-offset-[#0F1419]' : ''}`}>
       {/* Selection checkbox - visible on hover or when selected (dashboard only) */}
       {isDashboard && onToggleSelect && (
         <button
@@ -141,7 +141,7 @@ function CourseThumbnail({ course, orgslug, customLink, isDashboard = false, isS
           }`}
         >
           {isSelected ? (
-            <CheckSquare className="w-4 h-4 text-black" />
+            <CheckSquare className="w-4 h-4 text-white" />
           ) : (
             <Square className="w-4 h-4 text-gray-500" />
           )}
@@ -158,7 +158,7 @@ function CourseThumbnail({ course, orgslug, customLink, isDashboard = false, isS
         isDashboard={isDashboard}
       />
 
-      <Link prefetch={false} href={courseLink} className="block relative aspect-video overflow-hidden bg-gray-50">
+      <Link prefetch={false} href={courseLink} className="block relative aspect-video overflow-hidden bg-[#0A0A0A]">
         <div
           className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
           style={{ backgroundImage: `url(${thumbnailImage})` }}
@@ -184,19 +184,19 @@ function CourseThumbnail({ course, orgslug, customLink, isDashboard = false, isS
           <Link
             prefetch={false}
             href={courseLink}
-            className="text-base font-bold text-gray-900 leading-tight hover:text-black transition-colors line-clamp-1"
+            className="text-base font-bold text-white leading-tight hover:text-[#3587A4] transition-colors line-clamp-1"
           >
             {course.name}
           </Link>
         </div>
         
         {course.description && (
-          <p className="text-[11px] text-gray-500 line-clamp-2 min-h-[1.5rem]">
+          <p className="text-[11px] text-gray-500 line-clamp-2 min-h-[1.5rem] dark:text-gray-500">
             {course.description}
           </p>
         )}
 
-        <div className="pt-1.5 flex items-center justify-between border-t border-gray-100">
+        <div className="pt-1.5 flex items-center justify-between border-t border-[#2D2D2D]">
           <div className="flex items-center gap-2">
             {displayedAuthors.length > 0 && (
               <div className="flex -space-x-2 items-center">
@@ -237,7 +237,7 @@ function CourseThumbnail({ course, orgslug, customLink, isDashboard = false, isS
           <Link
             prefetch={false}
             href={courseLink}
-            className="text-[10px] font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-wider"
+            className="text-[10px] font-bold text-gray-500 hover:text-[#3587A4] transition-colors uppercase tracking-wider"
           >
             {t('courses.start_learning')}
           </Link>

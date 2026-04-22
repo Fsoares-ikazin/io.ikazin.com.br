@@ -57,11 +57,11 @@ function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassi
               </div>
             ))}
             {collections.length === 0 && (
-              <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/30">
-                <div className="p-4 bg-white rounded-full nice-shadow mb-4">
-                  <SquareLibrary className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
+              <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-[#2D2D2D] rounded-2xl bg-[#1F1F1F]/40">
+                <div className="p-4 bg-[#2D2D2D] rounded-full mb-4">
+                  <SquareLibrary className="w-8 h-8 text-gray-600" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-lg font-bold text-gray-600 mb-1">
+                <h3 className="text-lg font-bold text-gray-300 mb-1">
                   {t('collections.no_collections')}
                 </h3>
                 <p className="text-sm text-gray-400 max-w-xs text-center">
@@ -96,11 +96,11 @@ function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassi
               </div>
             ))}
             {courses.length === 0 && (
-              <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/30">
-                <div className="p-4 bg-white rounded-full nice-shadow mb-4">
-                  <BookCopy className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
+              <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-[#2D2D2D] rounded-2xl bg-[#1F1F1F]/40">
+                <div className="p-4 bg-[#2D2D2D] rounded-full mb-4">
+                  <BookCopy className="w-8 h-8 text-gray-600" strokeWidth={1.5} />
                 </div>
-                <h1 className="text-xl font-bold text-gray-600 mb-2">
+                <h1 className="text-xl font-bold text-gray-300 mb-2">
                   {t('courses.no_courses')}
                 </h1>
                 <p className="text-md text-gray-400 mb-6 text-center max-w-xs">
@@ -113,7 +113,7 @@ function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassi
             <div className="mt-4 text-center">
               <Link
                 href={getUriWithOrg(orgslug, '/courses')}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-500 hover:text-[#3587A4] transition-colors"
               >
                 {t('courses.view_all_courses')} ({courses.length})
               </Link>

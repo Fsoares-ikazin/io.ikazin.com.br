@@ -119,7 +119,8 @@ export default async function proxy(req: NextRequest) {
   
 
   // Out of orgslug paths & rewrite
-  const standard_paths = ['/home']
+  const standard_paths = ['/home', '/', '/planos', '/builds', '/blog', '/privacy', '/terms']
+  const standard_prefixes = ['/planos/', '/blog/']
   const auth_paths = ['/login', '/signup', '/reset', '/forgot', '/verify-email']
 
   // Admin subdomain detection — rewrite to /admin route group
@@ -134,8 +135,7 @@ export default async function proxy(req: NextRequest) {
     setInstanceCookies(response, instanceInfo)
     return response
   }
-  if (standard_paths.includes(pathname)) {
-    // Redirect to the same pathname with the original search params
+  if (standard_paths.includes(pathname) || standard_prefixes.some(p => pathname.startsWith(p))) {
     return NextResponse.rewrite(new URL(`${pathname}${search}`, req.url))
   }
 

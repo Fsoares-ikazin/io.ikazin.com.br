@@ -23,11 +23,11 @@ import ContentOverview from './ContentOverview'
 import UsageOverview from './UsageOverview'
 
 const PLAN_COLORS: Record<string, { bg: string; text: string }> = {
-  free: { bg: 'bg-gray-100', text: 'text-gray-600' },
-  oss: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  standard: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  pro: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  enterprise: { bg: 'bg-amber-100', text: 'text-amber-700' },
+  free: { bg: 'bg-[#2D2D2D]', text: 'text-gray-400' },
+  oss: { bg: 'bg-[rgba(34,197,94,0.1)]', text: 'text-emerald-400' },
+  standard: { bg: 'bg-[rgba(59,130,246,0.1)]', text: 'text-blue-400' },
+  pro: { bg: 'bg-[rgba(168,85,247,0.1)]', text: 'text-purple-400' },
+  enterprise: { bg: 'bg-[rgba(245,158,11,0.1)]', text: 'text-amber-400' },
 }
 
 export default function DashboardHome() {
@@ -50,13 +50,13 @@ export default function DashboardHome() {
   const planStyle = PLAN_COLORS[plan] || PLAN_COLORS.free
 
   return (
-    <div className="h-full w-full bg-[#f8f8f8]">
+    <div className="h-full w-full bg-[#0F1419]">
       <div className="px-10 pt-8 pb-10">
         <div className="space-y-6 max-w-[1600px] mx-auto w-full">
           {/* Welcome Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-white">
                 {t('dashboard.home.welcome_back')}{username ? `, ${username}` : ''}
               </h1>
               <div className="flex items-center gap-2 mt-1.5">
@@ -66,35 +66,35 @@ export default function DashboardHome() {
                   {plan === 'oss' ? 'OSS' : `${plan} ${t('dashboard.home.plan')}`}
                 </span>
                 {org?.name && (
-                  <span className="text-xs text-gray-400">{org.name}</span>
+                  <span className="text-xs text-gray-500">{org.name}</span>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Link
                 href="/dash/courses?new=true"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-[#3587A4] rounded-lg hover:opacity-90 transition-opacity"
               >
                 <PlusCircle size={14} weight="bold" />
                 {t('dashboard.home.create_course')}
               </Link>
               <Link
                 href="/dash/analytics"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-600 bg-white rounded-lg nice-shadow hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#1F1F1F] border border-[#2D2D2D] rounded-lg hover:bg-[#2D2D2D] transition-colors"
               >
                 <ChartBar size={14} weight="bold" />
                 {t('dashboard.home.analytics')}
               </Link>
               <Link
                 href="/dash/users/settings/users"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-600 bg-white rounded-lg nice-shadow hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#1F1F1F] border border-[#2D2D2D] rounded-lg hover:bg-[#2D2D2D] transition-colors"
               >
                 <Users size={14} weight="bold" />
                 {t('dashboard.home.members')}
               </Link>
               <Link
                 href="/dash/org/settings/general"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-600 bg-white rounded-lg nice-shadow hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#1F1F1F] border border-[#2D2D2D] rounded-lg hover:bg-[#2D2D2D] transition-colors"
               >
                 <GearSix size={14} weight="bold" />
                 {t('dashboard.home.settings')}

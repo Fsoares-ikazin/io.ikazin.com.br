@@ -22,7 +22,7 @@ export default function QuickStats() {
 
   if (statusLoading) {
     return (
-      <div className="bg-white rounded-xl nice-shadow p-5">
+      <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
         <div className="h-[120px] flex items-center justify-center text-gray-300 text-xs">
           {t('dashboard.home.loading')}
         </div>
@@ -32,20 +32,20 @@ export default function QuickStats() {
 
   if (!isConfigured) {
     return (
-      <div className="bg-white rounded-xl nice-shadow p-5">
+      <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
         <div className="flex flex-col items-center justify-center py-6 text-center">
-          <div className="p-2.5 rounded-full bg-gray-100 mb-2.5">
-            <ChartBar size={18} weight="duotone" className="text-gray-400" />
+          <div className="p-2.5 rounded-full bg-[#2D2D2D] mb-2.5">
+            <ChartBar size={18} weight="duotone" className="text-gray-500" />
           </div>
-          <h3 className="text-xs font-semibold text-gray-600 mb-1">
+          <h3 className="text-xs font-semibold text-gray-300 mb-1">
             {t('dashboard.home.analytics')}
           </h3>
-          <p className="text-[11px] text-gray-400 mb-3 max-w-[200px]">
+          <p className="text-[11px] text-gray-500 mb-3 max-w-[200px]">
             {t('dashboard.home.enable_analytics_description')}
           </p>
           <Link
             href="/dash/analytics"
-            className="text-[11px] font-medium text-blue-600 hover:text-blue-700"
+            className="text-[11px] font-medium text-[#3587A4] hover:opacity-80"
           >
             {t('dashboard.home.enable')} &rarr;
           </Link>
@@ -85,42 +85,42 @@ function QuickStatsContent() {
       value: liveCount,
       loading: liveLoading,
       icon: Broadcast,
-      color: 'text-green-500',
-      bg: 'bg-green-50',
+      color: 'text-green-400',
+      bg: 'bg-[rgba(34,197,94,0.1)]',
     },
     {
       label: t('dashboard.home.signups_30d'),
       value: signups,
       loading: eventsLoading,
       icon: UserPlus,
-      color: 'text-blue-500',
-      bg: 'bg-blue-50',
+      color: 'text-blue-400',
+      bg: 'bg-[rgba(59,130,246,0.1)]',
     },
     {
       label: t('dashboard.home.enrollments_30d'),
       value: enrollments,
       loading: eventsLoading,
       icon: GraduationCap,
-      color: 'text-indigo-500',
-      bg: 'bg-indigo-50',
+      color: 'text-indigo-400',
+      bg: 'bg-[rgba(99,102,241,0.1)]',
     },
     {
       label: t('dashboard.home.completions_30d'),
       value: completions,
       loading: eventsLoading,
       icon: CheckCircle,
-      color: 'text-emerald-500',
-      bg: 'bg-emerald-50',
+      color: 'text-emerald-400',
+      bg: 'bg-[rgba(16,185,129,0.1)]',
     },
   ]
 
   return (
-    <div className="bg-white rounded-xl nice-shadow p-5">
+    <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-700">{t('dashboard.home.quick_stats')}</h3>
+        <h3 className="text-sm font-semibold text-gray-200">{t('dashboard.home.quick_stats')}</h3>
         <Link
           href="/dash/analytics"
-          className="text-[11px] font-medium text-gray-400 hover:text-gray-600 transition-colors"
+          className="text-[11px] font-medium text-gray-500 hover:text-[#3587A4] transition-colors"
         >
           {t('dashboard.home.full_analytics')} &rarr;
         </Link>
@@ -134,7 +134,7 @@ function QuickStatsContent() {
               </div>
               <span className="text-xs text-gray-500">{stat.label}</span>
             </div>
-            <span className="text-sm font-bold text-gray-900 tabular-nums">
+            <span className="text-sm font-bold text-white tabular-nums">
               {stat.loading ? '\u2014' : <AnimatedNumber value={stat.value} />}
             </span>
           </div>

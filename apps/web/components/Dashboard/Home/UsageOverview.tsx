@@ -31,11 +31,11 @@ interface AICreditsSummary {
 }
 
 const PLAN_COLORS: Record<string, { bg: string; text: string }> = {
-  free: { bg: 'bg-gray-100', text: 'text-gray-600' },
-  oss: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  standard: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  pro: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  enterprise: { bg: 'bg-amber-100', text: 'text-amber-700' },
+  free: { bg: 'bg-[#2D2D2D]', text: 'text-gray-400' },
+  oss: { bg: 'bg-[rgba(34,197,94,0.1)]', text: 'text-emerald-400' },
+  standard: { bg: 'bg-[rgba(59,130,246,0.1)]', text: 'text-blue-400' },
+  pro: { bg: 'bg-[rgba(168,85,247,0.1)]', text: 'text-purple-400' },
+  enterprise: { bg: 'bg-[rgba(245,158,11,0.1)]', text: 'text-amber-400' },
 }
 
 function getBarColor(usage: number, limit: number | 'unlimited'): string {
@@ -125,9 +125,9 @@ export default function UsageOverview() {
   return (
     <div className="space-y-6">
       {/* Usage card */}
-      <div className="bg-white rounded-xl nice-shadow p-5">
+      <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-sm font-semibold text-gray-700">{t('dashboard.home.plan_and_usage')}</h3>
+          <h3 className="text-sm font-semibold text-gray-200">{t('dashboard.home.plan_and_usage')}</h3>
           <span
             className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize ${planStyle.bg} ${planStyle.text}`}
           >
@@ -139,8 +139,8 @@ export default function UsageOverview() {
           <div className="space-y-5">
             {[1, 2, 3].map((i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-3 bg-gray-100 rounded w-20 mb-2" />
-                <div className="h-2 bg-gray-100 rounded w-full" />
+                <div className="h-3 bg-[#2D2D2D] rounded w-20 mb-2" />
+                <div className="h-2 bg-[#2D2D2D] rounded w-full" />
               </div>
             ))}
           </div>
@@ -150,7 +150,7 @@ export default function UsageOverview() {
               const isUnlimited = ossMode || meter.limit === 'unlimited'
               const limitText = isUnlimited ? t('dashboard.home.unlimited') : String(meter.limit)
               const barColor = isUnlimited
-                ? 'bg-green-500'
+                ? 'bg-[#3587A4]'
                 : getBarColor(meter.usage, meter.limit)
               const barPercent = isUnlimited
                 ? 30
@@ -164,29 +164,29 @@ export default function UsageOverview() {
                       <Icon
                         size={13}
                         weight="duotone"
-                        className="text-gray-400"
+                        className="text-gray-500"
                       />
-                      <span className="text-xs font-medium text-gray-600">
+                      <span className="text-xs font-medium text-gray-400">
                         {meter.label}
                       </span>
                     </div>
-                    <span className="text-[11px] text-gray-400 tabular-nums">
+                    <span className="text-[11px] text-gray-500 tabular-nums">
                       {meter.usage} / {limitText}
                     </span>
                   </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-[#2D2D2D] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${barColor}`}
                       style={{ width: `${barPercent}%` }}
                     />
                   </div>
                   {!isUnlimited && meter.limit_reached && (
-                    <p className="text-[10px] text-red-500 mt-1">
+                    <p className="text-[10px] text-red-400 mt-1">
                       {t('dashboard.home.limit_reached')}
                     </p>
                   )}
                   {!isUnlimited && !meter.limit_reached && (
-                    <p className="text-[10px] text-gray-300 mt-1">
+                    <p className="text-[10px] text-gray-600 mt-1">
                       {meter.remaining} {t('dashboard.home.remaining')}
                     </p>
                   )}
@@ -195,7 +195,7 @@ export default function UsageOverview() {
             })}
 
             {meters.length === 0 && (
-              <p className="text-xs text-gray-400 text-center py-4">
+              <p className="text-xs text-gray-500 text-center py-4">
                 {t('dashboard.home.usage_data_unavailable')}
               </p>
             )}
@@ -205,15 +205,15 @@ export default function UsageOverview() {
         {/* AI Credits */}
         {aiCredits && aiCredits.mode !== 'disabled' && (
           <>
-            <div className="border-t border-gray-100 my-4" />
+            <div className="border-t border-[#2D2D2D] my-4" />
             <AICreditsSection credits={aiCredits} />
           </>
         )}
       </div>
 
       {/* Features card */}
-      <div className="bg-white rounded-xl nice-shadow p-5">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">
+      <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
+        <h3 className="text-sm font-semibold text-gray-200 mb-4">
           {t('dashboard.home.features')}
         </h3>
         <div className="space-y-2.5">
@@ -225,21 +225,21 @@ export default function UsageOverview() {
               <div className="flex items-center gap-2.5">
                 <div
                   className={`w-1.5 h-1.5 rounded-full ${
-                    feature.enabled ? 'bg-green-500' : 'bg-gray-300'
+                    feature.enabled ? 'bg-[#3587A4]' : 'bg-[#2D2D2D]'
                   }`}
                 />
                 <feature.icon
                   size={14}
                   weight="duotone"
                   className={
-                    feature.enabled ? 'text-gray-500' : 'text-gray-300'
+                    feature.enabled ? 'text-gray-400' : 'text-gray-600'
                   }
                 />
                 <span
                   className={`text-xs ${
                     feature.enabled
-                      ? 'text-gray-600 font-medium'
-                      : 'text-gray-400'
+                      ? 'text-gray-300 font-medium'
+                      : 'text-gray-600'
                   }`}
                 >
                   {feature.label}
@@ -249,11 +249,11 @@ export default function UsageOverview() {
                 <Link href={feature.href}>
                   <ArrowRight
                     size={12}
-                    className="text-gray-300 hover:text-gray-500 transition-colors"
+                    className="text-gray-600 hover:text-[#3587A4] transition-colors"
                   />
                 </Link>
               ) : (
-                <span className="text-[10px] text-gray-300">{t('dashboard.home.off')}</span>
+                <span className="text-[10px] text-gray-600">{t('dashboard.home.off')}</span>
               )}
             </div>
           ))}
@@ -297,27 +297,27 @@ function AICreditsSection({ credits }: { credits: AICreditsSummary }) {
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
           <Lightning size={13} weight="duotone" className="text-violet-400" />
-          <span className="text-xs font-medium text-gray-600">{t('dashboard.home.ai_credits')}</span>
+          <span className="text-xs font-medium text-gray-400">{t('dashboard.home.ai_credits')}</span>
         </div>
-        <span className="text-[11px] text-gray-400 tabular-nums">
+        <span className="text-[11px] text-gray-500 tabular-nums">
           {used} / {isUnlimited ? t('dashboard.home.unlimited') : total}
         </span>
       </div>
-      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-[#2D2D2D] rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${barColor}`}
           style={{ width: `${percent}%` }}
         />
       </div>
       {isUnlimited ? (
-        <p className="text-[10px] text-gray-300 mt-1">{used} {t('dashboard.home.used')}</p>
+        <p className="text-[10px] text-gray-600 mt-1">{used} {t('dashboard.home.used')}</p>
       ) : remaining !== null && remaining > 0 ? (
-        <p className="text-[10px] text-gray-300 mt-1">{remaining} {t('dashboard.home.remaining')}</p>
+        <p className="text-[10px] text-gray-600 mt-1">{remaining} {t('dashboard.home.remaining')}</p>
       ) : remaining !== null && remaining <= 0 ? (
-        <p className="text-[10px] text-red-500 mt-1">{t('dashboard.home.no_credits_remaining')}</p>
+        <p className="text-[10px] text-red-400 mt-1">{t('dashboard.home.no_credits_remaining')}</p>
       ) : null}
       {credits.purchased_credits > 0 && (
-        <p className="text-[10px] text-gray-300 mt-0.5">
+        <p className="text-[10px] text-gray-600 mt-0.5">
           {t('dashboard.home.includes_purchased', { count: credits.purchased_credits })}
         </p>
       )}
