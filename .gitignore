@@ -60,3 +60,4 @@ apps/web/runtime-config.json
 
 # Claude Code
 .claude/
+data/
