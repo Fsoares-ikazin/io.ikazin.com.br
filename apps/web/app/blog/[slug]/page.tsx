@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+export const dynamicParams = true
+
 export default function BlogPostPage({ params }: Props) {
   const exists = posts.some(p => p.slug.en === params.slug || p.slug.pt === params.slug)
   if (!exists) notFound()
