@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRef, useState } from 'react'
-import { Cpu, Box, Award, Check, ChevronRight, Zap, Play, AlertTriangle, TrendingUp, Clock } from 'lucide-react'
+import { Cpu, Box, Award, ChevronRight, Zap, Play, AlertTriangle, TrendingUp } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 
@@ -47,6 +47,7 @@ const copy = {
     tiersSub: 'From the absolute beginner to the SIMOTION D specialist. Each level unlocks the next.',
     tierCta: 'See builds',
     tierDetails: 'Details & demos',
+    tiersCtaSingle: 'Explore all levels',
     techTitle: 'The same tools industry demands',
     finalTitle: 'How long can you afford to be the engineer who never simulated anything?',
     finalSub: 'Every week without real practice is another week behind the engineer who already has 25 projects in the portfolio.',
@@ -93,6 +94,7 @@ const copy = {
     tiersSub: 'Do iniciante absoluto ao especialista SIMOTION D. Cada nível desbloqueia o próximo.',
     tierCta: 'Ver builds',
     tierDetails: 'Detalhes & demos',
+    tiersCtaSingle: 'Explorar todos os níveis',
     techTitle: 'As mesmas ferramentas que a indústria exige',
     finalTitle: 'Por quanto tempo você pode ser o engenheiro que nunca simulou nada?',
     finalSub: 'Cada semana sem prática real é mais uma semana atrás do engenheiro que já tem 25 projetos no portfólio.',
@@ -112,6 +114,7 @@ type TierCopy = {
   builds: string
   audience: string
   features: string[]
+  tagline: string
   featured?: boolean
 }
 
@@ -121,18 +124,21 @@ const tierData: Record<Lang, TierCopy[]> = {
       label: 'BASIC', slug: 'basic', price: '$69',
       builds: 'Builds 1–8',
       audience: 'Trainees and automation students',
+      tagline: 'PLC from zero. No physical hardware needed.',
       features: ['Boolean logic, FSM, interlocks', 'Digital/analog sensors (CTU/CTD)', 'G120 SINA_SPEED / SINA_POS'],
     },
     {
       label: 'ESSENTIALS', slug: 'essentials', price: '$119',
       builds: 'Builds 9–13',
       audience: 'Operators, senior technicians, supervisors',
+      tagline: 'Real machines. Full PID. Industrial complexity.',
       features: ['Real industrial applications', 'Full PID control', 'Packaging & stretch film lines'],
     },
     {
       label: 'ADVANCED', slug: 'advanced', price: '$159',
       builds: 'Builds 14–18',
       audience: 'Siemens drive specialists & motion engineers',
+      tagline: 'S120 multi-axis. The level the industry actually demands.',
       features: ['SINAMICS S120 speed & position', 'Electronic gearing & Rotary Knife', 'Winder tension control'],
       featured: true,
     },
@@ -140,6 +146,7 @@ const tierData: Record<Lang, TierCopy[]> = {
       label: 'PREMIUM', slug: 'premium', price: '$209',
       builds: 'Builds 19–25',
       audience: 'Senior engineers, integrators, OEMs',
+      tagline: 'Robotics, CNC G-code & SIMOTION D. Full machine builder toolkit.',
       features: ['SCARA & Delta robots', 'CNC G-code 2D/3D', 'SIMOTION D full workbench'],
     },
   ],
@@ -148,18 +155,21 @@ const tierData: Record<Lang, TierCopy[]> = {
       label: 'BASIC', slug: 'basic', price: 'R$389',
       builds: 'Builds 1–8',
       audience: 'Estagiários e estudantes de automação',
+      tagline: 'CLP do zero. Sem hardware físico necessário.',
       features: ['Lógica booleana e FSM', 'Sensores digitais e analógicos', 'Inversores G120 SINA_SPEED'],
     },
     {
       label: 'ESSENTIALS', slug: 'essentials', price: 'R$669',
       builds: 'Builds 9–13',
       audience: 'Técnicos sênior e supervisores',
+      tagline: 'Máquinas reais. PID completo. Complexidade industrial.',
       features: ['Aplicações industriais reais', 'Controle PID completo', 'Linhas de embalagem e envolvimento'],
     },
     {
       label: 'ADVANCED', slug: 'advanced', price: 'R$899',
       builds: 'Builds 14–18',
       audience: 'Especialistas em drives Siemens',
+      tagline: 'S120 multi-eixo. O nível que a indústria realmente exige.',
       features: ['SINAMICS S120 velocidade e posição', 'Acoplamento eletrônico e Rotary Knife', 'Controle de tensão em enroladores'],
       featured: true,
     },
@@ -167,6 +177,7 @@ const tierData: Record<Lang, TierCopy[]> = {
       label: 'PREMIUM', slug: 'premium', price: 'R$1.179',
       builds: 'Builds 19–25',
       audience: 'Engenheiros sênior e integradores',
+      tagline: 'Robótica, CNC G-code e SIMOTION D. Kit completo de construtor de máquinas.',
       features: ['Robôs SCARA e Delta', 'CNC G-code 2D/3D', 'SIMOTION D workbench completo'],
     },
   ],
@@ -320,53 +331,40 @@ export function LandingClient() {
 
       {/* Tier Cards */}
       <section id="builds" className="px-6 py-20 border-t border-ikz-border">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-4 text-center text-2xl font-black tracking-tight text-white">{t.tiersTitle}</h2>
+        <div className="mx-auto max-w-5xl">
+          <h2 className="mb-3 text-center text-2xl font-black tracking-tight text-white">{t.tiersTitle}</h2>
           <p className="mb-12 text-center text-gray-400">{t.tiersSub}</p>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {tiers.map((tier, i) => {
               const style = tierStyle[i]
               return (
-                <div
+                <Link
                   key={tier.label}
-                  className={`relative flex flex-col rounded-2xl border ${style.borderColor} bg-ikz-surface p-6 transition-all hover:scale-[1.02] ${tier.featured ? 'ring-1 ring-ikz-lime/40 shadow-glow-lime' : ''}`}
+                  href={`/planos/${tier.slug}`}
+                  className={`group relative flex flex-col overflow-hidden rounded-2xl border ${style.borderColor} bg-ikz-surface p-6 transition-all hover:-translate-y-1 ${tier.featured ? 'ring-1 ring-ikz-lime/30' : ''}`}
                 >
+                  {/* Featured accent line */}
                   {tier.featured && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-ikz-lime px-3 py-0.5 text-xs font-bold text-ikz-bg whitespace-nowrap">
-                      {lang === 'en' ? 'Most Popular' : 'Mais Popular'}
-                    </div>
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ikz-lime to-transparent" />
                   )}
-                  <div className={`mb-1 text-xs font-black tracking-widest ${style.color}`}>{tier.label}</div>
-                  <div className="mb-1 text-2xl font-black text-white">{tier.price}</div>
-                  <div className="mb-1 text-xs font-semibold text-gray-500">{tier.builds}</div>
-                  <div className="mb-5 text-xs italic text-gray-500">{tier.audience}</div>
-                  <ul className="mb-6 space-y-2 flex-1">
-                    {tier.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-xs text-gray-300">
-                        <Check size={13} className="mt-0.5 shrink-0 text-ikz-cyan" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="space-y-2">
-                    <Link
-                      href={`/planos/${tier.slug}`}
-                      className="block rounded-lg border border-ikz-border py-2 text-center text-xs font-semibold text-gray-400 hover:border-gray-600 hover:text-white transition-colors"
-                    >
-                      {t.tierDetails}
-                    </Link>
-                    <Link
-                      href="/planos"
-                      className={`block rounded-lg py-2.5 text-center text-sm font-semibold transition-opacity hover:opacity-90 ${
-                        tier.featured ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg' : 'border border-ikz-border text-gray-300 hover:border-gray-600'
-                      }`}
-                    >
-                      {t.tierCta}
-                    </Link>
+                  <div className={`mb-3 text-[10px] font-black tracking-widest ${style.color}`}>{tier.label}</div>
+                  <p className="flex-1 text-sm leading-snug text-gray-300 group-hover:text-white transition-colors">{tier.tagline}</p>
+                  <div className="mt-5 flex items-center justify-between">
+                    <span className="text-[10px] font-semibold text-gray-600">{tier.builds}</span>
+                    <ChevronRight size={13} className={`transition-transform group-hover:translate-x-0.5 ${style.color}`} />
                   </div>
-                </div>
+                </Link>
               )
             })}
+          </div>
+          {/* Single CTA */}
+          <div className="mt-10 text-center">
+            <Link
+              href="/planos"
+              className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg transition-all hover:opacity-90"
+            >
+              {t.tiersCtaSingle} <ChevronRight size={16} />
+            </Link>
           </div>
         </div>
       </section>
