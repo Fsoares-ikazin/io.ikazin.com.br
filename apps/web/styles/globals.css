@@ -160,6 +160,21 @@
   --color-chart-3: hsl(var(--chart-3));
   --color-chart-4: hsl(var(--chart-4));
   --color-chart-5: hsl(var(--chart-5));
+
+  /* IKAZIN.IO brand tokens — see docs/brand-dna.md */
+  --color-ikz-bg: hsl(var(--ikz-bg));
+  --color-ikz-surface: hsl(var(--ikz-surface));
+  --color-ikz-slate: hsl(var(--ikz-slate));
+  --color-ikz-lime: hsl(var(--ikz-lime));
+  --color-ikz-cyan: hsl(var(--ikz-cyan));
+  --color-ikz-text: hsl(var(--ikz-text));
+  --color-ikz-text-muted: hsl(var(--ikz-text-muted));
+  --color-ikz-border: hsl(var(--ikz-border));
+
+  --shadow-glow-lime: 0 0 24px hsl(var(--ikz-lime) / 0.4);
+  --shadow-glow-cyan: 0 0 24px hsl(var(--ikz-cyan) / 0.35);
+  --shadow-glow-lime-lg: 0 0 48px hsl(var(--ikz-lime) / 0.5);
+  --shadow-glow-cyan-lg: 0 0 48px hsl(var(--ikz-cyan) / 0.45);
 }
 
 /*
@@ -335,6 +350,16 @@
     --chart-5: 204 15% 40%;
     --radius: 0.75rem;
 
+    /* IKAZIN.IO brand tokens (HSL triplets) */
+    --ikz-bg: 215 25% 6%;
+    --ikz-surface: 215 18% 11%;
+    --ikz-slate: 215 19% 28%;
+    --ikz-lime: 86 67% 64%;
+    --ikz-cyan: 184 50% 49%;
+    --ikz-text: 213 27% 92%;
+    --ikz-text-muted: 213 11% 58%;
+    --ikz-border: 213 12% 15%;
+
     /* Z-Index Layering System */
     --z-behind: -10;
     --z-background: -1;
@@ -385,7 +410,19 @@
     --chart-2: 79 65% 42%;
     --chart-3: 187 19% 46%;
     --chart-4: 43 74% 66%;
-    --chart-5: 204 15% 40%;}}
+    --chart-5: 204 15% 40%;
+
+    /* IKAZIN.IO brand tokens (mirror :root) */
+    --ikz-bg: 215 25% 6%;
+    --ikz-surface: 215 18% 11%;
+    --ikz-slate: 215 19% 28%;
+    --ikz-lime: 86 67% 64%;
+    --ikz-cyan: 184 50% 49%;
+    --ikz-text: 213 27% 92%;
+    --ikz-text-muted: 213 11% 58%;
+    --ikz-border: 213 12% 15%;
+  }
+}
 
 @layer base {
   * {
