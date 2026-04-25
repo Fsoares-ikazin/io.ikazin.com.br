@@ -35,12 +35,12 @@ interface Props {
 
 export function LanguageToggle({ lang, onChange }: Props) {
   return (
-    <div className="flex items-center rounded-lg border border-[#2D2D2D] bg-[#1F1F1F] p-0.5 text-xs font-semibold">
+    <div className="flex items-center rounded-lg border border-ikz-border bg-ikz-surface p-0.5 text-xs font-semibold">
       <button
         onClick={() => onChange('en')}
         className={`rounded-md px-2.5 py-1 transition-colors ${
           lang === 'en'
-            ? 'bg-[#3587A4] text-white'
+            ? 'bg-ikz-lime text-ikz-bg'
             : 'text-gray-400 hover:text-white'
         }`}
       >
@@ -50,7 +50,7 @@ export function LanguageToggle({ lang, onChange }: Props) {
         onClick={() => onChange('pt')}
         className={`rounded-md px-2.5 py-1 transition-colors ${
           lang === 'pt'
-            ? 'bg-[#3587A4] text-white'
+            ? 'bg-ikz-lime text-ikz-bg'
             : 'text-gray-400 hover:text-white'
         }`}
       >

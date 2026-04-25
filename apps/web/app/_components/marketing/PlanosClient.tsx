@@ -76,7 +76,7 @@ const tierData: Record<Lang, TierData[]> = {
     {
       label: 'ADVANCED', price: '$159', builds: 'Builds 14–18', audience: 'Siemens drive specialists & motion engineers',
       features: ['SINAMICS S120 — MoveVelocity real-time', 'SINAMICS S120 — MoveAbsolute / MoveRelative', 'Electronic gearing GearIn / GearInAbsolute', 'Rotary Knife with cam profiles', 'Winder / Dancer Roll tension control'],
-      style: { badge: 'bg-[rgba(53,135,164,0.15)] text-[#3587A4]', border: 'border-[#3587A4]', cta: 'primary', featured: true },
+      style: { badge: 'bg-ikz-lime/15 text-ikz-lime', border: 'border-ikz-lime', cta: 'primary', featured: true },
     },
     {
       label: 'PREMIUM', price: '$209', builds: 'Builds 19–25', audience: 'Senior engineers, integrators, OEMs',
@@ -98,7 +98,7 @@ const tierData: Record<Lang, TierData[]> = {
     {
       label: 'ADVANCED', price: '$159', builds: 'Builds 14–18', audience: 'Especialistas em drives Siemens e engenheiros de motion',
       features: ['SINAMICS S120 — MoveVelocity real-time', 'SINAMICS S120 — MoveAbsolute / MoveRelative', 'Acoplamento eletrônico GearIn / GearInAbsolute', 'Rotary Knife com perfis de came', 'Enroladores com controle de tensão'],
-      style: { badge: 'bg-[rgba(53,135,164,0.15)] text-[#3587A4]', border: 'border-[#3587A4]', cta: 'primary', featured: true },
+      style: { badge: 'bg-ikz-lime/15 text-ikz-lime', border: 'border-ikz-lime', cta: 'primary', featured: true },
     },
     {
       label: 'PREMIUM', price: '$209', builds: 'Builds 19–25', audience: 'Engenheiros sênior, integradores e fabricantes',
@@ -116,14 +116,14 @@ export function PlanosClient() {
   const tiers = tierData[lang]
 
   return (
-    <div className="min-h-screen bg-[#0F1419] text-gray-100">
+    <div className="min-h-screen bg-ikz-bg text-gray-100">
       <MarketingNav lang={lang} onLangChange={setLang} copy={{ plans: lang === 'en' ? 'Plans' : 'Planos', blog: 'Blog', cta: t.nav.cta }} />
 
       {/* Header */}
       <section className="px-6 py-20 text-center">
         <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl">{t.title}</h1>
         <p className="mx-auto mb-3 max-w-2xl text-lg text-gray-400">{t.sub}</p>
-        <p className="text-sm font-semibold text-[#3587A4]">{t.badge}</p>
+        <p className="text-sm font-semibold text-ikz-cyan">{t.badge}</p>
       </section>
 
       {/* Tier grid */}
@@ -132,12 +132,12 @@ export function PlanosClient() {
           {tiers.map((tier) => (
             <div
               key={tier.label}
-              className={`relative flex flex-col rounded-2xl border ${tier.style.border} bg-[#1F1F1F] p-6 ${
-                tier.style.featured ? 'ring-1 ring-[#3587A4]/30' : ''
+              className={`relative flex flex-col rounded-2xl border ${tier.style.border} bg-ikz-surface p-6 transition-all hover:-translate-y-1 ${
+                tier.style.featured ? 'ring-1 ring-ikz-lime/40 shadow-glow-lime' : ''
               }`}
             >
               {tier.style.featured && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#3587A4] px-4 py-1 text-xs font-black text-white">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-ikz-lime px-4 py-1 text-xs font-black text-ikz-bg">
                   {t.mostPopular}
                 </div>
               )}
@@ -151,7 +151,7 @@ export function PlanosClient() {
               <ul className="mb-8 flex-1 space-y-2.5">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm text-gray-300">
-                    <Check size={14} className="mt-0.5 shrink-0 text-[#3587A4]" />
+                    <Check size={14} className="mt-0.5 shrink-0 text-ikz-cyan" />
                     {f}
                   </li>
                 ))}
@@ -160,8 +160,8 @@ export function PlanosClient() {
                 href="/login"
                 className={`block rounded-xl py-3 text-center text-sm font-bold transition-opacity hover:opacity-90 ${
                   tier.style.cta === 'primary'
-                    ? 'bg-[#3587A4] text-white'
-                    : 'border border-[#2D2D2D] text-gray-300 hover:border-gray-600'
+                    ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg'
+                    : 'border border-ikz-border text-gray-300 hover:border-gray-600'
                 }`}
               >
                 {t.ctaPrefix} {tier.label}
@@ -174,7 +174,7 @@ export function PlanosClient() {
       {/* Premium Plus */}
       <section className="px-6 pb-20">
         <div className="mx-auto max-w-7xl">
-          <div className="rounded-2xl border border-amber-900/50 bg-[#1F1F1F] p-8 md:flex md:items-center md:justify-between md:gap-8">
+          <div className="rounded-2xl border border-amber-900/50 bg-ikz-surface p-8 md:flex md:items-center md:justify-between md:gap-8">
             <div className="mb-6 md:mb-0">
               <div className="mb-3 inline-block rounded-full bg-amber-900/40 px-3 py-0.5 text-xs font-black tracking-widest text-amber-400">
                 PREMIUM PLUS
@@ -208,7 +208,7 @@ export function PlanosClient() {
           <h2 className="mb-10 text-center text-2xl font-bold text-white">{t.faqTitle}</h2>
           <div className="space-y-4">
             {t.faq.map(({ q, a }) => (
-              <details key={q} className="group rounded-2xl border border-[#2D2D2D] bg-[#1F1F1F]">
+              <details key={q} className="group rounded-2xl border border-ikz-border bg-ikz-surface">
                 <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white list-none">
                   {q}
                   <ChevronRight size={16} className="text-gray-500 transition-transform group-open:rotate-90" />
@@ -221,9 +221,9 @@ export function PlanosClient() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="border-t border-[#2D2D2D] px-6 py-16 text-center">
+      <section className="border-t border-ikz-border px-6 py-16 text-center">
         <p className="mb-4 text-gray-400">{t.contactTitle}</p>
-        <a href="mailto:contato@ikazin.com.br" className="text-sm font-semibold text-[#3587A4] hover:underline">
+        <a href="mailto:contato@ikazin.com.br" className="text-sm font-semibold text-ikz-cyan hover:underline">
           contato@ikazin.com.br
         </a>
       </section>

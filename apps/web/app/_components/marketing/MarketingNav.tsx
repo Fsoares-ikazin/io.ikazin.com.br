@@ -22,7 +22,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[#2D2D2D] bg-[#0F1419]/90 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 border-b border-ikz-border bg-ikz-bg/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -32,9 +32,10 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
             width={40}
             height={40}
             className="h-10 w-auto"
+            style={{ filter: 'drop-shadow(0 0 6px hsl(var(--ikz-cyan) / 0.45))' }}
             priority
           />
-          <span className="text-lg font-black tracking-tight text-[#3587A4]">
+          <span className="text-lg font-black tracking-tight text-ikz-cyan">
             Ikazin<span className="text-white">®</span>
           </span>
         </Link>
@@ -50,7 +51,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
           <LanguageToggle lang={lang} onChange={onLangChange} />
           <Link
             href="/login"
-            className="hidden items-center gap-1.5 rounded-lg bg-[#3587A4] px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:flex"
+            className="hidden items-center gap-1.5 rounded-lg bg-ikz-cyan px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:flex"
           >
             {copy.cta} <ChevronRight size={14} />
           </Link>
@@ -67,7 +68,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-[#2D2D2D] bg-[#0F1419]/95 px-6 py-4 space-y-4">
+        <div className="md:hidden border-t border-ikz-border bg-ikz-bg/95 px-6 py-4 space-y-4">
           <Link href="/planos" className="block text-gray-300 hover:text-white text-sm font-medium py-1" onClick={() => setMobileOpen(false)}>
             {copy.plans}
           </Link>
@@ -76,7 +77,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
           </Link>
           <Link
             href="/login"
-            className="block w-full text-center rounded-lg bg-[#3587A4] px-4 py-2.5 text-sm font-semibold text-white"
+            className="block w-full text-center rounded-lg bg-ikz-cyan px-4 py-2.5 text-sm font-semibold text-white"
             onClick={() => setMobileOpen(false)}
           >
             {copy.cta}

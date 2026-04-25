@@ -104,8 +104,8 @@ const plans: Record<string, PlanDetail> = {
       en: ['Commission SINAMICS S120 drives from scratch', 'Implement PLCopen motion control blocks', 'Design electronic gearing and synchronization', 'Build Rotary Knife and flying saw applications', 'Control winder tension with diameter compensation'],
       pt: ['Comissionar drives SINAMICS S120 do zero', 'Implementar blocos de motion control PLCopen', 'Projetar acoplamento eletrônico e sincronização', 'Construir aplicações Rotary Knife e flying saw', 'Controlar tensão em enroladores com compensação de diâmetro'],
     },
-    color: 'text-[#3587A4]',
-    borderColor: 'border-[#3587A4]',
+    color: 'text-ikz-lime',
+    borderColor: 'border-ikz-lime',
   },
   premium: {
     label: 'PREMIUM',
@@ -166,7 +166,7 @@ function DemoVideo({ title }: { title: string }) {
   const [playing, setPlaying] = useState(false)
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#2D2D2D] bg-[#0A0A0A] aspect-video">
+    <div className="relative overflow-hidden rounded-2xl border border-ikz-cyan/30 bg-ikz-bg aspect-video shadow-glow-cyan">
       <video
         ref={videoRef}
         src="/video-hero.mp4"
@@ -181,14 +181,14 @@ function DemoVideo({ title }: { title: string }) {
           <button
             onClick={() => { videoRef.current?.play(); setPlaying(true) }}
             aria-label="Play demo"
-            className="group flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-[#3587A4] hover:bg-[rgba(53,135,164,0.2)]"
+            className="group flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-ikz-cyan hover:bg-ikz-cyan/20"
           >
-            <Play size={22} className="translate-x-0.5 text-white group-hover:text-[#3587A4]" fill="currentColor" />
+            <Play size={22} className="translate-x-0.5 text-white group-hover:text-ikz-cyan" fill="currentColor" />
           </button>
           <span className="mt-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">{title}</span>
         </div>
       )}
-      <div className="absolute bottom-3 right-3 rounded-md border border-[rgba(53,135,164,0.3)] bg-[#0F1419]/80 px-2.5 py-1 text-[10px] font-bold text-[#3587A4] backdrop-blur-sm">
+      <div className="absolute bottom-3 right-3 rounded-md border border-ikz-cyan/30 bg-ikz-bg/80 px-2.5 py-1 text-[10px] font-bold text-ikz-cyan backdrop-blur-sm">
         TIA Portal + Digital Twin
       </div>
     </div>
@@ -235,11 +235,11 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
 
   if (!plan) {
     return (
-      <div className="min-h-screen bg-[#0F1419] text-gray-100">
+      <div className="min-h-screen bg-ikz-bg text-gray-100">
         <MarketingNav lang={lang} onLangChange={setLang} copy={t.nav} />
         <div className="flex flex-col items-center justify-center py-40">
           <p className="text-gray-400">Plan not found.</p>
-          <Link href="/planos" className="mt-4 text-[#3587A4] hover:underline">{t.back}</Link>
+          <Link href="/planos" className="mt-4 text-ikz-cyan hover:underline">{t.back}</Link>
         </div>
       </div>
     )
@@ -248,11 +248,11 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
   const isPremiumPlus = slug === 'premium-plus'
 
   return (
-    <div className="min-h-screen bg-[#0F1419] text-gray-100">
+    <div className="min-h-screen bg-ikz-bg text-gray-100">
       <MarketingNav lang={lang} onLangChange={setLang} copy={t.nav} />
 
       {/* Header */}
-      <section className={`px-6 py-16 border-b border-[#2D2D2D]`} style={{ background: 'linear-gradient(180deg, rgba(53,135,164,0.04) 0%, transparent 100%)' }}>
+      <section className={`px-6 py-16 border-b border-ikz-border`} style={{ background: 'linear-gradient(180deg, hsl(var(--ikz-cyan) / 0.04) 0%, transparent 100%)' }}>
         <div className="mx-auto max-w-7xl">
           <Link href="/planos" className="mb-8 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-gray-300 transition-colors">
             <ArrowLeft size={13} /> {t.back}
@@ -266,11 +266,11 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
               <p className="mb-6 text-gray-400 leading-relaxed max-w-xl">{plan.description[lang]}</p>
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <Zap size={12} className="text-[#3587A4]" /> {t.oneTime}
+                  <Zap size={12} className="text-ikz-cyan" /> {t.oneTime}
                 </div>
-                <div className="w-px h-3 bg-[#2D2D2D]" />
+                <div className="w-px h-3 bg-ikz-border" />
                 <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <BookOpen size={12} className="text-[#3587A4]" /> {t.lifetime}
+                  <BookOpen size={12} className="text-ikz-cyan" /> {t.lifetime}
                 </div>
               </div>
               <div className="mb-2 text-4xl font-black text-white">{plan.price[lang]}</div>
@@ -280,14 +280,14 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
                   {t.contactCta} <ChevronRight size={16} />
                 </Link>
               ) : (
-                <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-[#3587A4] px-8 py-4 text-sm font-bold text-white hover:opacity-90 transition-opacity">
+                <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg hover:opacity-90 transition-all">
                   {t.buyNow} <ChevronRight size={16} />
                 </Link>
               )}
             </div>
 
             {/* Outcomes */}
-            <div className={`rounded-2xl border ${plan.borderColor} bg-[#1F1F1F] p-6 lg:w-80 shrink-0`}>
+            <div className={`rounded-2xl border ${plan.borderColor} bg-ikz-surface p-6 lg:w-80 shrink-0`}>
               <div className="flex items-center gap-2 mb-4">
                 <Award size={16} className={plan.color} />
                 <h3 className="font-bold text-white text-sm">{t.outcomes}</h3>
@@ -295,11 +295,11 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
               <ul className="space-y-3">
                 {plan.outcomes[lang].map((o, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-gray-300">
-                    <Check size={14} className="mt-0.5 shrink-0 text-[#3587A4]" /> {o}
+                    <Check size={14} className="mt-0.5 shrink-0 text-ikz-lime" /> {o}
                   </li>
                 ))}
               </ul>
-              <div className="mt-5 pt-5 border-t border-[#2D2D2D]">
+              <div className="mt-5 pt-5 border-t border-ikz-border">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">{t.audience}</p>
                 <p className="text-xs text-gray-400 leading-relaxed">{plan.audience[lang]}</p>
               </div>
@@ -309,7 +309,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
       </section>
 
       {/* Demo video */}
-      <section className="px-6 py-16 border-b border-[#2D2D2D]">
+      <section className="px-6 py-16 border-b border-ikz-border">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-6 text-xl font-black text-white">{t.demoTitle}</h2>
           <DemoVideo title={plan.tagline[lang]} />
@@ -326,8 +326,8 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
             <h2 className="mb-8 text-xl font-black text-white">{t.buildsTitle} <span className={`text-sm font-semibold ${plan.color}`}>({plan.builds.length})</span></h2>
             <div className="space-y-3">
               {plan.builds.map((build, i) => (
-                <div key={build.number} className="group flex gap-5 rounded-xl border border-[#2D2D2D] bg-[#1F1F1F] p-5 hover:border-[rgba(53,135,164,0.2)] transition-colors">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-black ${i === plan.builds.length - 1 ? 'bg-[rgba(53,135,164,0.15)] text-[#3587A4]' : 'bg-[#2D2D2D] text-gray-500'}`}>
+                <div key={build.number} className="group flex gap-5 rounded-xl border border-ikz-border bg-ikz-surface p-5 hover:border-ikz-cyan/40 transition-all hover:-translate-y-0.5">
+                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-black ${i === plan.builds.length - 1 ? 'bg-ikz-lime/15 text-ikz-lime' : 'bg-ikz-border text-gray-500'}`}>
                     {build.number}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -338,7 +338,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
                     <p className="text-xs text-gray-500 mb-2">{build.description}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {build.tags.map(tag => (
-                        <span key={tag} className="text-[10px] font-semibold text-gray-600 border border-[#2D2D2D] rounded px-1.5 py-0.5">{tag}</span>
+                        <span key={tag} className="text-[10px] font-semibold text-gray-600 border border-ikz-border rounded px-1.5 py-0.5">{tag}</span>
                       ))}
                     </div>
                   </div>
@@ -350,7 +350,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
       )}
 
       {/* CTA */}
-      <section className="px-6 py-20 text-center border-t border-[#2D2D2D]">
+      <section className="px-6 py-20 text-center border-t border-ikz-border">
         <div className="mx-auto max-w-xl">
           <h2 className="mb-3 text-2xl font-black text-white">{plan.tagline[lang]}</h2>
           <div className="mb-6 text-3xl font-black text-white">{plan.price[lang]}</div>
@@ -359,7 +359,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
               {t.contactCta} <ChevronRight size={16} />
             </Link>
           ) : (
-            <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-[#3587A4] px-10 py-4 text-base font-bold text-white hover:opacity-90 transition-opacity">
+            <Link href="/login" className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-10 py-4 text-base font-bold text-ikz-bg hover:opacity-90 transition-all">
               {t.buyNow} <ChevronRight size={16} />
             </Link>
           )}
@@ -367,7 +367,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#2D2D2D] px-6 py-8">
+      <footer className="border-t border-ikz-border px-6 py-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row">
           <span>© {new Date().getFullYear()} Ikazin®. {lang === 'en' ? 'All rights reserved.' : 'Todos os direitos reservados.'}</span>
           <div className="flex gap-6">

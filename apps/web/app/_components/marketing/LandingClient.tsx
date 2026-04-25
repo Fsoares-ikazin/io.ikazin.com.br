@@ -175,7 +175,7 @@ const tierData: Record<Lang, TierCopy[]> = {
 const tierStyle = [
   { color: 'text-gray-400', borderColor: 'border-gray-800', badgeColor: 'bg-gray-800 text-gray-400' },
   { color: 'text-blue-400', borderColor: 'border-blue-900/50', badgeColor: 'bg-blue-900/50 text-blue-400' },
-  { color: 'text-[#3587A4]', borderColor: 'border-[#3587A4]', badgeColor: 'bg-[rgba(53,135,164,0.15)] text-[#3587A4]', featured: true },
+  { color: 'text-ikz-lime', borderColor: 'border-ikz-lime', badgeColor: 'bg-ikz-lime/15 text-ikz-lime', featured: true },
   { color: 'text-purple-400', borderColor: 'border-purple-900/50', badgeColor: 'bg-purple-900/50 text-purple-400' },
 ]
 
@@ -199,7 +199,7 @@ function VideoSection({ title, sub, playLabel }: { title: string; sub: string; p
           <h2 className="mb-3 text-2xl font-black tracking-tight text-white">{title}</h2>
           <p className="mx-auto max-w-xl text-sm text-gray-400">{sub}</p>
         </div>
-        <div className="relative overflow-hidden rounded-2xl border border-[#2D2D2D] bg-[#0A0A0A] aspect-video">
+        <div className="relative overflow-hidden rounded-2xl border border-ikz-border bg-ikz-bg aspect-video">
           <video
             ref={videoRef}
             src="/video-hero.mp4"
@@ -214,15 +214,15 @@ function VideoSection({ title, sub, playLabel }: { title: string; sub: string; p
               <button
                 onClick={handlePlay}
                 aria-label={playLabel}
-                className="group flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-[#3587A4] hover:bg-[rgba(53,135,164,0.2)]"
+                className="group flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-ikz-cyan hover:bg-ikz-cyan/20"
               >
-                <Play size={28} className="translate-x-0.5 text-white group-hover:text-[#3587A4]" fill="currentColor" />
+                <Play size={28} className="translate-x-0.5 text-white group-hover:text-ikz-cyan" fill="currentColor" />
               </button>
               <span className="mt-4 text-xs font-semibold uppercase tracking-widest text-gray-400">{playLabel}</span>
             </div>
           )}
           {/* Corner badge */}
-          <div className="absolute bottom-4 right-4 rounded-lg border border-[rgba(53,135,164,0.3)] bg-[#0F1419]/80 px-3 py-1.5 text-xs font-bold text-[#3587A4] backdrop-blur-sm">
+          <div className="absolute bottom-4 right-4 rounded-lg border border-ikz-cyan/30 bg-ikz-bg/80 px-3 py-1.5 text-xs font-bold text-ikz-cyan backdrop-blur-sm">
             TIA Portal + Digital Twin
           </div>
         </div>
@@ -239,11 +239,11 @@ export function LandingClient() {
   const tiers = tierData[lang]
 
   return (
-    <div className="min-h-screen bg-[#0F1419] text-gray-100">
+    <div className="min-h-screen bg-ikz-bg text-gray-100">
       <MarketingNav lang={lang} onLangChange={setLang} copy={t.nav} />
 
       {/* Pain section */}
-      <section className="relative overflow-hidden px-6 py-20 border-b border-[#2D2D2D]">
+      <section className="relative overflow-hidden px-6 py-20 border-b border-ikz-border">
         <div
           className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2"
           style={{ width: 800, height: 400, background: 'radial-gradient(ellipse, rgba(239,68,68,0.04) 0%, transparent 70%)' }}
@@ -259,7 +259,7 @@ export function LandingClient() {
           {/* Stats */}
           <div className="grid gap-6 sm:grid-cols-3">
             {t.painStats.map((stat, i) => (
-              <div key={i} className="rounded-xl border border-[#2D2D2D] bg-[#1F1F1F] px-6 py-5">
+              <div key={i} className="rounded-xl border border-ikz-border bg-ikz-surface px-6 py-5 transition-all hover:-translate-y-0.5">
                 <div className="mb-1 text-3xl font-black text-red-400">{stat.number}</div>
                 <div className="text-xs text-gray-500 leading-snug">{stat.label}</div>
               </div>
@@ -272,22 +272,22 @@ export function LandingClient() {
       <section className="relative overflow-hidden px-6 py-28 text-center">
         <div
           className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/4"
-          style={{ width: 800, height: 600, background: 'radial-gradient(circle, rgba(53,135,164,0.12) 0%, transparent 70%)' }}
+          style={{ width: 800, height: 600, background: 'radial-gradient(circle, hsl(var(--ikz-lime) / 0.1) 0%, hsl(var(--ikz-cyan) / 0.08) 40%, transparent 70%)' }}
         />
         <div className="relative mx-auto max-w-4xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(53,135,164,0.25)] bg-[rgba(53,135,164,0.07)] px-4 py-1.5 text-xs font-semibold text-[#3587A4]">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-ikz-cyan/25 bg-ikz-cyan/10 px-4 py-1.5 text-xs font-semibold text-ikz-cyan">
             <Zap size={12} /> {t.badge}
           </div>
           <h1 className="mb-6 text-5xl font-black leading-tight tracking-tight text-white md:text-7xl">
             {t.headline}{' '}
-            <span className="text-[#3587A4]">{t.headlineAccent}</span>
+            <span className="bg-gradient-to-r from-ikz-lime to-ikz-cyan bg-clip-text text-transparent">{t.headlineAccent}</span>
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-400 leading-relaxed">{t.sub}</p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link href="/planos" className="rounded-xl bg-[#3587A4] px-8 py-4 text-sm font-bold text-white transition-opacity hover:opacity-90 flex items-center gap-2">
+            <Link href="/planos" className="rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg transition-all hover:opacity-90 flex items-center gap-2">
               {t.ctaPrimary} <ChevronRight size={16} />
             </Link>
-            <Link href="#builds" className="rounded-xl border border-[#2D2D2D] px-8 py-4 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:text-white">
+            <Link href="#builds" className="rounded-xl border border-ikz-border px-8 py-4 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:text-white">
               {t.ctaSecondary}
             </Link>
           </div>
@@ -298,25 +298,28 @@ export function LandingClient() {
       <VideoSection title={t.videoTitle} sub={t.videoSub} playLabel={t.videoPlay} />
 
       {/* Pillars */}
-      <section className="px-6 py-20 border-t border-[#2D2D2D]">
+      <section className="px-6 py-20 border-t border-ikz-border">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-12 text-center text-2xl font-black tracking-tight text-white">{t.pillarsTitle}</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {([Cpu, Box, Award] as const).map((Icon, i) => (
-              <div key={i} className="rounded-2xl border border-[#2D2D2D] bg-[#1F1F1F] p-8 transition-colors hover:border-[rgba(53,135,164,0.2)]">
-                <div className="mb-4 inline-flex rounded-xl bg-[rgba(53,135,164,0.1)] p-3">
-                  <Icon size={22} className="text-[#3587A4]" />
+            {([Cpu, Box, Award] as const).map((Icon, i) => {
+              const isLime = i % 2 === 0
+              return (
+              <div key={i} className={`rounded-2xl border border-ikz-border bg-ikz-surface p-8 transition-colors ${isLime ? 'hover:border-ikz-lime/30' : 'hover:border-ikz-cyan/30'}`}>
+                <div className={`mb-4 inline-flex rounded-xl p-3 ${isLime ? 'bg-ikz-lime/10' : 'bg-ikz-cyan/10'}`}>
+                  <Icon size={22} className={isLime ? 'text-ikz-lime' : 'text-ikz-cyan'} />
                 </div>
                 <h3 className="mb-2 font-bold text-white">{t.pillars[i].title}</h3>
                 <p className="text-sm leading-relaxed text-gray-400">{t.pillars[i].body}</p>
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* Tier Cards */}
-      <section id="builds" className="px-6 py-20 border-t border-[#2D2D2D]">
+      <section id="builds" className="px-6 py-20 border-t border-ikz-border">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-4 text-center text-2xl font-black tracking-tight text-white">{t.tiersTitle}</h2>
           <p className="mb-12 text-center text-gray-400">{t.tiersSub}</p>
@@ -326,10 +329,10 @@ export function LandingClient() {
               return (
                 <div
                   key={tier.label}
-                  className={`relative flex flex-col rounded-2xl border ${style.borderColor} bg-[#1F1F1F] p-6 transition-all hover:scale-[1.02] ${tier.featured ? 'ring-1 ring-[#3587A4]/40' : ''}`}
+                  className={`relative flex flex-col rounded-2xl border ${style.borderColor} bg-ikz-surface p-6 transition-all hover:scale-[1.02] ${tier.featured ? 'ring-1 ring-ikz-lime/40 shadow-glow-lime' : ''}`}
                 >
                   {tier.featured && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#3587A4] px-3 py-0.5 text-xs font-bold text-white whitespace-nowrap">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-ikz-lime px-3 py-0.5 text-xs font-bold text-ikz-bg whitespace-nowrap">
                       {lang === 'en' ? 'Most Popular' : 'Mais Popular'}
                     </div>
                   )}
@@ -340,7 +343,7 @@ export function LandingClient() {
                   <ul className="mb-6 space-y-2 flex-1">
                     {tier.features.map((f) => (
                       <li key={f} className="flex items-start gap-2 text-xs text-gray-300">
-                        <Check size={13} className="mt-0.5 shrink-0 text-[#3587A4]" />
+                        <Check size={13} className="mt-0.5 shrink-0 text-ikz-cyan" />
                         {f}
                       </li>
                     ))}
@@ -348,14 +351,14 @@ export function LandingClient() {
                   <div className="space-y-2">
                     <Link
                       href={`/planos/${tier.slug}`}
-                      className="block rounded-lg border border-[#2D2D2D] py-2 text-center text-xs font-semibold text-gray-400 hover:border-gray-600 hover:text-white transition-colors"
+                      className="block rounded-lg border border-ikz-border py-2 text-center text-xs font-semibold text-gray-400 hover:border-gray-600 hover:text-white transition-colors"
                     >
                       {t.tierDetails}
                     </Link>
                     <Link
                       href="/planos"
                       className={`block rounded-lg py-2.5 text-center text-sm font-semibold transition-opacity hover:opacity-90 ${
-                        tier.featured ? 'bg-[#3587A4] text-white' : 'border border-[#2D2D2D] text-gray-300 hover:border-gray-600'
+                        tier.featured ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg' : 'border border-ikz-border text-gray-300 hover:border-gray-600'
                       }`}
                     >
                       {t.tierCta}
@@ -369,7 +372,7 @@ export function LandingClient() {
       </section>
 
       {/* Tech strip */}
-      <section className="border-y border-[#2D2D2D] px-6 py-8">
+      <section className="border-y border-ikz-border px-6 py-8">
         <p className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-gray-600">{t.techTitle}</p>
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-10 gap-y-3">
           {['Siemens S7-1500', 'SINAMICS S120', 'TIA Portal V18', 'WinCC Unified', 'SIMOTION D', 'RealVirtual · Unity'].map((tech) => (
@@ -381,18 +384,18 @@ export function LandingClient() {
       {/* Final CTA — urgency */}
       <section className="px-6 py-28 text-center">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(53,135,164,0.2)] bg-[rgba(53,135,164,0.05)] px-4 py-1.5 text-xs font-semibold text-gray-400">
-            <TrendingUp size={12} className="text-[#3587A4]" /> {lang === 'en' ? 'Every week counts' : 'Cada semana conta'}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-ikz-cyan/20 bg-ikz-cyan/5 px-4 py-1.5 text-xs font-semibold text-gray-400">
+            <TrendingUp size={12} className="text-ikz-cyan" /> {lang === 'en' ? 'Every week counts' : 'Cada semana conta'}
           </div>
           <h2 className="mb-5 text-3xl font-black tracking-tight text-white md:text-5xl leading-tight">
             {t.finalTitle}
           </h2>
           <p className="mb-10 text-gray-400 max-w-xl mx-auto">{t.finalSub}</p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link href="/planos" className="inline-flex items-center gap-2 rounded-xl bg-[#3587A4] px-10 py-4 text-base font-bold text-white transition-opacity hover:opacity-90">
+            <Link href="/planos" className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-10 py-4 text-base font-bold text-ikz-bg transition-all hover:opacity-90">
               {t.finalCta} <ChevronRight size={16} />
             </Link>
-            <Link href="/blog" className="inline-flex items-center gap-2 rounded-xl border border-[#2D2D2D] px-8 py-4 text-sm font-semibold text-gray-400 hover:border-gray-600 hover:text-white transition-colors">
+            <Link href="/blog" className="inline-flex items-center gap-2 rounded-xl border border-ikz-border px-8 py-4 text-sm font-semibold text-gray-400 hover:border-gray-600 hover:text-white transition-colors">
               {lang === 'en' ? 'Read the blog' : 'Ler o blog'}
             </Link>
           </div>
@@ -400,7 +403,7 @@ export function LandingClient() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#2D2D2D] px-6 py-8">
+      <footer className="border-t border-ikz-border px-6 py-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row">
           <span>© {new Date().getFullYear()} Ikazin®. {t.footerCopy}</span>
           <div className="flex gap-6">

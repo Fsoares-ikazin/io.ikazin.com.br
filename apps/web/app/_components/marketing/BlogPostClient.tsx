@@ -43,8 +43,8 @@ const copy = {
 }
 
 const tagColors: Record<string, string> = {
-  vc: 'bg-[rgba(53,135,164,0.12)] text-[#3587A4]',
-  plc: 'bg-[rgba(132,204,22,0.12)] text-lime-400',
+  vc: 'bg-ikz-cyan/10 text-ikz-cyan',
+  plc: 'bg-ikz-lime/10 text-ikz-lime',
   drives: 'bg-[rgba(168,85,247,0.12)] text-purple-400',
   dt: 'bg-[rgba(251,146,60,0.12)] text-orange-400',
 }
@@ -79,8 +79,8 @@ function renderBlock(block: ContentBlock, idx: number) {
       )
     case 'code':
       return (
-        <div key={idx} className="my-6 rounded-xl overflow-hidden border border-[#2D2D2D]">
-          <div className="flex items-center justify-between px-4 py-2 bg-[#161B22] border-b border-[#2D2D2D]">
+        <div key={idx} className="my-6 rounded-xl overflow-hidden border border-ikz-border">
+          <div className="flex items-center justify-between px-4 py-2 bg-[#161B22] border-b border-ikz-border">
             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">{block.lang}</span>
           </div>
           <pre className="p-5 overflow-x-auto bg-[#0D1117] text-sm font-mono text-gray-200 leading-relaxed">
@@ -93,7 +93,7 @@ function renderBlock(block: ContentBlock, idx: number) {
         <ul key={idx} className="mb-5 space-y-2 pl-1">
           {block.items.map((item, i) => (
             <li key={i} className="flex items-start gap-3 text-gray-300 text-base leading-relaxed">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3587A4]" />
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ikz-cyan" />
               {item}
             </li>
           ))}
@@ -104,7 +104,7 @@ function renderBlock(block: ContentBlock, idx: number) {
         <ol key={idx} className="mb-5 space-y-2 pl-1 list-none">
           {block.items.map((item, i) => (
             <li key={i} className="flex items-start gap-3 text-gray-300 text-base leading-relaxed">
-              <span className="shrink-0 min-w-[1.5rem] text-center font-bold text-[#3587A4] text-sm mt-0.5">
+              <span className="shrink-0 min-w-[1.5rem] text-center font-bold text-ikz-cyan text-sm mt-0.5">
                 {i + 1}.
               </span>
               {item}
@@ -114,7 +114,7 @@ function renderBlock(block: ContentBlock, idx: number) {
       )
     case 'callout': {
       const variants = {
-        tip: { border: 'border-[#3587A4]', bg: 'bg-[rgba(53,135,164,0.07)]', label: '💡 Tip', labelColor: 'text-[#3587A4]' },
+        tip: { border: 'border-ikz-cyan', bg: 'bg-ikz-cyan/10', label: '💡 Tip', labelColor: 'text-ikz-cyan' },
         warning: { border: 'border-yellow-500/40', bg: 'bg-yellow-500/5', label: '⚠️ Warning', labelColor: 'text-yellow-400' },
         info: { border: 'border-blue-500/40', bg: 'bg-blue-500/5', label: 'ℹ️ Note', labelColor: 'text-blue-400' },
       }
@@ -127,7 +127,7 @@ function renderBlock(block: ContentBlock, idx: number) {
       )
     }
     case 'separator':
-      return <hr key={idx} className="my-10 border-[#2D2D2D]" />
+      return <hr key={idx} className="my-10 border-ikz-border" />
     default:
       return null
   }
@@ -152,7 +152,7 @@ export function BlogPostClient({ slug }: Props) {
     : []
 
   return (
-    <div className="min-h-screen bg-[#0F1419] text-gray-100">
+    <div className="min-h-screen bg-ikz-bg text-gray-100">
       <MarketingNav lang={lang} onLangChange={setLang} copy={t.nav} />
 
       {!post ? (
@@ -162,11 +162,11 @@ export function BlogPostClient({ slug }: Props) {
       ) : (
         <>
           {/* Article header */}
-          <header className="border-b border-[#2D2D2D] px-6 py-12">
+          <header className="border-b border-ikz-border px-6 py-12">
             <div className="mx-auto max-w-3xl">
               <Link
                 href="/blog"
-                className="mb-8 inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-[#3587A4] transition-colors"
+                className="mb-8 inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-ikz-cyan transition-colors"
               >
                 <ArrowLeft size={13} /> {t.back}
               </Link>
@@ -199,14 +199,14 @@ export function BlogPostClient({ slug }: Props) {
 
           {/* Mid-article CTA */}
           <section className="mx-auto max-w-3xl px-6 mb-12">
-            <div className="rounded-2xl border border-[rgba(53,135,164,0.25)] bg-[rgba(53,135,164,0.05)] p-8 flex flex-col md:flex-row md:items-center gap-6">
+            <div className="rounded-2xl border border-ikz-lime/30 bg-ikz-lime/5 p-8 flex flex-col md:flex-row md:items-center gap-6">
               <div className="flex-1">
                 <h3 className="text-xl font-black text-white mb-2">{t.cta.title}</h3>
                 <p className="text-sm text-gray-400 leading-relaxed">{t.cta.sub}</p>
               </div>
               <Link
                 href="/planos"
-                className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-[#3587A4] px-6 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity"
+                className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime px-6 py-3 text-sm font-bold text-ikz-bg hover:opacity-90 hover:shadow-glow-lime-lg transition-all"
               >
                 {t.cta.btn} <ChevronRight size={14} />
               </Link>
@@ -215,7 +215,7 @@ export function BlogPostClient({ slug }: Props) {
 
           {/* Related posts */}
           {relatedPosts.length > 0 && (
-            <section className="border-t border-[#2D2D2D] px-6 py-12">
+            <section className="border-t border-ikz-border px-6 py-12">
               <div className="mx-auto max-w-3xl">
                 <h2 className="mb-6 text-sm font-bold uppercase tracking-widest text-gray-500">{t.related}</h2>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -223,15 +223,15 @@ export function BlogPostClient({ slug }: Props) {
                     <Link
                       key={p.slug.en}
                       href={`/blog/${p.slug[lang]}`}
-                      className="group flex flex-col rounded-xl border border-[#2D2D2D] bg-[#1F1F1F] p-5 hover:border-[rgba(53,135,164,0.25)] transition-colors"
+                      className="group flex flex-col rounded-xl border border-ikz-border bg-ikz-surface p-5 hover:border-ikz-cyan/40 transition-all hover:-translate-y-0.5"
                     >
                       <span className={`mb-3 self-start text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${tagColors[p.tag]}`}>
                         {t.tags[p.tag as keyof typeof t.tags]}
                       </span>
-                      <h3 className="text-sm font-bold text-white leading-snug mb-3 group-hover:text-[#3587A4] transition-colors flex-1">
+                      <h3 className="text-sm font-bold text-white leading-snug mb-3 group-hover:text-ikz-cyan transition-colors flex-1">
                         {p.title[lang]}
                       </h3>
-                      <span className="text-[10px] font-bold text-[#3587A4] flex items-center gap-1 group-hover:gap-2 transition-all">
+                      <span className="text-[10px] font-bold text-ikz-cyan flex items-center gap-1 group-hover:gap-2 transition-all">
                         {t.readMore} <ChevronRight size={10} />
                       </span>
                     </Link>
@@ -244,7 +244,7 @@ export function BlogPostClient({ slug }: Props) {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-[#2D2D2D] px-6 py-8 mt-4">
+      <footer className="border-t border-ikz-border px-6 py-8 mt-4">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row">
           <span>© {new Date().getFullYear()} Ikazin®. {t.footerCopy}</span>
           <div className="flex gap-6">
