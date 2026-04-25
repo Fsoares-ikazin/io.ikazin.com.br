@@ -1,5 +1,9 @@
 import { PlanoDetailClient } from '../../_components/marketing/PlanoDetailClient'
 
+interface Props {
+  params: Promise<{ slug: string }>
+}
+
 export function generateStaticParams() {
   return [
     { slug: 'basic' },
@@ -10,6 +14,7 @@ export function generateStaticParams() {
   ]
 }
 
-export default function PlanoDetailPage({ params }: { params: { slug: string } }) {
-  return <PlanoDetailClient slug={params.slug} />
+export default async function PlanoDetailPage({ params }: Props) {
+  const { slug } = await params
+  return <PlanoDetailClient slug={slug} />
 }

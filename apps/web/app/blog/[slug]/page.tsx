@@ -4,7 +4,7 @@ import { posts } from '../../_data/blog-posts'
 import { BlogPostClient } from '../../_components/marketing/BlogPostClient'
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
@@ -17,10 +17,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = posts.find(p => p.slug.en === params.slug || p.slug.pt === params.slug)
+  const { slug } = await params
+  const post = posts.find(p => p.slug.en === slug || p.slug.pt === slug)
   if (!post) return { title: 'Blog | IKAZIN.IO' }
 
-  const lang = post.slug.en === params.slug ? 'en' : 'pt'
+  const lang = post.slug.en === slug ? 'en' : 'pt'
   return {
     title: `${post.title[lang]} | IKAZIN.IO`,
     description: post.excerpt[lang],
@@ -29,9 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export const dynamicParams = true
 
-export default function BlogPostPage({ params }: Props) {
-  const exists = posts.some(p => p.slug.en === params.slug || p.slug.pt === params.slug)
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
+  const exists = posts.some(p => p.slug.en === slug || p.slug.pt === slug)
   if (!exists) notFound()
 
-  return <BlogPostClient slug={params.slug} />
+  return <BlogPostClient slug={slug} />
 }
