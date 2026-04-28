@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { useRef, useState } from 'react'
 import { Cpu, Box, Award, ChevronRight, Zap, Play, AlertTriangle, TrendingUp } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
@@ -51,6 +50,8 @@ const copy = {
     techTitle: 'The same tools industry demands',
     finalTitle: 'How long can you afford to be the engineer who never simulated anything?',
     finalSub: 'Every week without real practice is another week behind the engineer who already has 25 projects in the portfolio.',
+    previewTitle: '25 builds. Real. Numbered.',
+    previewCta: 'See plans',
     finalCta: 'Start Today',
     footerCopy: 'All rights reserved.',
     footerPrivacy: 'Privacy',
@@ -98,6 +99,8 @@ const copy = {
     techTitle: 'As mesmas ferramentas que a indústria exige',
     finalTitle: 'Por quanto tempo você pode ser o engenheiro que nunca simulou nada?',
     finalSub: 'Cada semana sem prática real é mais uma semana atrás do engenheiro que já tem 25 projetos no portfólio.',
+    previewTitle: '25 builds. Reais. Numerados.',
+    previewCta: 'Ver planos',
     finalCta: 'Começar Hoje',
     footerCopy: 'Todos os direitos reservados.',
     footerPrivacy: 'Privacidade',
@@ -190,19 +193,118 @@ const tierStyle = [
   { color: 'text-purple-400', borderColor: 'border-purple-900/50', badgeColor: 'bg-purple-900/50 text-purple-400' },
 ]
 
+// ─── Build Preview Data ───────────────────────────────────────────────────────
+
+type BuildTierRow = {
+  label: string
+  labelColor: string
+  builds: { code: string; title: string }[]
+}
+
+const buildPreviewRows: BuildTierRow[] = [
+  {
+    label: 'BASIC',
+    labelColor: 'text-gray-400',
+    builds: [
+      { code: 'B1', title: 'Boolean Logic Fundamentals' },
+      { code: 'B2', title: 'Timer & Counter Basics' },
+      { code: 'B3', title: 'Motion Axis Fundamentals' },
+      { code: 'B4', title: 'Sensor Integration (Digital/Analog)' },
+      { code: 'B5', title: 'HMI Basic Screens' },
+      { code: 'B6', title: 'Safety PLCopen Basics' },
+      { code: 'B7', title: 'Drive Commissioning V/F' },
+      { code: 'B8', title: 'Fieldbus Intro (PROFINET)' },
+    ],
+  },
+  {
+    label: 'ESSENTIALS',
+    labelColor: 'text-blue-400',
+    builds: [
+      { code: 'B9', title: 'PID Control Loop' },
+      { code: 'B10', title: 'Cam Profile Basics' },
+      { code: 'B11', title: 'Synchronized Axes' },
+      { code: 'B12', title: 'Flying Shear' },
+      { code: 'B13', title: 'Conveyor + Reject System' },
+    ],
+  },
+  {
+    label: 'ADVANCED',
+    labelColor: 'text-ikz-lime',
+    builds: [
+      { code: 'B14', title: 'SINAMICS S120 Commissioning' },
+      { code: 'B15', title: 'Multi-Axis Coordinated Motion' },
+      { code: 'B16', title: 'CNC G-Code Interpreter' },
+      { code: 'B17', title: 'Rotary Knife' },
+      { code: 'B18', title: 'Winding/Unwinding Tension Control' },
+    ],
+  },
+  {
+    label: 'PREMIUM',
+    labelColor: 'text-purple-400',
+    builds: [
+      { code: 'B19', title: 'Complete Packaging Machine' },
+      { code: 'B20', title: 'Robot Cell Integration (KUKA/ABB)' },
+      { code: 'B21', title: 'Vision System + Reject' },
+      { code: 'B22', title: 'SIMOTION D Advanced' },
+      { code: 'B23', title: 'OPC-UA Data Layer' },
+      { code: 'B24', title: 'Digital Twin Commissioning' },
+      { code: 'B25', title: 'Integrated OEM Machine' },
+    ],
+  },
+]
+
+// ─── BuildPreviewStrip ────────────────────────────────────────────────────────
+
+function BuildPreviewStrip({ previewTitle, previewCta }: { previewTitle: string; previewCta: string }) {
+  return (
+    <section className="px-6 py-20 border-t border-ikz-border">
+      <div className="mx-auto max-w-7xl">
+        <h2 className="mb-10 text-center text-2xl font-black tracking-tight text-white">{previewTitle}</h2>
+        <div className="flex flex-col gap-6">
+          {buildPreviewRows.map((row) => (
+            <div key={row.label} className="flex items-start gap-4">
+              {/* Tier label */}
+              <div className={`w-24 shrink-0 pt-2.5 text-[10px] font-black tracking-widest ${row.labelColor}`}>
+                {row.label}
+              </div>
+              {/* Scrollable strip */}
+              <div className="relative min-w-0 flex-1">
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+                  {row.builds.map((b) => (
+                    <div
+                      key={b.code}
+                      className="flex shrink-0 items-center gap-2 rounded-lg border border-ikz-border bg-ikz-surface px-3 py-2"
+                    >
+                      <span className={`text-[10px] font-black tabular-nums ${row.labelColor}`}>{b.code}</span>
+                      <span className="whitespace-nowrap text-xs text-gray-300">{b.title}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Fade-right gradient */}
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-ikz-bg to-transparent" />
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* CTA */}
+        <div className="mt-10 text-center">
+          <Link
+            href="/planos"
+            className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg transition-all hover:opacity-90"
+          >
+            {previewCta} <ChevronRight size={16} />
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─── VideoSection ─────────────────────────────────────────────────────────────
 
+const YOUTUBE_PLACEHOLDER = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+
 function VideoSection({ title, sub, playLabel }: { title: string; sub: string; playLabel: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [playing, setPlaying] = useState(false)
-
-  const handlePlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play()
-      setPlaying(true)
-    }
-  }
-
   return (
     <section className="px-6 py-20">
       <div className="mx-auto max-w-5xl">
@@ -210,28 +312,22 @@ function VideoSection({ title, sub, playLabel }: { title: string; sub: string; p
           <h2 className="mb-3 text-2xl font-black tracking-tight text-white">{title}</h2>
           <p className="mx-auto max-w-xl text-sm text-gray-400">{sub}</p>
         </div>
-        <div className="relative overflow-hidden rounded-2xl border border-ikz-border bg-ikz-bg aspect-video">
-          <video
-            ref={videoRef}
-            src="/video-hero.mp4"
-            className="w-full h-full object-cover"
-            loop
-            playsInline
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-          />
-          {!playing && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
-              <button
-                onClick={handlePlay}
-                aria-label={playLabel}
-                className="group flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all hover:scale-110 hover:border-ikz-cyan hover:bg-ikz-cyan/20"
-              >
-                <Play size={28} className="translate-x-0.5 text-white group-hover:text-ikz-cyan" fill="currentColor" />
-              </button>
-              <span className="mt-4 text-xs font-semibold uppercase tracking-widest text-gray-400">{playLabel}</span>
-            </div>
-          )}
+        <div className="relative overflow-hidden rounded-2xl border border-ikz-border bg-ikz-surface aspect-video flex flex-col items-center justify-center gap-6">
+          {/* Gradient badge */}
+          <div className="rounded-full border border-ikz-cyan/30 bg-gradient-to-r from-ikz-cyan/10 to-ikz-lime/10 px-5 py-2 text-xs font-black uppercase tracking-widest">
+            <span className="bg-gradient-to-r from-ikz-cyan to-ikz-lime bg-clip-text text-transparent">
+              Digital Twin · TIA Portal V18
+            </span>
+          </div>
+          {/* Play button → YouTube */}
+          <button
+            onClick={() => window.open(YOUTUBE_PLACEHOLDER, '_blank')}
+            aria-label={playLabel}
+            className="group flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 backdrop-blur-sm transition-all hover:scale-110 hover:border-ikz-cyan hover:bg-ikz-cyan/15"
+          >
+            <Play size={28} className="translate-x-0.5 text-white group-hover:text-ikz-cyan" fill="currentColor" />
+          </button>
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">{playLabel}</span>
           {/* Corner badge */}
           <div className="absolute bottom-4 right-4 rounded-lg border border-ikz-cyan/30 bg-ikz-bg/80 px-3 py-1.5 text-xs font-bold text-ikz-cyan backdrop-blur-sm">
             TIA Portal + Digital Twin
@@ -368,6 +464,9 @@ export function LandingClient() {
           </div>
         </div>
       </section>
+
+      {/* Build Preview Strip */}
+      <BuildPreviewStrip previewTitle={t.previewTitle} previewCta={t.previewCta} />
 
       {/* Tech strip */}
       <section className="border-y border-ikz-border px-6 py-8">

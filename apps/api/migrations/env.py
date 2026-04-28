@@ -17,6 +17,10 @@ lh_config = get_learnhouse_config()
 # access to the values within the .ini file in use.
 config = context.config
 
+# Override sqlalchemy.url from LearnHouse config (env var takes precedence over alembic.ini)
+if lh_config.database_config.sql_connection_string:
+    config.set_main_option("sqlalchemy.url", lh_config.database_config.sql_connection_string)
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
