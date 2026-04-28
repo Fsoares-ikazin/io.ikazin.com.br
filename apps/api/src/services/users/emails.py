@@ -68,22 +68,22 @@ def send_account_creation_email(
     safe_username = html.escape(user.username)
 
     body_content = f"""
-        <h1 style="{STYLES['h1']}">Welcome, {safe_username}!</h1>
+        <h1 style="{STYLES['h1']}">Bem-vindo, {safe_username}!</h1>
         <p style="{STYLES['p']}">
-            Your Ikazin.io account is ready. Get started by creating your own organization or joining one.
+            Sua conta Ikazin.io está pronta. Comece criando sua própria organização ou entrando em uma existente.
         </p>
         <a href="https://io.ikazin.com.br" style="{STYLES['button']}">
-            Get Started
+            Começar
         </a>
     """
 
     return send_email(
         to=email,
-        subject=f"Welcome to Ikazin.io, {safe_username}!",
+        subject=f"Bem-vindo à Ikazin.io, {safe_username}!",
         body=_email_layout(
-            title="Welcome",
+            title="Bem-vindo",
             body_content=body_content,
-            footer_note="Need help? Visit <a href=\"https://io.ikazin.com.br\" style=\"color: rgba(0,0,0,0.35); text-decoration: underline;\">Ikazin.io</a> to learn the basics.",
+            footer_note="Precisa de ajuda? Acesse <a href=\"https://io.ikazin.com.br\" style=\"color: rgba(0,0,0,0.35); text-decoration: underline;\">Ikazin.io</a> para conhecer o básico.",
         ),
     )
 
@@ -102,25 +102,25 @@ def send_password_reset_email(
     reset_url = f"{base_url}/reset?email={safe_email}&amp;resetCode={safe_code_param}"
 
     body_content = f"""
-        <h1 style="{STYLES['h1']}">Reset your password</h1>
+        <h1 style="{STYLES['h1']}">Redefinir sua senha</h1>
         <p style="{STYLES['p']}">
-            Hi {safe_username}, we received a request to reset your password. Use the code below or click the button.
+            Olá {safe_username}, recebemos uma solicitação para redefinir sua senha. Use o código abaixo ou clique no botão.
         </p>
         <div style="margin: 28px 0;">
             <span style="{STYLES['code']}">{safe_code}</span>
         </div>
         <a href="{reset_url}" style="{STYLES['button']}">
-            Reset Password
+            Redefinir Senha
         </a>
     """
 
     return send_email(
         to=email,
-        subject="Reset your password",
+        subject="Redefinir sua senha",
         body=_email_layout(
-            title="Reset Password",
+            title="Redefinir Senha",
             body_content=body_content,
-            footer_note="If you didn't request a password reset, you can safely ignore this email. This link will expire shortly.",
+            footer_note="Se você não solicitou a redefinição de senha, ignore este e-mail. Este link expira em breve.",
         ),
     )
 
@@ -138,25 +138,25 @@ def send_password_reset_email_platform(
     reset_url = f"{base_url}/reset-password?email={safe_email}&amp;resetCode={safe_code_param}"
 
     body_content = f"""
-        <h1 style="{STYLES['h1']}">Reset your password</h1>
+        <h1 style="{STYLES['h1']}">Redefinir sua senha</h1>
         <p style="{STYLES['p']}">
-            Hi {safe_username}, we received a request to reset your password. Use the code below or click the button.
+            Olá {safe_username}, recebemos uma solicitação para redefinir sua senha. Use o código abaixo ou clique no botão.
         </p>
         <div style="margin: 28px 0;">
             <span style="{STYLES['code']}">{safe_code}</span>
         </div>
         <a href="{reset_url}" style="{STYLES['button']}">
-            Reset Password
+            Redefinir Senha
         </a>
     """
 
     return send_email(
         to=email,
-        subject="Reset your password",
+        subject="Redefinir sua senha",
         body=_email_layout(
-            title="Reset Password",
+            title="Redefinir Senha",
             body_content=body_content,
-            footer_note="If you didn't request a password reset, you can safely ignore this email. This link will expire in 1 hour.",
+            footer_note="Se você não solicitou a redefinição de senha, ignore este e-mail. Este link expira em 1 hora.",
         ),
     )
 
@@ -179,32 +179,32 @@ def send_invitation_email(
             <span style="{STYLES['code']}">{safe_code}</span>
         </div>
         <p style="{STYLES['p']}">
-            Use the invite code above, or click the button below to sign up.
+            Use o código de convite acima ou clique no botão abaixo para se cadastrar.
         </p>"""
     else:
         code_section = f"""
         <p style="{STYLES['p']}">
-            Click the button below to get started.
+            Clique no botão abaixo para começar.
         </p>"""
 
     body_content = f"""
-        <h1 style="{STYLES['h1']}">You've been invited!</h1>
+        <h1 style="{STYLES['h1']}">Você recebeu um convite!</h1>
         <p style="{STYLES['p']}">
-            <strong>@{safe_inviter}</strong> has invited you to join <strong>{safe_org_name}</strong> on Ikazin.io.
+            <strong>@{safe_inviter}</strong> convidou você para entrar em <strong>{safe_org_name}</strong> na Ikazin.io.
         </p>
         {code_section}
         <a href="{signup_url}" style="{STYLES['button']}">
-            Join {safe_org_name}
+            Entrar em {safe_org_name}
         </a>
     """
 
     return send_email(
         to=email,
-        subject=f"You've been invited to join {safe_org_name}",
+        subject=f"Você recebeu um convite para entrar em {safe_org_name}",
         body=_email_layout(
-            title="Invitation",
+            title="Convite",
             body_content=body_content,
-            footer_note=f"This invitation was sent by @{safe_inviter}. If you weren't expecting this, you can safely ignore it.",
+            footer_note=f"Este convite foi enviado por @{safe_inviter}. Se você não esperava por isso, pode ignorá-lo.",
         ),
     )
 
@@ -223,22 +223,22 @@ def send_role_changed_email(
     safe_role_name = html.escape(new_role_name)
 
     body_content = f"""
-        <h1 style="{STYLES['h1']}">Your role has been updated</h1>
+        <h1 style="{STYLES['h1']}">Sua função foi atualizada</h1>
         <p style="{STYLES['p']}">
-            Hi {safe_username}, your role in <strong>{safe_org_name}</strong> has been changed to <strong>{safe_role_name}</strong>.
+            Olá {safe_username}, sua função em <strong>{safe_org_name}</strong> foi alterada para <strong>{safe_role_name}</strong>.
         </p>
         <p style="{STYLES['p']}">
-            This may affect what you can access and manage within the organization. If you have any questions, please reach out to your organization administrator.
+            Isso pode afetar o que você pode acessar e gerenciar dentro da organização. Em caso de dúvidas, fale com o administrador da organização.
         </p>
     """
 
     return send_email(
         to=email,
-        subject=f"Your role in {safe_org_name} has been updated",
+        subject=f"Sua função em {safe_org_name} foi atualizada",
         body=_email_layout(
-            title="Role Updated",
+            title="Função atualizada",
             body_content=body_content,
-            footer_note=f"You received this email because your role was changed in {safe_org_name} on Ikazin.io.",
+            footer_note=f"Você recebeu este e-mail porque sua função foi alterada em {safe_org_name} na Ikazin.io.",
         ),
     )
 
@@ -271,24 +271,24 @@ def send_email_verification_email(
     verification_url = f"{base_url}/verify-email?token={safe_token}&amp;user={safe_user_uuid}&amp;org={safe_org_uuid}"
 
     body_content = f"""
-        <h1 style="{STYLES['h1']}">Verify your email</h1>
+        <h1 style="{STYLES['h1']}">Verificar E-mail</h1>
         <p style="{STYLES['p']}">
-            Hi {safe_username}, welcome to Ikazin.io! Click the button below to verify your email address and activate your account.
+            Olá {safe_username}, bem-vindo à Ikazin.io! Clique no botão abaixo para verificar seu e-mail e ativar sua conta.
         </p>
         <a href="{verification_url}" style="{STYLES['button']}">
-            Verify Email Address
+            Verificar E-mail
         </a>
         <p style="{STYLES['link_text']}">
-            Or copy and paste this link:<br />{verification_url}
+            Ou copie e cole este link:<br />{verification_url}
         </p>
     """
 
     return send_email(
         to=email,
-        subject="Verify your email address",
+        subject="Verifique seu e-mail",
         body=_email_layout(
-            title="Verify Email",
+            title="Verificar E-mail",
             body_content=body_content,
-            footer_note="This link expires in 1 hour. If you didn't create an Ikazin.io account, you can safely ignore this email.",
+            footer_note="Este link expira em 1 hora. Se você não criou uma conta Ikazin.io, pode ignorar este e-mail.",
         ),
     )
