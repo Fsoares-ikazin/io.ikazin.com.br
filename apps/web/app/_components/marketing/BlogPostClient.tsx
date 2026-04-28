@@ -6,6 +6,7 @@ import { useMarketingLang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 import type { BlogPost, ContentBlock, Lang } from '../../_data/blog-posts'
 import { posts } from '../../_data/blog-posts'
+import { trackPublicMarketingEvent } from './PublicMarketingTracker'
 
 // ─── Copy ──────────────────────────────────────────────────────────────────────
 
@@ -192,6 +193,16 @@ export function BlogPostClient({ slug }: Props) {
             </div>
           </header>
 
+          <section className="mx-auto max-w-3xl px-6 pt-8">
+            <div className="overflow-hidden rounded-2xl border border-ikz-border bg-ikz-surface">
+              <img
+                src={`/api/og/blog/${post.slug[lang]}`}
+                alt=""
+                className="aspect-[1.91/1] w-full object-cover"
+              />
+            </div>
+          </section>
+
           {/* Article body */}
           <main className="mx-auto max-w-3xl px-6 py-12">
             {post.content[lang].map((block, i) => renderBlock(block, i))}
@@ -205,10 +216,11 @@ export function BlogPostClient({ slug }: Props) {
                 <p className="text-sm text-gray-400 leading-relaxed">{t.cta.sub}</p>
               </div>
               <Link
-                href="/planos"
+                href={post.cta.href}
+                onClick={() => trackPublicMarketingEvent('blog_cta_click', { slug: post.slug[lang], href: post.cta.href })}
                 className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime px-6 py-3 text-sm font-bold text-ikz-bg hover:opacity-90 hover:shadow-glow-lime-lg transition-all"
               >
-                {t.cta.btn} <ChevronRight size={14} />
+                {post.cta.label[lang] || t.cta.btn} <ChevronRight size={14} />
               </Link>
             </div>
           </section>
@@ -223,6 +235,7 @@ export function BlogPostClient({ slug }: Props) {
                     <Link
                       key={p.slug.en}
                       href={`/blog/${p.slug[lang]}`}
+                      onClick={() => trackPublicMarketingEvent('blog_related_click', { from: post.slug[lang], to: p.slug[lang] })}
                       className="group flex flex-col rounded-xl border border-ikz-border bg-ikz-surface p-5 hover:border-ikz-cyan/40 transition-all hover:-translate-y-0.5"
                     >
                       <span className={`mb-3 self-start text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${tagColors[p.tag]}`}>

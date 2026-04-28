@@ -4,6 +4,7 @@ import Script from 'next/script'
 import Providers from '@components/Providers'
 import { Wix_Madefor_Text } from 'next/font/google'
 import WhatsAppButton from '@/app/_components/marketing/WhatsAppButton'
+import { PublicMarketingTracker } from '@/app/_components/marketing/PublicMarketingTracker'
 
 const isDevEnv = getLEARNHOUSE_TOP_DOMAIN_VAL() === 'localhost'
 const isTelemetryDisabled = getLEARNHOUSE_TELEMETRY_DISABLED_VAL() === 'true'
@@ -40,6 +41,7 @@ export default function RootLayout({
                             />
         }
         <Providers>
+          <PublicMarketingTracker />
           <main className="animate-fade-in">
             {children}
           </main>

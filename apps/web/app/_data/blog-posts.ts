@@ -17,7 +17,13 @@ export interface BlogPost {
   tag: string
   readMin: number
   date: string
+  updatedAt?: string
   featured?: boolean
+  seoKeywords: { en: string[]; pt: string[] }
+  cta: {
+    href: string
+    label: { en: string; pt: string }
+  }
   content: { en: ContentBlock[]; pt: ContentBlock[] }
 }
 
@@ -40,6 +46,14 @@ export const posts: BlogPost[] = [
     readMin: 8,
     date: '2025-04-10',
     featured: true,
+    seoKeywords: {
+      en: ['virtual commissioning', 'digital twin', 'PLC simulation', 'industrial automation'],
+      pt: ['comissionamento virtual', 'gemeo digital', 'simulacao de CLP', 'automacao industrial'],
+    },
+    cta: {
+      href: '/planos/essentials',
+      label: { en: 'See simulation builds', pt: 'Ver builds de simulacao' },
+    },
     content: {
       en: [
         {
@@ -263,6 +277,14 @@ Intervalo de Poll:  10ms`,
     tag: 'plc',
     readMin: 12,
     date: '2025-03-28',
+    seoKeywords: {
+      en: ['TIA Portal digital twin', 'PLCSIM Advanced Unity', 'RealVirtual S7', 'PLC digital twin'],
+      pt: ['TIA Portal gemeo digital', 'PLCSIM Advanced Unity', 'RealVirtual S7', 'CLP gemeo digital'],
+    },
+    cta: {
+      href: '/planos/basic',
+      label: { en: 'Start with BASIC builds', pt: 'Comecar com builds BASIC' },
+    },
     content: {
       en: [
         {
@@ -503,6 +525,14 @@ Tempo de Curso:  0.5 s`,
     tag: 'drives',
     readMin: 10,
     date: '2025-03-14',
+    seoKeywords: {
+      en: ['SINAMICS S120', 'SINA_SPEED', 'SINA_POS', 'Siemens drive commissioning'],
+      pt: ['SINAMICS S120', 'SINA_SPEED', 'SINA_POS', 'comissionamento drive Siemens'],
+    },
+    cta: {
+      href: '/planos/advanced',
+      label: { en: 'Open ADVANCED builds', pt: 'Ver builds ADVANCED' },
+    },
     content: {
       en: [
         {
@@ -752,6 +782,14 @@ SINA_POS(
     tag: 'dt',
     readMin: 6,
     date: '2025-02-27',
+    seoKeywords: {
+      en: ['digital twin ROI', 'virtual commissioning ROI', 'automation project cost', 'commissioning savings'],
+      pt: ['ROI gemeo digital', 'ROI comissionamento virtual', 'custo projeto automacao', 'economia comissionamento'],
+    },
+    cta: {
+      href: '/planos/essentials',
+      label: { en: 'Compare IKAZIN tiers', pt: 'Comparar planos IKAZIN' },
+    },
     content: {
       en: [
         {
@@ -909,6 +947,14 @@ SINA_POS(
     tag: 'plc',
     readMin: 9,
     date: '2025-02-10',
+    seoKeywords: {
+      en: ['PLC state machine', 'finite state machine ladder', 'SCL sequence programming', 'industrial sequence logic'],
+      pt: ['maquina de estados CLP', 'MEF ladder', 'programacao sequencial SCL', 'logica sequencial industrial'],
+    },
+    cta: {
+      href: '/planos/basic',
+      label: { en: 'Practice FSM in BASIC', pt: 'Praticar MEF no BASIC' },
+    },
     content: {
       en: [
         {
@@ -1121,6 +1167,14 @@ END_IF;`,
     tag: 'drives',
     readMin: 11,
     date: '2025-01-22',
+    seoKeywords: {
+      en: ['rotary knife', 'electronic gearing', 'flying shear', 'SINAMICS S120 cam profile'],
+      pt: ['faca rotativa', 'acoplamento eletronico', 'flying shear', 'perfil de came SINAMICS S120'],
+    },
+    cta: {
+      href: '/planos/advanced',
+      label: { en: 'Study Rotary Knife in ADVANCED', pt: 'Estudar Faca Rotativa no ADVANCED' },
+    },
     content: {
       en: [
         {

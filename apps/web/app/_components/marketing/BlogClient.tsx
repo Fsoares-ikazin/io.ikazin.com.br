@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { Clock, ArrowRight, BookOpen, Rss } from 'lucide-react'
+import { FormEvent, useState } from 'react'
+import { Clock, ArrowRight, Rss } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 import { posts as allPosts } from '../../_data/blog-posts'
+import { trackPublicMarketingEvent } from './PublicMarketingTracker'
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -18,6 +20,8 @@ const copy = {
     allPosts: 'All articles',
     tags: { all: 'All', vc: 'Virtual Commissioning', dt: 'Digital Twin', plc: 'PLC / TIA Portal', drives: 'Drives & Motion' },
     newsletter: { title: 'Get new articles in your inbox', sub: 'No spam. Only technical content about industrial automation.', cta: 'Subscribe', placeholder: 'your@email.com' },
+    newsletterSuccess: 'Subscribed. Check your inbox soon.',
+    newsletterError: 'Could not subscribe right now.',
     footerCopy: 'All rights reserved.',
   },
   pt: {
@@ -29,6 +33,8 @@ const copy = {
     allPosts: 'Todos os artigos',
     tags: { all: 'Todos', vc: 'Comissionamento Virtual', dt: 'Gêmeo Digital', plc: 'PLC / TIA Portal', drives: 'Drives & Motion' },
     newsletter: { title: 'Receba novos artigos no seu e-mail', sub: 'Sem spam. Só conteúdo técnico sobre automação industrial.', cta: 'Assinar', placeholder: 'seu@email.com' },
+    newsletterSuccess: 'Inscricao recebida. Em breve voce recebe os proximos artigos.',
+    newsletterError: 'Nao foi possivel assinar agora.',
     footerCopy: 'Todos os direitos reservados.',
   },
 }
@@ -50,9 +56,40 @@ function formatDate(dateStr: string, lang: Lang) {
 
 export function BlogClient() {
   const [lang, setLang] = useMarketingLang()
+  const [email, setEmail] = useState('')
+  const [newsletterState, setNewsletterState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const t = copy[lang]
   const featured = allPosts.find(p => p.featured)!
   const rest = allPosts.filter(p => !p.featured)
+
+  async function handleNewsletterSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setNewsletterState('loading')
+
+    try {
+      const response = await fetch('/api/marketing/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          lang,
+          source: 'blog_index',
+          path: typeof window !== 'undefined' ? window.location.pathname : '/blog',
+        }),
+      })
+
+      if (!response.ok) throw new Error('Newsletter subscription failed')
+
+      trackPublicMarketingEvent('newsletter_submit', {
+        source: 'blog_index',
+        lang,
+      })
+      setNewsletterState('success')
+      setEmail('')
+    } catch {
+      setNewsletterState('error')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-ikz-bg text-gray-100">
@@ -73,7 +110,11 @@ export function BlogClient() {
         {/* Featured post */}
         <div className="mb-12">
           <span className="mb-4 inline-block text-xs font-bold uppercase tracking-widest text-ikz-cyan">{t.featured}</span>
-          <Link href={`/blog/${featured.slug[lang]}`} className="group block rounded-2xl border border-ikz-lime/40 bg-ikz-surface p-8 hover:border-ikz-lime hover:shadow-glow-lime transition-all">
+          <Link
+            href={`/blog/${featured.slug[lang]}`}
+            onClick={() => trackPublicMarketingEvent('blog_card_click', { slug: featured.slug[lang], featured: true })}
+            className="group block rounded-2xl border border-ikz-lime/40 bg-ikz-surface p-8 hover:border-ikz-lime hover:shadow-glow-lime transition-all"
+          >
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
@@ -93,9 +134,13 @@ export function BlogClient() {
                   {t.readMore} <ArrowRight size={14} />
                 </span>
               </div>
-              {/* Decorative graphic */}
-              <div className="hidden md:flex h-40 w-64 shrink-0 items-center justify-center rounded-xl bg-ikz-bg border border-ikz-border">
-                <BookOpen size={48} className="text-ikz-border" />
+              <div className="hidden md:block h-40 w-64 shrink-0 overflow-hidden rounded-xl border border-ikz-border bg-ikz-bg">
+                <img
+                  src={`/api/og/blog/${featured.slug[lang]}`}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
               </div>
             </div>
           </Link>
@@ -108,8 +153,17 @@ export function BlogClient() {
             <Link
               key={post.slug.en}
               href={`/blog/${post.slug[lang]}`}
+              onClick={() => trackPublicMarketingEvent('blog_card_click', { slug: post.slug[lang], featured: false })}
               className="group flex flex-col rounded-xl border border-ikz-border bg-ikz-surface p-6 hover:border-ikz-cyan/40 transition-all hover:-translate-y-0.5"
             >
+              <div className="mb-4 aspect-[1.91/1] overflow-hidden rounded-lg border border-ikz-border bg-ikz-bg">
+                <img
+                  src={`/api/og/blog/${post.slug[lang]}`}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
               <div className="flex items-center gap-2 mb-4">
                 <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${tagColors[post.tag]}`}>
                   {t.tags[post.tag as keyof typeof t.tags]}
@@ -140,19 +194,29 @@ export function BlogClient() {
             </div>
             <h2 className="mb-2 text-2xl font-black text-white">{t.newsletter.title}</h2>
             <p className="mb-6 text-sm text-gray-400">{t.newsletter.sub}</p>
-            <form className="mx-auto flex max-w-sm flex-col gap-2 sm:flex-row" onSubmit={e => e.preventDefault()}>
+            <form className="mx-auto flex max-w-sm flex-col gap-2 sm:flex-row" onSubmit={handleNewsletterSubmit}>
               <input
                 type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 placeholder={t.newsletter.placeholder}
+                required
                 className="min-w-0 flex-1 rounded-lg border border-ikz-border bg-ikz-bg px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-ikz-cyan focus:outline-none"
               />
               <button
                 type="submit"
+                disabled={newsletterState === 'loading'}
                 className="w-full shrink-0 rounded-lg bg-ikz-lime px-5 py-2.5 text-sm font-semibold text-ikz-bg shadow-glow-lime transition-all hover:opacity-90 hover:shadow-glow-lime-lg sm:w-auto"
               >
-                {t.newsletter.cta}
+                {newsletterState === 'loading' ? '...' : t.newsletter.cta}
               </button>
             </form>
+            {newsletterState === 'success' && (
+              <p className="mt-3 text-xs text-ikz-lime">{t.newsletterSuccess}</p>
+            )}
+            {newsletterState === 'error' && (
+              <p className="mt-3 text-xs text-red-300">{t.newsletterError}</p>
+            )}
           </div>
         </section>
       </div>

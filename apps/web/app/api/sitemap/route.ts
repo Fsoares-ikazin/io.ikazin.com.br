@@ -4,6 +4,7 @@ import { getOrgCollections } from '@services/courses/collections'
 import { getOrgPodcasts } from '@services/podcasts/podcasts'
 import { getCommunities } from '@services/communities/communities'
 import { NextRequest, NextResponse } from 'next/server'
+import { posts } from '../../_data/blog-posts'
 
 function getBaseUrlFromRequest(request: NextRequest): string {
   const host = request.headers.get('host') || 'localhost'
@@ -40,11 +41,31 @@ export async function GET(request: NextRequest) {
     case 'pages': {
       sitemapUrls = [
         { loc: baseUrl, priority: 1.0, changefreq: 'daily' },
+        { loc: `${baseUrl}blog`, priority: 0.8, changefreq: 'weekly' },
+        { loc: `${baseUrl}planos`, priority: 0.9, changefreq: 'weekly' },
+        { loc: `${baseUrl}builds`, priority: 0.8, changefreq: 'weekly' },
         { loc: `${baseUrl}courses`, priority: 0.9, changefreq: 'weekly' },
         { loc: `${baseUrl}collections`, priority: 0.9, changefreq: 'weekly' },
         { loc: `${baseUrl}podcasts`, priority: 0.9, changefreq: 'weekly' },
         { loc: `${baseUrl}communities`, priority: 0.9, changefreq: 'weekly' },
       ]
+      break
+    }
+    case 'blog': {
+      for (const post of posts) {
+        sitemapUrls.push({
+          loc: `${baseUrl}blog/${post.slug.pt}`,
+          priority: post.featured ? 0.8 : 0.7,
+          changefreq: 'monthly',
+          lastmod: post.updatedAt || post.date,
+        })
+        sitemapUrls.push({
+          loc: `${baseUrl}blog/${post.slug.en}`,
+          priority: post.featured ? 0.8 : 0.7,
+          changefreq: 'monthly',
+          lastmod: post.updatedAt || post.date,
+        })
+      }
       break
     }
     case 'courses': {
@@ -146,7 +167,7 @@ interface SitemapUrl {
   lastmod?: string
 }
 
-const SITEMAP_TYPES = ['pages', 'courses', 'activities', 'collections', 'podcasts', 'communities']
+const SITEMAP_TYPES = ['pages', 'blog', 'courses', 'activities', 'collections', 'podcasts', 'communities']
 
 function generateSitemapIndex(baseUrl: string): string {
   const sitemaps = SITEMAP_TYPES.map(type => `
