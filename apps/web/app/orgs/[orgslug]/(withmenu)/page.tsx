@@ -118,6 +118,16 @@ const OrgHomePage = async (params: any) => {
   return (
     <div className="w-full">
       <JsonLd data={orgJsonLd} />
+      <section className="bg-ikz-bg px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-(--breakpoint-2xl)">
+          <h1 className="max-w-3xl text-3xl font-black tracking-tight text-ikz-cyan md:text-5xl">
+            Sua jornada em automação industrial começa aqui
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-ikz-text md:text-lg">
+            Domine CLP Siemens, SINAMICS e Digital Twin com simulações hands-on.
+          </p>
+        </div>
+      </section>
       {hasCustomLanding ? (
         <LandingCustom
           landing={landingConfig}
