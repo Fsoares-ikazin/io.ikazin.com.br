@@ -11,6 +11,7 @@ from src.routers import dev, trail, users, auth, orgs, roles, search
 from src.routers import stream
 from src.routers import api_tokens
 from src.routers import webhooks
+from src.routers import notifications as notifications_router_module
 from src.routers.integrations import zapier as zapier_integration
 from src.routers.ai import ai, magicblocks, courseplanning, rag
 from src.routers.boards import boards_playground
@@ -91,6 +92,11 @@ v1_router.include_router(
     zapier_integration.router,
     prefix="/integrations/zapier",
     tags=["integrations", "zapier"],
+)
+v1_router.include_router(
+    notifications_router_module.router,
+    prefix="/notifications",
+    tags=["notifications"],
 )
 v1_router.include_router(
     custom_domains.router,

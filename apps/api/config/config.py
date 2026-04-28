@@ -95,6 +95,13 @@ class InternalPaymentsConfig(BaseModel):
     stripe: InternalStripeConfig
 
 
+class WhatsAppConfig(BaseModel):
+    meta_access_token: Optional[str] = None
+    meta_phone_number_id: Optional[str] = None
+    meta_verify_token: Optional[str] = None
+    ikazin_webhook_secret: Optional[str] = None
+
+
 class LearnHouseConfig(BaseModel):
     site_name: str
     site_description: str
@@ -109,6 +116,7 @@ class LearnHouseConfig(BaseModel):
     payments_config: InternalPaymentsConfig
     tinybird_config: TinybirdConfig | None
     judge0_config: Judge0Config | None
+    whatsapp_config: WhatsAppConfig | None = None
 
 
 def get_learnhouse_config() -> LearnHouseConfig:
@@ -426,6 +434,12 @@ def get_learnhouse_config() -> LearnHouseConfig:
         ),
         tinybird_config=tinybird_config,
         judge0_config=judge0_config,
+        whatsapp_config=WhatsAppConfig(
+            meta_access_token=os.environ.get("META_WHATSAPP_TOKEN"),
+            meta_phone_number_id=os.environ.get("META_WHATSAPP_PHONE_NUMBER_ID"),
+            meta_verify_token=os.environ.get("META_WHATSAPP_VERIFY_TOKEN"),
+            ikazin_webhook_secret=os.environ.get("META_WHATSAPP_WEBHOOK_SECRET"),
+        ),
     )
 
     return config

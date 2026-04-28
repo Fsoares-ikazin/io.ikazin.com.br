@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ikazin.io — Visão de Produto 2025</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #060d13;
+    color: #d6e4f0;
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #060d13;
+    padding: 14mm 16mm 14mm 16mm;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #0d1b26;
+    padding-bottom: 10mm;
+    margin-bottom: 10mm;
+  }
+  .logo-block { display: flex; align-items: center; gap: 12px; }
+  .logo-dot {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #00bcd4, #3587a4);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #060d13;
+  }
+  .logo-text { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .logo-text span { color: #00bcd4; }
+  .date-tag {
+    font-size: 11px; color: #3587a4; font-weight: 600;
+    background: rgba(53,135,164,0.12);
+    border: 1px solid rgba(53,135,164,0.25);
+    padding: 4px 12px; border-radius: 20px;
+  }
+
+  /* HERO */
+  .hero {
+    margin-bottom: 10mm;
+    padding: 8mm 8mm;
+    background: linear-gradient(135deg, rgba(0,188,212,0.07) 0%, rgba(53,135,164,0.04) 100%);
+    border: 1px solid rgba(0,188,212,0.15);
+    border-radius: 12px;
+  }
+  .hero-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    color: #00bcd4; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .hero h1 {
+    font-size: 28px; font-weight: 900; color: #fff;
+    line-height: 1.2; letter-spacing: -0.8px; margin-bottom: 8px;
+  }
+  .hero h1 span { color: #00bcd4; }
+  .hero p {
+    font-size: 13px; color: #8ca8be; max-width: 520px; line-height: 1.7;
+  }
+  .hero-stats {
+    display: flex; gap: 20px; margin-top: 8mm;
+  }
+  .stat {
+    background: rgba(13,27,38,0.8);
+    border: 1px solid #0d1b26;
+    border-radius: 8px; padding: 8px 14px;
+  }
+  .stat-val { font-size: 20px; font-weight: 800; color: #00bcd4; }
+  .stat-lbl { font-size: 10px; color: #5a7a90; font-weight: 500; margin-top: 1px; }
+
+  /* SECTION */
+  .section { margin-bottom: 8mm; }
+  .section-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 5mm;
+  }
+  .section-badge {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .badge-red { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.5); }
+  .badge-yellow { background: #f59e0b; box-shadow: 0 0 8px rgba(245,158,11,0.5); }
+  .badge-green { background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.5); }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .title-red { color: #ef4444; }
+  .title-yellow { color: #f59e0b; }
+  .title-green { color: #22c55e; }
+  .section-sub { font-size: 10px; color: #5a7a90; margin-left: auto; font-weight: 500; }
+
+  /* CARDS GRID */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .cards.three { grid-template-columns: 1fr 1fr 1fr; }
+  .card {
+    background: #0a1520;
+    border: 1px solid #0d1b26;
+    border-radius: 10px;
+    padding: 5mm;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .card-red::before { background: linear-gradient(90deg, #ef4444, transparent); }
+  .card-yellow::before { background: linear-gradient(90deg, #f59e0b, transparent); }
+  .card-green::before { background: linear-gradient(90deg, #22c55e, transparent); }
+  .card-cyan::before { background: linear-gradient(90deg, #00bcd4, transparent); }
+
+  .card-num {
+    font-size: 10px; font-weight: 800; letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .num-red { color: rgba(239,68,68,0.6); }
+  .num-yellow { color: rgba(245,158,11,0.6); }
+  .num-green { color: rgba(34,197,94,0.6); }
+  .num-cyan { color: rgba(0,188,212,0.6); }
+
+  .card h3 {
+    font-size: 13px; font-weight: 700; color: #fff;
+    margin-bottom: 4px; line-height: 1.3;
+  }
+  .card p { font-size: 11px; color: #6a8fa8; line-height: 1.6; }
+  .card .tag {
+    display: inline-block; margin-top: 5px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.8px;
+    padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+  }
+  .tag-differentiator { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+  .tag-revenue { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+  .tag-moat { background: rgba(0,188,212,0.1); color: #00bcd4; border: 1px solid rgba(0,188,212,0.2); }
+  .tag-brazil { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+
+  /* ROADMAP */
+  .roadmap {
+    background: #0a1520;
+    border: 1px solid #0d1b26;
+    border-radius: 10px;
+    padding: 6mm;
+    margin-top: 6mm;
+  }
+  .roadmap-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: #3587a4; margin-bottom: 5mm;
+  }
+  .roadmap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+  .quarter {
+    background: #060d13;
+    border: 1px solid #0d1b26;
+    border-radius: 8px; padding: 4mm;
+  }
+  .quarter-label {
+    font-size: 10px; font-weight: 800; color: #00bcd4;
+    margin-bottom: 4px;
+  }
+  .quarter-sub { font-size: 9px; color: #5a7a90; margin-bottom: 6px; }
+  .quarter ul { list-style: none; }
+  .quarter ul li {
+    font-size: 10px; color: #8ca8be; padding: 2px 0;
+    display: flex; align-items: flex-start; gap: 5px;
+  }
+  .quarter ul li::before {
+    content: '→'; color: #3587a4; font-size: 9px; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 8mm;
+    padding-top: 5mm;
+    border-top: 1px solid #0d1b26;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand { font-size: 11px; color: #3587a4; font-weight: 600; }
+  .footer-note { font-size: 10px; color: #3a5568; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-block">
+      <div class="logo-dot">I</div>
+      <div class="logo-text">Ikazin<span>.io</span></div>
+    </div>
+    <div class="date-tag">Visão de Produto — Abril 2025</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">Documento Estratégico Interno</div>
+    <h1>O que falta para a<br><span>Ikazin.io dominar</span><br>o mercado industrial</h1>
+    <p>Análise das features que diferenciam a plataforma de qualquer LMS genérico — focado em automação industrial, Digital Twin e o mercado BR.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">R$ 175k</div>
+        <div class="stat-lbl">Meta ano 1</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">1.902</div>
+        <div class="stat-lbl">Vendas necessárias</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">25+</div>
+        <div class="stat-lbl">Builds no catálogo</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">$69–$1.229</div>
+        <div class="stat-lbl">Range de preço</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRÍTICO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-red"></div>
+      <div class="section-title title-red">Crítico — Diferenciadores únicos de mercado</div>
+      <div class="section-sub">Nenhum concorrente tem isso</div>
+    </div>
+    <div class="cards">
+      <div class="card card-red">
+        <div class="card-num num-red">01</div>
+        <h3>Simulador Digital Twin Embutido</h3>
+        <p>Embed de PLCSIM Advanced ou ambiente virtual Siemens diretamente no player de atividade. Aluno escreve ladder/ST e executa contra hardware simulado sem sair da plataforma. Isso não é feature — é o produto.</p>
+        <span class="tag tag-differentiator">Diferenciador absoluto</span>
+      </div>
+      <div class="card card-red">
+        <div class="card-num num-red">02</div>
+        <h3>Validador Automático de Código PLC</h3>
+        <p>Aluno submete código → sistema testa contra outputs esperados na simulação → retorna pass/fail com feedback específico por linha. Escala Pedro como instrutor de 1 para 1.000 alunos sem perda de qualidade.</p>
+        <span class="tag tag-differentiator">Escala o negócio</span>
+      </div>
+      <div class="card card-red">
+        <div class="card-num num-red">03</div>
+        <h3>Build Path Visual — Mapa de Fábrica</h3>
+        <p>Os 25 builds como mapa de uma linha de produção industrial. Cada estação é um build. Aluno vê visualmente onde está, o que desbloqueou por tier, progresso percentual. Gamification real, não cosmética.</p>
+        <span class="tag tag-moat">Retenção e upsell</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALTO IMPACTO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-yellow"></div>
+      <div class="section-title title-yellow">Alto Impacto — Conversão e Receita</div>
+      <div class="section-sub">Implementar em Q2</div>
+    </div>
+    <div class="cards">
+      <div class="card card-yellow">
+        <div class="card-num num-yellow">04</div>
+        <h3>Certificado Verificável com QR Público</h3>
+        <p>verificar.ikazin.com.br/cert/ABC123 — empregador escaneia e vê nome, builds concluídos, competências. LinkedIn one-click "Adicionar ao perfil". No mercado industrial BR, esse credencial vale mais que o curso.</p>
+        <span class="tag tag-revenue">Credencial de mercado</span>
+      </div>
+      <div class="card card-yellow">
+        <div class="card-num num-yellow">05</div>
+        <h3>Portal B2B para Empresas</h3>
+        <p>Gerente compra N seats, acompanha progresso do time, extrai relatório de competências. Weg, Bosch, Festo treinam 10–50 pessoas de uma vez. Um contrato B2B = 6 meses de vendas individuais. Preço: $199/seat/mês.</p>
+        <span class="tag tag-revenue">Ticket alto</span>
+      </div>
+      <div class="card card-yellow">
+        <div class="card-num num-yellow">06</div>
+        <h3>WhatsApp Automático</h3>
+        <p>Evolution API já está rodando no servidor. Integrar: notificação de certificado emitido, lembrete de build abandonado ("você estava no Build 7, continue!"), confirmação de compra. Brasil = WhatsApp first.</p>
+        <span class="tag tag-brazil">Mercado BR</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INOVAÇÃO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-badge badge-green"></div>
+      <div class="section-title title-green">Inovação de Produto — Médio Prazo</div>
+      <div class="section-sub">Q3–Q4 2025</div>
+    </div>
+    <div class="cards three">
+      <div class="card card-green">
+        <div class="card-num num-green">07</div>
+        <h3>AI Copilot Siemens</h3>
+        <p>RAG sobre documentação TIA Portal + SINAMICS + material dos 25 builds. Aluno pergunta "por que meu PID oscila?" e recebe resposta contextualizada ao build atual. Gemini já está no config.</p>
+        <span class="tag tag-moat">Retenção</span>
+      </div>
+      <div class="card card-green">
+        <div class="card-num num-green">08</div>
+        <h3>Problema Real da Semana</h3>
+        <p>Pedro ou alunos postam problema real de campo (anonimizado). Comunidade resolve. Conteúdo gerado por usuário que prova valor prático. Vira case study de marketing e SEO orgânico.</p>
+        <span class="tag tag-brazil">Comunidade</span>
+      </div>
+      <div class="card card-green">
+        <div class="card-num num-green">09</div>
+        <h3>SSO Enterprise + SAML</h3>
+        <p>Empresas grandes exigem SAML/SSO para compliance. Plataforma já tem SSO no código. Ativar + vender como diferencial enterprise. Desbloqueia contratos com indústrias de médio/grande porte.</p>
+        <span class="tag tag-revenue">Enterprise</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="roadmap">
+    <div class="roadmap-title">Roadmap Recomendado — 12 meses</div>
+    <div class="roadmap-grid">
+      <div class="quarter">
+        <div class="quarter-label">Q1 — Agora</div>
+        <div class="quarter-sub">Base funcional</div>
+        <ul>
+          <li>Email SMTP Zoho</li>
+          <li>Primeiro curso publicado</li>
+          <li>Stripe ativo</li>
+          <li>Rebranding completo</li>
+        </ul>
+      </div>
+      <div class="quarter">
+        <div class="quarter-label">Q2</div>
+        <div class="quarter-sub">Diferenciação</div>
+        <ul>
+          <li>Build Path visual</li>
+          <li>Certificado + QR</li>
+          <li>WhatsApp bot</li>
+          <li>LinkedIn export</li>
+        </ul>
+      </div>
+      <div class="quarter">
+        <div class="quarter-label">Q3</div>
+        <div class="quarter-sub">Escala</div>
+        <ul>
+          <li>Validador PLC auto</li>
+          <li>Portal B2B</li>
+          <li>AI Copilot beta</li>
+          <li>Problema da semana</li>
+        </ul>
+      </div>
+      <div class="quarter">
+        <div class="quarter-label">Q4</div>
+        <div class="quarter-sub">Enterprise</div>
+        <ul>
+          <li>Digital Twin embed</li>
+          <li>SSO / SAML</li>
+          <li>Galeria de projetos</li>
+          <li>Contratos B2B</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">Ikazin.io — Confidencial</div>
+    <div class="footer-note">io.ikazin.com.br · suporte@ikazin.com.br · Abril 2025</div>
+  </div>
+
+</div>
+</body>
+</html>
