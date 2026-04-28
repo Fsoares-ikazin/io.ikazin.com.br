@@ -181,15 +181,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const MemoizedEmptyState = useMemo(() => {
     if (!searchQuery.trim()) {
       return (
-        <div className="py-8 px-4">
+        <div className="py-8 px-4 bg-ikz-bg">
           <div className="flex flex-col items-center text-center">
             <div className="mb-4 p-3 bg-black/5 rounded-full">
               <Sparkles className="w-6 h-6 text-black/70" />
             </div>
-            <h3 className="text-sm font-medium text-black/80 mb-1">
+            <h3 className="text-sm font-medium text-ikz-cyan mb-1">
               {t('search.discover_next_journey')}
             </h3>
-            <p className="text-xs text-black/50 max-w-[240px]">
+            <p className="text-xs text-ikz-text max-w-[240px]">
               {t('search.start_typing_to_search')}
             </p>
           </div>
