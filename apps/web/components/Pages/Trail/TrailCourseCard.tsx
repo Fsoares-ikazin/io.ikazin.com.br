@@ -81,13 +81,13 @@ function TrailCourseCard(props: TrailCourseCardProps) {
   const courseLink = getUriWithOrg(props.orgslug, '/course/' + courseid)
 
   return (
-    <div className="group relative flex flex-col bg-white rounded-xl nice-shadow overflow-hidden w-full transition-all duration-300 hover:scale-[1.01]">
+    <div className="group relative flex flex-col bg-ikz-surface border border-ikz-border rounded-xl overflow-hidden w-full transition-all duration-300 hover:border-ikz-cyan/40 hover:scale-[1.01]">
       {/* Dropdown Menu */}
       <div className="absolute top-2 right-2 z-20">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="p-1.5 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all shadow-md">
-              <MoreVertical size={18} className="text-gray-700" />
+            <button className="p-1.5 bg-ikz-bg/90 backdrop-blur-sm rounded-full hover:bg-ikz-bg transition-all shadow-md">
+              <MoreVertical size={18} className="text-gray-300" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
@@ -142,21 +142,21 @@ function TrailCourseCard(props: TrailCourseCardProps) {
       <div className="p-3 flex flex-col space-y-1.5">
         <Link
           href={courseLink}
-          className="text-base font-bold text-gray-900 leading-tight hover:text-black transition-colors line-clamp-1"
+          className="text-base font-bold text-gray-100 leading-tight hover:text-white transition-colors line-clamp-1"
         >
           {course.name}
         </Link>
 
         <div className="flex items-center gap-2 text-sm">
-          <span className={`font-semibold ${course_progress === 100 ? 'text-green-600' : 'text-teal-600'}`}>
+          <span className={`font-semibold ${course_progress === 100 ? 'text-green-400' : 'text-ikz-cyan'}`}>
             {course_progress}%
           </span>
-          <span className="text-gray-400 text-xs">
+          <span className="text-gray-500 text-xs">
             {t('courses.completed_of', { completed: course_completed_steps, total: course_total_steps })}
           </span>
         </div>
 
-        <div className="pt-1.5 flex items-center justify-between border-t border-gray-100">
+        <div className="pt-1.5 flex items-center justify-between border-t border-ikz-border">
           {/* Certificate or Progress indicator */}
           {course_progress === 100 ? (
             isLoadingCertificate ? (
@@ -165,12 +165,12 @@ function TrailCourseCard(props: TrailCourseCardProps) {
                 <span className="text-[10px] font-bold uppercase tracking-wider">{t('common.loading')}</span>
               </div>
             ) : courseCertificate ? (
-              <div className="flex items-center gap-1.5 text-yellow-600">
+              <div className="flex items-center gap-1.5 text-yellow-400">
                 <Award size={12} />
                 <span className="text-[10px] font-bold uppercase tracking-wider">{t('certificate.certificate')}</span>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 text-green-600">
+              <div className="flex items-center gap-1.5 text-green-400">
                 <Award size={12} />
                 <span className="text-[10px] font-bold uppercase tracking-wider">{t('common.completed')}</span>
               </div>
@@ -195,7 +195,7 @@ function TrailCourseCard(props: TrailCourseCardProps) {
           ) : (
             <Link
               href={courseLink}
-              className="text-[10px] font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-wider"
+              className="text-[10px] font-bold text-gray-500 hover:text-ikz-cyan transition-colors uppercase tracking-wider"
             >
               {t('courses.continue_learning')}
             </Link>
