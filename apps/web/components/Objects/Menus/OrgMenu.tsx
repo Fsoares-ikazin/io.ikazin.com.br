@@ -330,7 +330,7 @@ export const OrgMenu = (props: any) => {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <a
-                        href="mailto:contato@ikazin.com.br"
+                        href="mailto:suporte@ikazin.com.br"
                         className="flex items-center gap-2"
                       >
                         <DiscordIcon size={16} />
