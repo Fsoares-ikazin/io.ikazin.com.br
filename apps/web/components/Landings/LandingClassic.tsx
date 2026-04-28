@@ -1,19 +1,13 @@
 'use client'
 
 import React from 'react'
-import GeneralWrapperStyled from '@components/Objects/StyledElements/Wrappers/GeneralWrapper'
-import TypeOfContentTitle from '@components/Objects/StyledElements/Titles/TypeOfContentTitle'
-import CourseThumbnail from '@components/Objects/Thumbnails/CourseThumbnail'
-import CollectionThumbnail from '@components/Objects/Thumbnails/CollectionThumbnail'
-import AuthenticatedClientElement from '@components/Security/AuthenticatedClientElement'
-import NewCourseButton from '@components/Objects/StyledElements/Buttons/NewCourseButton'
-import NewCollectionButton from '@components/Objects/StyledElements/Buttons/NewCollectionButton'
-import ContentPlaceHolderIfUserIsNotAdmin from '@components/Objects/ContentPlaceHolder'
-import Link from 'next/link'
-import { getUriWithOrg } from '@services/config/config'
-import { useTranslation } from 'react-i18next'
-import { BookCopy, SquareLibrary } from 'lucide-react'
-import ContinueLearning from '@components/Landings/ContinueLearning'
+import { useLHSession } from '@components/Contexts/LHSessionContext'
+import { useOrg } from '@components/Contexts/OrgContext'
+import { getAPIUrl } from '@services/config/config'
+import { swrFetcher } from '@services/utils/ts/requests'
+import useSWR from 'swr'
+import NetflixHero from '@components/Landings/NetflixHero'
+import NetflixRow from '@components/Landings/NetflixRow'
 
 interface LandingClassicProps {
   courses: any[]
@@ -23,106 +17,89 @@ interface LandingClassicProps {
 }
 
 function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassicProps) {
-  const { t } = useTranslation()
+  const session = useLHSession() as any
+  const org = useOrg() as any
+  const token = session?.data?.tokens?.access_token
+  const orgID = org?.id
 
-  // Limit to 12 courses (4x3 grid) for the home page
-  const displayedCourses = courses.slice(0, 12)
-  const hasMoreCourses = courses.length > 12
+  const { data: trail } = useSWR(
+    token && orgID ? `${getAPIUrl()}trail/org/${orgID}/trail` : null,
+    (url) => swrFetcher(url, token),
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
+  )
+
+  const trailRuns: any[] = trail?.runs ?? []
+  const inProgressRuns = trailRuns.filter(
+    (r) => r.course_total_steps > 0 && r.steps.length < r.course_total_steps
+  )
+  const inProgressIds = new Set(inProgressRuns.map((r) => r.course.course_uuid))
+
+  // Build rows
+  const publishedCourses = courses.filter((c) => c.published !== false)
+  const featuredCourse = publishedCourses[0] ?? courses[0] ?? null
+
+  // Courses per collection
+  const collectionRows = collections.map((col: any) => ({
+    title: col.name as string,
+    courses: publishedCourses.filter((c: any) =>
+      col.courses?.some((cc: any) => cc.course_uuid === c.course_uuid || cc === c.course_uuid)
+    ),
+  })).filter((r) => r.courses.length > 0)
+
+  // Courses NOT in any collection → "Todos os cursos" fallback
+  const collectionCourseIds = new Set(
+    collections.flatMap((col: any) =>
+      (col.courses ?? []).map((cc: any) => cc.course_uuid ?? cc)
+    )
+  )
+  const uncategorised = publishedCourses.filter((c) => !collectionCourseIds.has(c.course_uuid))
 
   return (
-    <div className="w-full">
-      <GeneralWrapperStyled>
-        <ContinueLearning orgslug={orgslug} />
-        {/* Collections */}
-        <div className="flex flex-col space-y-2 mb-6">
-          <div className="flex items-center justify-between">
-            <TypeOfContentTitle title={t('collections.collections')} type="col" />
-            <AuthenticatedClientElement
-              checkMethod="roles"
-              ressourceType="collections"
-              action="create"
-              orgId={org_id}
-            >
-              <Link href={getUriWithOrg(orgslug, '/collections/new')}>
-                <NewCollectionButton />
-              </Link>
-            </AuthenticatedClientElement>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {collections.map((collection: any) => (
-              <div key={collection.collection_id} className="flex flex-col">
-                <CollectionThumbnail
-                  collection={collection}
-                  orgslug={orgslug}
-                  org_id={org_id}
-                />
-              </div>
-            ))}
-            {collections.length === 0 && (
-              <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-[#2D2D2D] rounded-2xl bg-[#1F1F1F]/40">
-                <div className="p-4 bg-[#2D2D2D] rounded-full mb-4">
-                  <SquareLibrary className="w-8 h-8 text-gray-600" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-lg font-bold text-gray-300 mb-1">
-                  {t('collections.no_collections')}
-                </h3>
-                <p className="text-sm text-gray-400 max-w-xs text-center">
-                  <ContentPlaceHolderIfUserIsNotAdmin
-                    text={t('collections.create_collections_placeholder')}
-                  />
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
+    <div className="w-full bg-ikz-bg">
+      {/* Hero */}
+      <NetflixHero course={featuredCourse} orgslug={orgslug} />
 
-        {/* Courses */}
-        <div className="flex flex-col space-y-2">
-          <div className="flex items-center justify-between">
-            <TypeOfContentTitle title={t('courses.courses')} type="cou" />
-            <AuthenticatedClientElement
-              ressourceType="courses"
-              action="create"
-              checkMethod="roles"
-              orgId={org_id}
-            >
-              <Link href={getUriWithOrg(orgslug, '/courses?new=true')}>
-                <NewCourseButton />
-              </Link>
-            </AuthenticatedClientElement>
+      {/* Rows */}
+      <div className="px-6 md:px-12 lg:px-16 pt-6 pb-12">
+        {/* Continue Watching */}
+        {inProgressRuns.length > 0 && (
+          <NetflixRow
+            title="Continue Assistindo"
+            courses={inProgressRuns.map((r) => r.course)}
+            orgslug={orgslug}
+            trailRuns={inProgressRuns}
+          />
+        )}
+
+        {/* Collection rows */}
+        {collectionRows.map((row) => (
+          <NetflixRow
+            key={row.title}
+            title={row.title}
+            courses={row.courses}
+            orgslug={orgslug}
+            trailRuns={trailRuns}
+          />
+        ))}
+
+        {/* Uncategorised or all courses */}
+        {uncategorised.length > 0 && (
+          <NetflixRow
+            title={collectionRows.length > 0 ? 'Mais cursos' : 'Todos os Cursos'}
+            courses={uncategorised}
+            orgslug={orgslug}
+            trailRuns={trailRuns}
+          />
+        )}
+
+        {/* Empty state */}
+        {publishedCourses.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <p className="text-gray-500 text-sm mb-2">Nenhum curso disponível ainda.</p>
+            <p className="text-gray-600 text-xs">Os cursos publicados aparecerão aqui.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {displayedCourses.map((course: any) => (
-              <div key={course.course_uuid} className="flex">
-                <CourseThumbnail course={course} orgslug={orgslug} />
-              </div>
-            ))}
-            {courses.length === 0 && (
-              <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-[#2D2D2D] rounded-2xl bg-[#1F1F1F]/40">
-                <div className="p-4 bg-[#2D2D2D] rounded-full mb-4">
-                  <BookCopy className="w-8 h-8 text-gray-600" strokeWidth={1.5} />
-                </div>
-                <h1 className="text-xl font-bold text-gray-300 mb-2">
-                  {t('courses.no_courses')}
-                </h1>
-                <p className="text-md text-gray-400 mb-6 text-center max-w-xs">
-                  <ContentPlaceHolderIfUserIsNotAdmin text={t('courses.create_courses_placeholder')} />
-                </p>
-              </div>
-            )}
-          </div>
-          {hasMoreCourses && (
-            <div className="mt-4 text-center">
-              <Link
-                href={getUriWithOrg(orgslug, '/courses')}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-500 hover:text-[#3587A4] transition-colors"
-              >
-                {t('courses.view_all_courses')} ({courses.length})
-              </Link>
-            </div>
-          )}
-        </div>
-      </GeneralWrapperStyled>
+        )}
+      </div>
     </div>
   )
 }
