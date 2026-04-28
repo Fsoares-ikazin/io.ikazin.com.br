@@ -30,11 +30,11 @@ export default function NotFound() {
         <p className="mb-4 rounded-full border border-ikz-cyan/30 bg-ikz-cyan/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-ikz-cyan">
           Erro 404
         </p>
-        <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">
-          Esta página não está disponível.
+        <h1 className="text-4xl font-black tracking-tight text-ikz-cyan md:text-6xl">
+          Página não encontrada
         </h1>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-gray-400 md:text-lg">
-          O endereço pode ter mudado, expirado ou nunca existiu. Volte para a plataforma e continue pelas simulações ou pelos planos da Ikazin.io.
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-ikz-text md:text-lg">
+          O conteúdo que você procura não existe ou foi movido.
         </p>
 
         <div className="mt-9 grid w-full gap-3 sm:grid-cols-3">
@@ -43,7 +43,7 @@ export default function NotFound() {
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-ikz-cyan px-5 py-3 text-sm font-bold text-white shadow-glow transition-opacity hover:opacity-90"
           >
             <Home size={16} />
-            Início
+            Voltar ao início
           </Link>
           <Link
             href="/builds"
