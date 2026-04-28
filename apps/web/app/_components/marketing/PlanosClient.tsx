@@ -86,22 +86,22 @@ const tierData: Record<Lang, TierData[]> = {
   ],
   pt: [
     {
-      label: 'BASIC', price: '$69', builds: 'Builds 1–8', audience: 'Estagiários e estudantes de automação',
+      label: 'BASIC', price: 'R$399', builds: 'Builds 1–8', audience: 'Estagiários e estudantes de automação',
       features: ['Lógica booleana, FSM e intertravamentos', 'Sensores digitais (CTU/CTD, borda)', 'Sensores analógicos 0–10V / 4–20mA', 'Controle de nível por histerese', 'Inversor G120 SINA_SPEED e SINA_POS', 'Sincronismo master/slave'],
       style: { badge: 'bg-gray-800 text-gray-400', border: 'border-gray-800', cta: 'outline' },
     },
     {
-      label: 'ESSENTIALS', price: '$119', builds: 'Builds 9–13', audience: 'Operadores, técnicos sênior e supervisores',
+      label: 'ESSENTIALS', price: 'R$699', builds: 'Builds 9–13', audience: 'Operadores, técnicos sênior e supervisores',
       features: ['Desvio giratório multi-eixo', 'Máquina de filme stretch com HMI', 'Linha Flow Pack — sincronismo de esteira', 'Controle PID de nível (P, PI, PID)', 'Ball & Beam — sistema instável avançado'],
       style: { badge: 'bg-blue-900/50 text-blue-400', border: 'border-blue-900/50', cta: 'outline' },
     },
     {
-      label: 'ADVANCED', price: '$159', builds: 'Builds 14–18', audience: 'Especialistas em drives Siemens e engenheiros de motion',
+      label: 'ADVANCED', price: 'R$899', builds: 'Builds 14–18', audience: 'Especialistas em drives Siemens e engenheiros de motion',
       features: ['SINAMICS S120 — MoveVelocity real-time', 'SINAMICS S120 — MoveAbsolute / MoveRelative', 'Acoplamento eletrônico GearIn / GearInAbsolute', 'Rotary Knife com perfis de came', 'Enroladores com controle de tensão'],
       style: { badge: 'bg-ikz-lime/15 text-ikz-lime', border: 'border-ikz-lime', cta: 'primary', featured: true },
     },
     {
-      label: 'PREMIUM', price: '$209', builds: 'Builds 19–25', audience: 'Engenheiros sênior, integradores e fabricantes',
+      label: 'PREMIUM', price: 'R$1.199', builds: 'Builds 19–25', audience: 'Engenheiros sênior, integradores e fabricantes',
       features: ['Pick & Place — cinemática cartesiana', 'Cut / Fill On The Fly', 'Robô SCARA — cinemática direta e inversa', 'Robô Delta — alta velocidade multi-eixo', 'CNC G-code — trajetória 2D/3D', 'SIMOTION D — workbench completo'],
       style: { badge: 'bg-purple-900/50 text-purple-400', border: 'border-purple-900/50', cta: 'outline' },
     },

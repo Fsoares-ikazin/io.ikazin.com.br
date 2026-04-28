@@ -155,14 +155,14 @@ const tierData: Record<Lang, TierCopy[]> = {
   ],
   pt: [
     {
-      label: 'BASIC', slug: 'basic', price: 'R$389',
+      label: 'BASIC', slug: 'basic', price: 'R$399',
       builds: 'Builds 1–8',
       audience: 'Estagiários e estudantes de automação',
       tagline: 'CLP do zero. Sem hardware físico necessário.',
       features: ['Lógica booleana e FSM', 'Sensores digitais e analógicos', 'Inversores G120 SINA_SPEED'],
     },
     {
-      label: 'ESSENTIALS', slug: 'essentials', price: 'R$669',
+      label: 'ESSENTIALS', slug: 'essentials', price: 'R$699',
       builds: 'Builds 9–13',
       audience: 'Técnicos sênior e supervisores',
       tagline: 'Máquinas reais. PID completo. Complexidade industrial.',
@@ -177,7 +177,7 @@ const tierData: Record<Lang, TierCopy[]> = {
       featured: true,
     },
     {
-      label: 'PREMIUM', slug: 'premium', price: 'R$1.179',
+      label: 'PREMIUM', slug: 'premium', price: 'R$1.199',
       builds: 'Builds 19–25',
       audience: 'Engenheiros sênior e integradores',
       tagline: 'Robótica, CNC G-code e SIMOTION D. Kit completo de construtor de máquinas.',

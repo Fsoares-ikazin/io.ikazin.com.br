@@ -25,7 +25,7 @@ type PlanDetail = {
 const plans: Record<string, PlanDetail> = {
   basic: {
     label: 'BASIC',
-    price: { en: '$69', pt: 'R$389' },
+    price: { en: '$69', pt: 'R$399' },
     priceNote: { en: 'one-time · lifetime access', pt: 'pagamento único · acesso vitalício' },
     tagline: { en: 'From zero to working PLC logic', pt: 'Do zero à lógica CLP funcionando' },
     description: {
@@ -55,7 +55,7 @@ const plans: Record<string, PlanDetail> = {
   },
   essentials: {
     label: 'ESSENTIALS',
-    price: { en: '$119', pt: 'R$669' },
+    price: { en: '$119', pt: 'R$699' },
     priceNote: { en: 'one-time · lifetime access', pt: 'pagamento único · acesso vitalício' },
     tagline: { en: 'Real machines. Real logic. Real problems.', pt: 'Máquinas reais. Lógica real. Problemas reais.' },
     description: {
@@ -109,7 +109,7 @@ const plans: Record<string, PlanDetail> = {
   },
   premium: {
     label: 'PREMIUM',
-    price: { en: '$209', pt: 'R$1.179' },
+    price: { en: '$209', pt: 'R$1.199' },
     priceNote: { en: 'one-time · lifetime access', pt: 'pagamento único · acesso vitalício' },
     tagline: { en: 'Robotics, CNC and SIMOTION D', pt: 'Robótica, CNC e SIMOTION D' },
     description: {
