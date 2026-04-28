@@ -273,12 +273,12 @@ const LoginClient = (props: LoginClientProps) => {
         <div className="m-auto w-full max-w-sm px-6 py-8 sm:py-0">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">{t('auth.welcome_back')}</h1>
-            <p className="text-gray-500 mt-1">{t('auth.enter_credentials')}</p>
+            <h1 className="text-3xl font-black tracking-tight text-white">{t('auth.welcome_back')}</h1>
+            <p className="mt-2 text-sm text-gray-400">{t('auth.enter_credentials')}</p>
           </div>
 
           {/* Login Form Card */}
-          <div className="bg-white rounded-xl p-6 nice-shadow">
+          <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
             <FormLayout onSubmit={formik.handleSubmit}>
               <FormField name="email">
                 <FormLabelAndMessage
@@ -314,7 +314,7 @@ const LoginClient = (props: LoginClientProps) => {
               <div className="flex justify-end">
                 <Link
                   href="/forgot"
-                  className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+                  className="text-xs font-medium text-gray-400 transition-colors hover:text-ikz-cyan"
                 >
                   {t('auth.forgot_password')}
                 </Link>
@@ -322,7 +322,7 @@ const LoginClient = (props: LoginClientProps) => {
 
               <div className="pt-2">
                 <Form.Submit asChild>
-                  <button className="w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
+                  <button className="w-full rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90 disabled:opacity-60">
                     {isSubmitting ? t('common.loading') : t('auth.login')}
                   </button>
                 </Form.Submit>
@@ -332,10 +332,10 @@ const LoginClient = (props: LoginClientProps) => {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
+                <div className="w-full border-t border-ikz-border"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-3 bg-white text-gray-400">{t('common.or')}</span>
+                <span className="bg-ikz-surface px-3 text-gray-500">{t('common.or')}</span>
               </div>
             </div>
 
@@ -343,7 +343,7 @@ const LoginClient = (props: LoginClientProps) => {
             <div className="space-y-2.5">
               <button
                 onClick={handleGoogleSignIn}
-                className="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-ikz-border bg-ikz-bg py-2.5 font-medium text-gray-200 transition-colors hover:border-ikz-cyan/50 hover:bg-ikz-bg/80"
               >
                 <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="" className="w-4 h-4" />
                 <span>{t('auth.sign_in_with_google')}</span>
@@ -353,7 +353,7 @@ const LoginClient = (props: LoginClientProps) => {
                 <button
                   onClick={handleSSOLogin}
                   disabled={ssoLoading}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-ikz-lime py-2.5 font-bold text-ikz-bg transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
                   <Shield size={16} />
                   <span>{ssoLoading ? t('common.loading') : t('auth.sign_in_with_sso')}</span>
@@ -363,9 +363,9 @@ const LoginClient = (props: LoginClientProps) => {
           </div>
 
           {/* Sign Up Link */}
-          <p className="text-center text-gray-600 mt-6">
+          <p className="mt-6 text-center text-sm text-gray-400">
             {t('auth.no_account')}{' '}
-            <Link href="/signup" className="font-semibold text-gray-900 hover:underline">
+            <Link href="/signup" className="font-semibold text-ikz-cyan hover:underline">
               {t('auth.sign_up')}
             </Link>
           </p>

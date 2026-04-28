@@ -23,7 +23,8 @@ export default function AuthBrandingPanel({ org, welcomeText }: AuthBrandingPane
   const plan = usePlan()
   const isEnterprise = plan === 'enterprise'
 
-  const isDefaultOrg = !org?.name || org.name === 'default' || org.name === 'Default'
+  const isIkazinOrg = org?.slug === 'default' || org?.slug === 'ikazin' || org?.label === 'IKAZIN.IO'
+  const isDefaultOrg = isIkazinOrg || !org?.name || org.name === 'default' || org.name === 'Default'
 
   const getBackgroundStyle = (): React.CSSProperties => {
     if (isDefaultOrg || background_type === 'gradient' || !background_image) {
@@ -52,7 +53,7 @@ export default function AuthBrandingPanel({ org, welcomeText }: AuthBrandingPane
 
   const displayMessage = welcome_message || welcomeText || ''
   const hasCustomBackground = !isDefaultOrg && background_type !== 'gradient' && background_image
-  const displayName = isDefaultOrg ? 'IKAZIN.IO' : org?.name
+  const displayName = isIkazinOrg ? 'Ikazin.io' : (isDefaultOrg ? 'IKAZIN.IO' : org?.name)
 
   return (
     <div
@@ -145,7 +146,7 @@ export default function AuthBrandingPanel({ org, welcomeText }: AuthBrandingPane
             {/* Text content */}
             <div className="space-y-1">
               <h1
-                className="font-bold text-3xl tracking-tight"
+                className="font-black text-4xl tracking-tight"
                 style={isDefaultOrg ? { background: 'linear-gradient(90deg, hsl(86 67% 64%), hsl(184 50% 49%))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' } : {}}
               >
                 {displayName}

@@ -1,8 +1,6 @@
 'use client'
 import React from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
-import learnhouseIcon from 'public/learnhouse_bigicon_1.png'
 import { getOrgLogoMediaDirectory, getOrgAuthBackgroundMediaDirectory } from '@services/media/media'
 import { getUriWithOrg } from '@services/config/config'
 
@@ -43,6 +41,7 @@ export default function AuthMobileHeader({ org }: AuthMobileHeaderProps) {
   }
 
   const hasCustomBackground = background_type !== 'gradient' && background_image
+  const isIkazinOrg = org?.slug === 'default' || org?.slug === 'ikazin' || org?.label === 'IKAZIN.IO'
 
   return (
     <div
@@ -54,28 +53,28 @@ export default function AuthMobileHeader({ org }: AuthMobileHeaderProps) {
       )}
 
       <Link prefetch href={getUriWithOrg(org?.slug, '/')} className="relative z-10">
-        <div className="w-10 h-10 rounded-lg ring-1 ring-inset ring-white/10 bg-white flex items-center justify-center overflow-hidden shrink-0">
-          {org?.logo_image ? (
+        <div className="w-10 h-10 rounded-lg ring-1 ring-inset ring-ikz-cyan/25 bg-ikz-bg flex items-center justify-center overflow-hidden shrink-0">
+          {isIkazinOrg ? (
+            <img
+              src="/logo.png"
+              alt="Ikazin.io"
+              className="w-full h-full object-contain p-1.5"
+              style={{ filter: 'drop-shadow(0 0 5px hsl(var(--ikz-cyan) / 0.45))' }}
+            />
+          ) : org?.logo_image ? (
             <img
               src={getOrgLogoMediaDirectory(org.org_uuid, org.logo_image)}
               alt={org.name}
               className="w-full h-full object-contain p-1.5"
             />
           ) : (
-            <Image
-              quality={100}
-              width={40}
-              height={40}
-              src={learnhouseIcon}
-              alt="LearnHouse"
-              className="object-contain"
-            />
+            <img src="/logo.png" alt="Ikazin.io" className="w-full h-full object-contain p-1.5" />
           )}
         </div>
       </Link>
 
       <span className="relative z-10 font-semibold text-white text-lg truncate">
-        {org?.name}
+        {isIkazinOrg ? 'Ikazin.io' : org?.name}
       </span>
     </div>
   )
