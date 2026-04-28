@@ -130,18 +130,18 @@ export default function SSOCallbackPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-ikz-bg">
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <Shield className="w-16 h-16 text-indigo-600" />
-              <Loader2 className="w-6 h-6 text-indigo-600 absolute -bottom-1 -right-1 animate-spin" />
+              <Shield className="w-16 h-16 text-ikz-cyan" />
+              <Loader2 className="w-6 h-6 text-ikz-cyan absolute -bottom-1 -right-1 animate-spin" />
             </div>
           </div>
-          <h1 className="text-xl font-semibold text-gray-800 mb-2">
+          <h1 className="text-xl font-semibold text-white mb-2">
             {t('auth.sso_callback.authenticating')}
           </h1>
-          <p className="text-gray-500">
+          <p className="text-gray-400">
             {t('auth.sso_callback.please_wait')}
           </p>
         </div>
@@ -159,19 +159,19 @@ export default function SSOCallbackPage() {
 
   if (status === 'error') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-ikz-bg">
         <div className="text-center max-w-lg mx-auto p-6">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-red-100 rounded-full">
+            <div className="p-3 border border-red-900/60 bg-red-950/35 rounded-full">
               <AlertTriangle className="w-12 h-12 text-red-600" />
             </div>
           </div>
-          <h1 className="text-xl font-semibold text-gray-800 mb-2">
+          <h1 className="text-xl font-semibold text-white mb-2">
             {t('auth.sso_callback.auth_failed')}
           </h1>
 
           {/* Main error message */}
-          <p className="text-gray-600 mb-4">{error?.message}</p>
+          <p className="text-gray-400 mb-4">{error?.message}</p>
 
           {/* Error code badge */}
           {error?.errorCode && error.errorCode !== 'unknown_error' && (
@@ -182,7 +182,7 @@ export default function SSOCallbackPage() {
 
           {/* Provider info */}
           {error?.provider && (
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-400 mb-4">
               Provider: {error.provider}
             </p>
           )}
@@ -192,17 +192,17 @@ export default function SSOCallbackPage() {
             <div className="mb-6">
               <button
                 onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
-                className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+                className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200"
               >
                 <Info className="w-4 h-4" />
                 {showTechnicalDetails ? 'Hide' : 'Show'} technical details
               </button>
 
               {showTechnicalDetails && (
-                <div className="mt-2 p-3 bg-gray-100 rounded-md text-left relative">
+                <div className="mt-2 p-3 border border-ikz-border bg-ikz-surface rounded-md text-left relative">
                   <button
                     onClick={copyToClipboard}
-                    className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-600"
+                    className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-400"
                     title="Copy to clipboard"
                   >
                     {copied ? (
@@ -211,7 +211,7 @@ export default function SSOCallbackPage() {
                       <Copy className="w-4 h-4" />
                     )}
                   </button>
-                  <pre className="text-xs font-mono text-gray-700 whitespace-pre-wrap overflow-x-auto">
+                  <pre className="text-xs font-mono text-gray-200 whitespace-pre-wrap overflow-x-auto">
                     {error.technicalDetails}
                   </pre>
                 </div>
@@ -221,40 +221,40 @@ export default function SSOCallbackPage() {
 
           {/* Helpful tips based on error code */}
           {error?.errorCode === 'access_denied' && (
-            <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-md text-left">
-              <p className="text-sm text-amber-800">
+            <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
+              <p className="text-sm text-amber-200">
                 <strong>Tip:</strong> If you declined the login request by mistake, try again and accept the permissions.
               </p>
             </div>
           )}
 
           {error?.errorCode === 'invalid_state' && (
-            <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-md text-left">
-              <p className="text-sm text-amber-800">
+            <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
+              <p className="text-sm text-amber-200">
                 <strong>Tip:</strong> Your session may have expired. Please try logging in again.
               </p>
             </div>
           )}
 
           {error?.errorCode === 'domain_not_allowed' && (
-            <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-md text-left">
-              <p className="text-sm text-amber-800">
+            <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
+              <p className="text-sm text-amber-200">
                 <strong>Tip:</strong> Contact your organization administrator to verify your email domain is allowed.
               </p>
             </div>
           )}
 
           {(error?.errorCode === 'auto_provision_disabled' || error?.errorCode === 'user_not_found') && (
-            <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-md text-left">
-              <p className="text-sm text-amber-800">
+            <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
+              <p className="text-sm text-amber-200">
                 <strong>Tip:</strong> Your organization requires an administrator to create your account first. Contact your organization admin to request access.
               </p>
             </div>
           )}
 
           {error?.errorCode === 'sso_misconfigured' && (
-            <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-md text-left">
-              <p className="text-sm text-amber-800">
+            <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
+              <p className="text-sm text-amber-200">
                 <strong>Tip:</strong> There may be a configuration issue with SSO. Please contact your IT administrator.
               </p>
             </div>
@@ -263,13 +263,13 @@ export default function SSOCallbackPage() {
           <div className="space-y-3">
             <Link
               href="/auth/login"
-              className="block w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              className="block w-full py-2 px-4 bg-ikz-cyan text-white rounded-md hover:opacity-90 transition-colors"
             >
               {t('auth.sso_callback.try_again')}
             </Link>
             <Link
               href="/"
-              className="block w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              className="block w-full py-2 px-4 border border-ikz-border bg-ikz-surface text-gray-200 rounded-md hover:border-ikz-cyan/50 transition-colors"
             >
               {t('auth.sso_callback.go_home')}
             </Link>
@@ -281,15 +281,15 @@ export default function SSOCallbackPage() {
 
   // Success state - redirecting
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-ikz-bg">
       <div className="text-center">
         <div className="flex justify-center mb-4">
-          <Shield className="w-16 h-16 text-green-600" />
+          <Shield className="w-16 h-16 text-ikz-lime" />
         </div>
-        <h1 className="text-xl font-semibold text-gray-800 mb-2">
+        <h1 className="text-xl font-semibold text-white mb-2">
           {t('auth.sso_callback.success')}
         </h1>
-        <p className="text-gray-500">
+        <p className="text-gray-400">
           {t('auth.sso_callback.redirecting')}
         </p>
       </div>

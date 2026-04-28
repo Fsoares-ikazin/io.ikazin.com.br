@@ -146,26 +146,26 @@ const LoggedInJoinScreen = ({ inviteCode, org }: JoinScreenProps) => {
         <div className="m-auto w-full max-w-sm px-6 py-8 sm:py-0">
           {/* Header */}
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900">{t('auth.join_organization')}</h1>
-            <p className="text-gray-500 mt-1">{t('auth.join_organization_desc')}</p>
+            <h1 className="text-3xl font-black tracking-tight text-white">{t('auth.join_organization')}</h1>
+            <p className="mt-2 text-sm text-gray-400">{t('auth.join_organization_desc')}</p>
           </div>
 
           {/* Join Card */}
-          <div className="bg-white rounded-xl p-6 nice-shadow">
+          <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
             <div className="flex flex-col items-center gap-6">
               {/* User Info */}
               <div className="flex items-center gap-3">
                 <UserAvatar rounded="rounded-xl" border="border-2" width={48} />
                 <div>
-                  <p className="font-medium text-gray-900">{session.data?.user?.first_name} {session.data?.user?.last_name}</p>
+                  <p className="font-medium text-white">{session.data?.user?.first_name} {session.data?.user?.last_name}</p>
                   <p className="text-sm text-gray-500">@{session.data?.user?.username}</p>
                 </div>
               </div>
 
               {/* Organization Info */}
-              <div className="w-full text-center py-4 bg-gray-50 rounded-lg">
+              <div className="w-full rounded-lg border border-ikz-border bg-ikz-bg py-4 text-center">
                 <p className="text-sm text-gray-500 mb-1">{t('auth.joining')}</p>
-                <p className="font-semibold text-gray-900 text-lg">{activeOrg?.name}</p>
+                <p className="text-lg font-semibold text-white">{activeOrg?.name}</p>
               </div>
 
               {/* Join Button or Verification Warning */}
@@ -179,7 +179,7 @@ const LoggedInJoinScreen = ({ inviteCode, org }: JoinScreenProps) => {
                 <button
                   onClick={join}
                   disabled={isSubmitting}
-                  className="w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <Loader2 size={18} className="animate-spin" />
@@ -262,12 +262,12 @@ const NoTokenScreen = ({ org }: NoTokenScreenProps) => {
         <div className="m-auto w-full max-w-sm px-6 py-8 sm:py-0">
           {/* Header */}
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900">{t('auth.invite_required')}</h1>
-            <p className="text-gray-500 mt-1">{t('auth.invite_required_desc', { org: activeOrg?.name })}</p>
+            <h1 className="text-3xl font-black tracking-tight text-white">{t('auth.invite_required')}</h1>
+            <p className="mt-2 text-sm text-gray-400">{t('auth.invite_required_desc', { org: activeOrg?.name })}</p>
           </div>
 
           {/* Invite Code Card */}
-          <div className="bg-white rounded-xl p-6 nice-shadow">
+          <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
             <FormLayout onSubmit={validateCode}>
               <FormField name="invite_code">
                 <FormLabelAndMessage
@@ -289,7 +289,7 @@ const NoTokenScreen = ({ org }: NoTokenScreenProps) => {
                 <Form.Submit asChild>
                   <button
                     disabled={isSubmitting || !inviteCode}
-                    className="w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90 disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <Loader2 size={18} className="animate-spin" />

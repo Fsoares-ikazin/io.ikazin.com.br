@@ -86,15 +86,15 @@ function VerifyEmailClient({ org }: VerifyEmailClientProps) {
                     <div className="m-auto w-full max-w-sm px-6 py-8 sm:py-0">
                         {/* Header */}
                         <div className="mb-8 text-center">
-                            <h1 className="text-2xl font-bold text-gray-900">{t('auth.verify_email_title')}</h1>
+                            <h1 className="text-3xl font-black tracking-tight text-white">{t('auth.verify_email_title')}</h1>
                         </div>
 
                         {/* Loading State */}
                         {isVerifying && (
-                            <div className="bg-white rounded-xl p-8 nice-shadow">
+                            <div className="rounded-xl border border-ikz-border bg-ikz-surface p-8 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
                                 <div className="flex flex-col items-center gap-4">
-                                    <Loader2 className="h-12 w-12 animate-spin text-gray-600" />
-                                    <p className="text-gray-600">{t('auth.verifying_email')}</p>
+                                    <Loader2 className="h-12 w-12 animate-spin text-ikz-cyan" />
+                                    <p className="text-gray-400">{t('auth.verifying_email')}</p>
                                 </div>
                             </div>
                         )}
@@ -102,23 +102,23 @@ function VerifyEmailClient({ org }: VerifyEmailClientProps) {
                         {/* Error State */}
                         {!isVerifying && error && (
                             <div className="space-y-4">
-                                <div className="bg-white rounded-xl p-6 nice-shadow">
+                                <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
                                     <div className="flex flex-col items-center gap-4 text-center">
-                                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-red-900/60 bg-red-950/35">
                                             <AlertTriangle className="h-8 w-8 text-red-500" />
                                         </div>
                                         <div>
-                                            <h2 className="font-semibold text-lg text-gray-900">{t('auth.verification_failed')}</h2>
-                                            <p className="text-sm text-gray-500 mt-1">{error}</p>
+                                            <h2 className="text-lg font-semibold text-white">{t('auth.verification_failed')}</h2>
+                                            <p className="mt-1 text-sm text-gray-400">{error}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-sm text-gray-500 text-center">
+                                <p className="text-center text-sm text-gray-400">
                                     {t('auth.verification_trouble')}
                                 </p>
                                 <Link
                                     href="/login"
-                                    className="block w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors"
+                                    className="block w-full rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90"
                                 >
                                     {t('auth.back_to_login')}
                                 </Link>
@@ -128,20 +128,20 @@ function VerifyEmailClient({ org }: VerifyEmailClientProps) {
                         {/* Success State */}
                         {!isVerifying && success && (
                             <div className="space-y-4">
-                                <div className="bg-white rounded-xl p-6 nice-shadow">
+                                <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
                                     <div className="flex flex-col items-center gap-4 text-center">
-                                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-emerald-800/60 bg-emerald-950/35">
                                             <CheckCircle className="h-8 w-8 text-green-500" />
                                         </div>
                                         <div>
-                                            <h2 className="font-semibold text-lg text-gray-900">{t('auth.email_verified_success')}</h2>
-                                            <p className="text-sm text-gray-500 mt-1">{t('auth.email_verified_message')}</p>
+                                            <h2 className="text-lg font-semibold text-white">{t('auth.email_verified_success')}</h2>
+                                            <p className="mt-1 text-sm text-gray-400">{t('auth.email_verified_message')}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <Link
                                     href="/login"
-                                    className="block w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors"
+                                    className="block w-full rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90"
                                 >
                                     {t('auth.proceed_to_login')}
                                 </Link>

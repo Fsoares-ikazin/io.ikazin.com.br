@@ -85,12 +85,12 @@ function ForgotPasswordClient({ org }: ForgotPasswordClientProps) {
                     <div className="m-auto w-full max-w-sm px-6 py-8 sm:py-0">
                         {/* Header */}
                         <div className="mb-8">
-                            <h1 className="text-2xl font-bold text-gray-900">{t('auth.forgot_password_title')}</h1>
-                            <p className="text-gray-500 mt-1">{t('auth.forgot_password_description')}</p>
+                            <h1 className="text-3xl font-black tracking-tight text-white">{t('auth.forgot_password_title')}</h1>
+                            <p className="mt-2 text-sm text-gray-400">{t('auth.forgot_password_description')}</p>
                         </div>
 
                         {/* Form Card */}
-                        <div className="bg-white rounded-xl p-6 nice-shadow">
+                        <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
                             <FormLayout onSubmit={formik.handleSubmit}>
                                 <FormField name="email">
                                     <FormLabelAndMessage
@@ -109,7 +109,7 @@ function ForgotPasswordClient({ org }: ForgotPasswordClientProps) {
 
                                 <div className="pt-2">
                                     <Form.Submit asChild>
-                                        <button className="w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
+                                        <button className="w-full rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90 disabled:opacity-60">
                                             {isSubmitting ? t('common.loading') : t('auth.send_reset_link')}
                                         </button>
                                     </Form.Submit>
@@ -118,8 +118,8 @@ function ForgotPasswordClient({ org }: ForgotPasswordClientProps) {
                         </div>
 
                         {/* Back to Login */}
-                        <p className="text-center text-gray-600 mt-6">
-                            <Link href="/login" className="inline-flex items-center gap-2 font-semibold text-gray-900 hover:underline">
+                        <p className="mt-6 text-center text-sm text-gray-400">
+                            <Link href="/login" className="inline-flex items-center gap-2 font-semibold text-ikz-cyan hover:underline">
                                 <ArrowLeft size={16} />
                                 {t('auth.back_to_login')}
                             </Link>

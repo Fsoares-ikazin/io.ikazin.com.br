@@ -112,28 +112,28 @@ function OpenSignUpComponent() {
     <div className="m-auto w-full max-w-sm px-6 py-8 sm:py-0">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{t('auth.create_account')}</h1>
-        <p className="text-gray-500 mt-1">{t('auth.fill_in_details')}</p>
+        <h1 className="text-3xl font-black tracking-tight text-white">{t('auth.create_account')}</h1>
+        <p className="mt-2 text-sm text-gray-400">{t('auth.fill_in_details')}</p>
       </div>
 
       {/* Error/Success Messages */}
       {error && (
-        <div className="flex items-center gap-3 bg-red-100 rounded-xl text-red-900 p-4 mb-6 nice-shadow">
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-red-900/60 bg-red-950/35 p-4 text-red-100">
           <AlertTriangle size={18} className="shrink-0" />
           <div className="font-bold text-sm">{error}</div>
         </div>
       )}
       {message && (
-        <div className="flex flex-col gap-4 bg-green-100 rounded-xl text-green-900 p-4 mb-6 nice-shadow">
+        <div className="mb-6 flex flex-col gap-4 rounded-xl border border-emerald-800/60 bg-emerald-950/35 p-4 text-emerald-100">
           <div className="flex items-center gap-2">
             <Mail size={18} />
             <div className="font-bold text-sm">{t('auth.check_email_for_verification')}</div>
           </div>
-          <p className="text-xs text-green-800">
+          <p className="text-xs text-emerald-200/80">
             {t('auth.verification_email_sent_message')}
           </p>
-          <hr className="border-green-200" />
-          <Link className="flex items-center gap-2 text-sm font-medium hover:underline" href="/login">
+          <hr className="border-emerald-800/60" />
+          <Link className="flex items-center gap-2 text-sm font-medium text-ikz-cyan hover:underline" href="/login">
             <User size={14} />
             <span>{t('auth.login')}</span>
           </Link>
@@ -141,7 +141,7 @@ function OpenSignUpComponent() {
       )}
 
       {/* Signup Form Card */}
-      <div className="bg-white rounded-xl p-6 nice-shadow">
+      <div className="rounded-xl border border-ikz-border bg-ikz-surface p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
         <FormLayout onSubmit={formik.handleSubmit}>
           <FormField name="email">
             <FormLabelAndMessage
@@ -159,7 +159,7 @@ function OpenSignUpComponent() {
             </Form.Control>
           </FormField>
 
-          <div className="flex flex-row space-x-2">
+          <div className="flex flex-col gap-0 sm:flex-row sm:gap-2">
             <FormField name="first_name">
               <FormLabelAndMessage
                 label={t('user.first_name')}
@@ -241,7 +241,7 @@ function OpenSignUpComponent() {
 
           <div className="pt-2">
             <Form.Submit asChild>
-              <button className="w-full bg-black text-white font-semibold text-center py-2.5 rounded-lg hover:bg-gray-800 transition-colors">
+              <button className="w-full rounded-lg bg-ikz-cyan py-2.5 text-center text-sm font-bold text-white shadow-glow transition-all hover:opacity-90 disabled:opacity-60">
                 {isSubmitting ? t('common.loading') : t('auth.create_account')}
               </button>
             </Form.Submit>
@@ -251,17 +251,17 @@ function OpenSignUpComponent() {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
+            <div className="w-full border-t border-ikz-border"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-3 bg-white text-gray-400">{t('common.or')}</span>
+            <span className="bg-ikz-surface px-3 text-gray-500">{t('common.or')}</span>
           </div>
         </div>
 
         {/* Google Sign In */}
         <button
           onClick={handleGoogleSignIn}
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-ikz-border bg-ikz-bg py-2.5 font-medium text-gray-200 transition-colors hover:border-ikz-cyan/50 hover:bg-ikz-bg/80"
         >
           <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="" className="w-4 h-4" />
           <span>{t('auth.sign_in_with_google')}</span>
@@ -269,9 +269,9 @@ function OpenSignUpComponent() {
       </div>
 
       {/* Login Link */}
-      <p className="text-center text-gray-600 mt-6">
+      <p className="mt-6 text-center text-sm text-gray-400">
         {t('auth.already_have_account')}{' '}
-        <Link href="/login" className="font-semibold text-gray-900 hover:underline">
+        <Link href="/login" className="font-semibold text-ikz-cyan hover:underline">
           {t('auth.login')}
         </Link>
       </p>
