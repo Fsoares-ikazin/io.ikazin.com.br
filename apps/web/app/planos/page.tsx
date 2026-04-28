@@ -1,7 +1,7 @@
 import { PlanosClient } from '../_components/marketing/PlanosClient'
 
 export const metadata = {
-  title: 'Plans — IKAZIN.IO',
+  title: 'Plans — Ikazin.io',
   description: 'Choose your level of industrial automation mastery. From fundamentals to SIMOTION D. One-time payment, lifetime access.',
 }
 

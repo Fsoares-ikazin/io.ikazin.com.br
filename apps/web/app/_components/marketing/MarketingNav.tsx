@@ -28,7 +28,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo.png"
-            alt="IKAZIN Logo"
+            alt="Ikazin.io Logo"
             width={40}
             height={40}
             className="h-10 w-auto"
@@ -36,7 +36,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
             priority
           />
           <span className="text-lg font-black tracking-tight text-ikz-cyan">
-            Ikazin<span className="text-white">®</span>
+            Ikazin.io
           </span>
         </Link>
 

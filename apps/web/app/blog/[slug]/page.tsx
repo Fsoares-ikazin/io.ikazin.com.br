@@ -19,11 +19,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = posts.find(p => p.slug.en === slug || p.slug.pt === slug)
-  if (!post) return { title: 'Blog | IKAZIN.IO' }
+  if (!post) return { title: 'Blog | Ikazin.io' }
 
   const lang = post.slug.en === slug ? 'en' : 'pt'
   return {
-    title: `${post.title[lang]} | IKAZIN.IO`,
+    title: `${post.title[lang]} | Ikazin.io`,
     description: post.excerpt[lang],
   }
 }

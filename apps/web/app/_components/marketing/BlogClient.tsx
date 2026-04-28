@@ -140,15 +140,15 @@ export function BlogClient() {
             </div>
             <h2 className="mb-2 text-2xl font-black text-white">{t.newsletter.title}</h2>
             <p className="mb-6 text-sm text-gray-400">{t.newsletter.sub}</p>
-            <form className="flex gap-2 max-w-sm mx-auto" onSubmit={e => e.preventDefault()}>
+            <form className="mx-auto flex max-w-sm flex-col gap-2 sm:flex-row" onSubmit={e => e.preventDefault()}>
               <input
                 type="email"
                 placeholder={t.newsletter.placeholder}
-                className="flex-1 rounded-lg border border-ikz-border bg-ikz-bg px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-ikz-cyan focus:outline-none"
+                className="min-w-0 flex-1 rounded-lg border border-ikz-border bg-ikz-bg px-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-ikz-cyan focus:outline-none"
               />
               <button
                 type="submit"
-                className="rounded-lg bg-ikz-lime shadow-glow-lime px-5 py-2.5 text-sm font-semibold text-ikz-bg hover:opacity-90 hover:shadow-glow-lime-lg transition-all"
+                className="w-full shrink-0 rounded-lg bg-ikz-lime px-5 py-2.5 text-sm font-semibold text-ikz-bg shadow-glow-lime transition-all hover:opacity-90 hover:shadow-glow-lime-lg sm:w-auto"
               >
                 {t.newsletter.cta}
               </button>
@@ -160,7 +160,7 @@ export function BlogClient() {
       {/* Footer */}
       <footer className="border-t border-ikz-border px-6 py-8 mt-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row">
-          <span>© {new Date().getFullYear()} Ikazin®. {t.footerCopy}</span>
+          <span>© {new Date().getFullYear()} Ikazin.io. {t.footerCopy}</span>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-gray-400 transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-gray-400 transition-colors">Terms</Link>

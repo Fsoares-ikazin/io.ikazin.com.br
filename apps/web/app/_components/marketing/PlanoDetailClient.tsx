@@ -369,7 +369,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
       {/* Footer */}
       <footer className="border-t border-ikz-border px-6 py-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row">
-          <span>© {new Date().getFullYear()} Ikazin®. {lang === 'en' ? 'All rights reserved.' : 'Todos os direitos reservados.'}</span>
+          <span>© {new Date().getFullYear()} Ikazin.io. {lang === 'en' ? 'All rights reserved.' : 'Todos os direitos reservados.'}</span>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-gray-400 transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-gray-400 transition-colors">Terms</Link>
