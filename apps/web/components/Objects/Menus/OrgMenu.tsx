@@ -156,12 +156,12 @@ export const OrgMenu = (props: any) => {
                   {org?.logo_image ? (
                     <img
                       src={`${getOrgLogoMediaDirectory(org.org_uuid, org?.logo_image)}`}
-                      alt="Learnhouse"
+                      alt="Ikazin.io"
                       style={{ width: 'auto', height: '100%' }}
                       className="rounded-md"
                     />
                   ) : (
-                    <LearnHouseLogo logoFilter={colors.logoFilter} />
+                    <LearnHouseLogo />
                   )}
                 </div>
               </Link>
@@ -308,7 +308,7 @@ export const OrgMenu = (props: any) => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <a
-                        href="https://docs.learnhouse.app"
+                        href="https://ikazin.com.br"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2"
@@ -319,7 +319,7 @@ export const OrgMenu = (props: any) => {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <a
-                        href="https://learnhouse.app"
+                        href="https://ikazin.com.br"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2"
@@ -330,9 +330,7 @@ export const OrgMenu = (props: any) => {
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <a
-                        href="https://discord.gg/learnhouse"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href="mailto:contato@ikazin.com.br"
                         className="flex items-center gap-2"
                       >
                         <DiscordIcon size={16} />
@@ -547,14 +545,15 @@ const CopilotMenuButton = ({
   )
 }
 
-const LearnHouseLogo = ({ logoFilter }: { logoFilter: string }) => {
+const LearnHouseLogo = () => {
   return (
     <Image
-      src="/lrn-text.svg"
-      alt="LearnHouse logo"
+      src="/logo.png"
+      alt="Ikazin.io"
       width={133}
       height={40}
-      style={{ height: 'auto', filter: logoFilter }}
+      className="h-8 w-auto object-contain"
+      style={{ height: 'auto' }}
     />
   )
 }

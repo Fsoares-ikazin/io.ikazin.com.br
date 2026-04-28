@@ -22,7 +22,7 @@ export default function QuickStats() {
 
   if (statusLoading) {
     return (
-      <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
+      <div className="bg-ikz-surface rounded-xl border border-ikz-border p-5">
         <div className="h-[120px] flex items-center justify-center text-gray-300 text-xs">
           {t('dashboard.home.loading')}
         </div>
@@ -32,9 +32,9 @@ export default function QuickStats() {
 
   if (!isConfigured) {
     return (
-      <div className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] p-5">
+      <div className="bg-ikz-surface rounded-xl border border-ikz-border p-5">
         <div className="flex flex-col items-center justify-center py-6 text-center">
-          <div className="p-2.5 rounded-full bg-[#2D2D2D] mb-2.5">
+          <div className="p-2.5 rounded-full bg-ikz-border mb-2.5">
             <ChartBar size={18} weight="duotone" className="text-gray-500" />
           </div>
           <h3 className="text-xs font-semibold text-gray-300 mb-1">
@@ -45,7 +45,7 @@ export default function QuickStats() {
           </p>
           <Link
             href="/dash/analytics"
-            className="text-[11px] font-medium text-[#3587A4] hover:opacity-80"
+            className="text-[11px] font-medium text-ikz-cyan hover:opacity-80"
           >
             {t('dashboard.home.enable')} &rarr;
           </Link>
@@ -120,7 +120,7 @@ function QuickStatsContent() {
         <h3 className="text-sm font-semibold text-gray-200">{t('dashboard.home.quick_stats')}</h3>
         <Link
           href="/dash/analytics"
-          className="text-[11px] font-medium text-gray-500 hover:text-[#3587A4] transition-colors"
+          className="text-[11px] font-medium text-gray-500 hover:text-ikz-cyan transition-colors"
         >
           {t('dashboard.home.full_analytics')} &rarr;
         </Link>

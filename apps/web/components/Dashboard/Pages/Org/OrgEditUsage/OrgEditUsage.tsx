@@ -265,7 +265,7 @@ export default function OrgEditUsage() {
               </p>
             </div>
             <a
-              href="https://learnhouse.app"
+              href="https://ikazin.com.br"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"

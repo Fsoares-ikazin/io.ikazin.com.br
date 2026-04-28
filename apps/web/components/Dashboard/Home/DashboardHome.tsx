@@ -23,8 +23,8 @@ import ContentOverview from './ContentOverview'
 import UsageOverview from './UsageOverview'
 
 const PLAN_COLORS: Record<string, { bg: string; text: string }> = {
-  free: { bg: 'bg-[#2D2D2D]', text: 'text-gray-400' },
-  oss: { bg: 'bg-[rgba(34,197,94,0.1)]', text: 'text-emerald-400' },
+  free: { bg: 'bg-ikz-surface', text: 'text-gray-400' },
+  oss: { bg: 'bg-ikz-cyan/10', text: 'text-ikz-cyan' },
   standard: { bg: 'bg-[rgba(59,130,246,0.1)]', text: 'text-blue-400' },
   pro: { bg: 'bg-[rgba(168,85,247,0.1)]', text: 'text-purple-400' },
   enterprise: { bg: 'bg-[rgba(245,158,11,0.1)]', text: 'text-amber-400' },
@@ -50,7 +50,7 @@ export default function DashboardHome() {
   const planStyle = PLAN_COLORS[plan] || PLAN_COLORS.free
 
   return (
-    <div className="h-full w-full bg-[#0F1419]">
+    <div className="h-full w-full bg-ikz-bg">
       <div className="px-10 pt-8 pb-10">
         <div className="space-y-6 max-w-[1600px] mx-auto w-full">
           {/* Welcome Header */}
@@ -73,28 +73,28 @@ export default function DashboardHome() {
             <div className="flex items-center gap-2">
               <Link
                 href="/dash/courses?new=true"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-[#3587A4] rounded-lg hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-ikz-cyan rounded-lg hover:opacity-90 transition-opacity"
               >
                 <PlusCircle size={14} weight="bold" />
                 {t('dashboard.home.create_course')}
               </Link>
               <Link
                 href="/dash/analytics"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#1F1F1F] border border-[#2D2D2D] rounded-lg hover:bg-[#2D2D2D] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-ikz-surface border border-ikz-border rounded-lg hover:bg-ikz-surface/80 transition-colors"
               >
                 <ChartBar size={14} weight="bold" />
                 {t('dashboard.home.analytics')}
               </Link>
               <Link
                 href="/dash/users/settings/users"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#1F1F1F] border border-[#2D2D2D] rounded-lg hover:bg-[#2D2D2D] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-ikz-surface border border-ikz-border rounded-lg hover:bg-ikz-surface/80 transition-colors"
               >
                 <Users size={14} weight="bold" />
                 {t('dashboard.home.members')}
               </Link>
               <Link
                 href="/dash/org/settings/general"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-[#1F1F1F] border border-[#2D2D2D] rounded-lg hover:bg-[#2D2D2D] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-gray-300 bg-ikz-surface border border-ikz-border rounded-lg hover:bg-ikz-surface/80 transition-colors"
               >
                 <GearSix size={14} weight="bold" />
                 {t('dashboard.home.settings')}

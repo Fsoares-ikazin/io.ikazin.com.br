@@ -189,9 +189,9 @@ function DashLeftMenu() {
             />
           ) : (
             <img
-              src="/lrn-dash.svg"
-              alt="Learnhouse logo"
-              className="h-8 w-8"
+              src="/logo.png"
+              alt="Ikazin.io"
+              className="h-8 w-8 object-contain"
             />
           )}
           {!isCollapsed && (
@@ -748,7 +748,7 @@ function DashLeftMenu() {
                 <HoverMenuSeparator />
                 <HoverMenuItem asChild>
                   <a
-                    href="https://docs.learnhouse.app"
+                    href="https://ikazin.com.br"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/[0.08] cursor-pointer transition-colors"
@@ -759,7 +759,7 @@ function DashLeftMenu() {
                 </HoverMenuItem>
                 <HoverMenuItem asChild>
                   <a
-                    href="https://learnhouse.app"
+                    href="https://ikazin.com.br"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/[0.08] cursor-pointer transition-colors"
@@ -770,9 +770,7 @@ function DashLeftMenu() {
                 </HoverMenuItem>
                 <HoverMenuItem asChild>
                   <a
-                    href="https://discord.gg/learnhouse"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="mailto:contato@ikazin.com.br"
                     className="flex items-center gap-2 px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/[0.08] cursor-pointer transition-colors"
                   >
                     <DiscordIcon size={16} />

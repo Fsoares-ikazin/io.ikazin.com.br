@@ -154,7 +154,7 @@ export default function ContentOverview() {
         <Link
           key={card.label}
           href={card.href}
-          className="bg-[#1F1F1F] rounded-xl border border-[#2D2D2D] px-5 py-4 hover:border-[rgba(53,135,164,0.25)] transition-colors group"
+          className="bg-ikz-surface rounded-xl border border-ikz-border px-5 py-4 hover:border-ikz-cyan/25 transition-colors group"
         >
           <div className="flex items-center gap-2 mb-2">
             <div className={`p-1.5 rounded-lg ${card.iconBg}`}>

@@ -651,12 +651,12 @@ export default function OnboardingBar() {
                                       </div>
                                     )}
 
-                                  {/* Teach the world — LearnHouse University link */}
+                                  {/* Teach the world — Ikazin.io resources link */}
                                   {step.id === 'teach_the_world' &&
                                     !step.completed && (
                                       <div className="relative px-3 pb-3 space-y-2">
                                         <a
-                                          href="https://university.learnhouse.io"
+                                          href="https://ikazin.com.br"
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           onClick={() => completeStep('teach_the_world')}
@@ -664,7 +664,7 @@ export default function OnboardingBar() {
                                         >
                                           <img
                                             src="/UNI_LOGO.png"
-                                            alt="LearnHouse University"
+                                            alt="Ikazin.io"
                                             className="h-9 w-auto shrink-0 rounded"
                                           />
                                           <div className="min-w-0">
@@ -678,7 +678,7 @@ export default function OnboardingBar() {
                                           <span className="text-gray-300 shrink-0 ml-auto">→</span>
                                         </a>
                                         <a
-                                          href="https://classroom.learnhouse.io"
+                                          href="https://ikazin.com.br"
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           onClick={() => completeStep('teach_the_world')}
