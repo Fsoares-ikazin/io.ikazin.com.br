@@ -89,32 +89,32 @@ interface FormValues {
 
 const DETAIL_TEMPLATES = {
   general: [
-    { id: 'title', label: 'Title', icon: 'briefcase', text: '' },
-    { id: 'affiliation', label: 'Affiliation', icon: 'building-2', text: '' },
-    { id: 'location', label: 'Location', icon: 'map-pin', text: '' },
-    { id: 'website', label: 'Website', icon: 'globe', text: '' },
+    { id: 'title', label: 'Título', icon: 'briefcase', text: '' },
+    { id: 'affiliation', label: 'Afiliação', icon: 'building-2', text: '' },
+    { id: 'location', label: 'Localização', icon: 'map-pin', text: '' },
+    { id: 'website', label: 'Site', icon: 'globe', text: '' },
     { id: 'linkedin', label: 'LinkedIn', icon: 'link', text: '' }
   ],
   academic: [
-    { id: 'institution', label: 'Institution', icon: 'building-2', text: '' },
-    { id: 'department', label: 'Department', icon: 'graduation-cap', text: '' },
-    { id: 'research', label: 'Research Area', icon: 'book-open', text: '' },
-    { id: 'academic-title', label: 'Academic Title', icon: 'award', text: '' }
+    { id: 'institution', label: 'Instituição', icon: 'building-2', text: '' },
+    { id: 'department', label: 'Departamento', icon: 'graduation-cap', text: '' },
+    { id: 'research', label: 'Área de pesquisa', icon: 'book-open', text: '' },
+    { id: 'academic-title', label: 'Título acadêmico', icon: 'award', text: '' }
   ],
   professional: [
-    { id: 'company', label: 'Company', icon: 'building-2', text: '' },
-    { id: 'industry', label: 'Industry', icon: 'briefcase', text: '' },
-    { id: 'expertise', label: 'Expertise', icon: 'laptop-2', text: '' },
-    { id: 'community', label: 'Community', icon: 'users', text: '' }
+    { id: 'company', label: 'Empresa', icon: 'building-2', text: '' },
+    { id: 'industry', label: 'Indústria', icon: 'briefcase', text: '' },
+    { id: 'expertise', label: 'Especialização', icon: 'laptop-2', text: '' },
+    { id: 'community', label: 'Comunidade', icon: 'users', text: '' }
   ]
 } as const;
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  username: Yup.string().required('Username is required'),
-  first_name: Yup.string().required('First name is required'),
-  last_name: Yup.string().required('Last name is required'),
-  bio: Yup.string().max(400, 'Bio must be 400 characters or less'),
+  email: Yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+  username: Yup.string().required('Nome de usuário é obrigatório'),
+  first_name: Yup.string().required('Nome é obrigatório'),
+  last_name: Yup.string().required('Sobrenome é obrigatório'),
+  bio: Yup.string().max(400, 'A biografia deve ter 400 caracteres ou menos'),
   details: Yup.object().shape({})
 });
 
@@ -379,7 +379,7 @@ const UserEditForm = ({
                         const id = `detail-${Date.now()}`;
                         newDetails[id] = {
                           id,
-                          label: 'New Detail',
+                          label: 'Novo detalhe',
                           icon: '',
                           text: ''
                         };
@@ -545,7 +545,7 @@ function AccountGeneral() {
           setUserData(data);
         } catch (error) {
           console.error('Error fetching user data:', error);
-          setError('Failed to load user data');
+          setError('Não foi possível carregar os dados do usuário');
         }
       }
     };
@@ -625,7 +625,7 @@ function AccountGeneral() {
                 getUser(userData.id, access_token).then(setUserData);
               })
               .catch(() => {
-                toast.error('Failed to update profile', { id: loadingToast })
+                toast.error('Não foi possível atualizar o perfil', { id: loadingToast })
               })
           }, 400)
         }}

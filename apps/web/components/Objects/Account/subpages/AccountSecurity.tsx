@@ -47,10 +47,10 @@ function AccountSecurity() {
         await new Promise(resolve => setTimeout(resolve, 4000))
         signOut({ redirect: true, callbackUrl: getUriWithoutOrg('/') })
       } else {
-        toast.error(response.data.detail || 'Failed to update password', { id: loadingToast })
+        toast.error(response.data.detail || 'Não foi possível atualizar a senha', { id: loadingToast })
       }
     } catch (error: any) {
-      const errorMessage = error.data?.detail || 'Failed to update password. Please try again.'
+      const errorMessage = error.data?.detail || 'Não foi possível atualizar a senha. Tente novamente.'
       toast.error(errorMessage, { id: loadingToast })
       console.error('Password update error:', error)
     }

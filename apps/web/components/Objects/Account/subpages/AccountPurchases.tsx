@@ -27,14 +27,14 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
   const isActive = enrollment.status === 'active'
 
   const formattedPrice = enrollment.amount != null
-    ? new Intl.NumberFormat('en-US', {
+    ? new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: enrollment.currency ?? 'USD',
       }).format(enrollment.amount)
     : null
 
   const formattedDate = enrollment.creation_date
-    ? new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(
+    ? new Intl.DateTimeFormat('pt-BR', { year: 'numeric', month: 'short', day: 'numeric' }).format(
         new Date(enrollment.creation_date)
       )
     : null
@@ -45,13 +45,13 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
       <div className={`px-4 py-2 flex items-center justify-between ${isSubscription ? 'bg-indigo-50' : 'bg-gray-50'}`}>
         <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${isSubscription ? 'text-indigo-700' : 'text-gray-600'}`}>
           {isSubscription ? <RefreshCcw size={11} /> : <SquareCheck size={11} />}
-          {isSubscription ? 'Subscription' : 'One-time purchase'}
+          {isSubscription ? 'Assinatura' : 'Compra única'}
         </span>
         <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full ${
           isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
         }`}>
           <BadgeCheck size={11} />
-          {isActive ? 'Active' : enrollment.status}
+          {isActive ? 'Ativo' : enrollment.status}
         </span>
       </div>
 
@@ -65,7 +65,7 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
                 {formattedPrice}
               </p>
               {isSubscription && (
-                <p className="text-xs text-indigo-400 leading-none">recurring</p>
+                <p className="text-xs text-indigo-400 leading-none">recorrente</p>
               )}
             </div>
           )}
@@ -75,7 +75,7 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
         {formattedDate && (
           <div className="flex items-center gap-1.5 text-xs text-gray-400">
             <CalendarDays size={12} />
-            <span>Purchased {formattedDate}</span>
+            <span>Compra em {formattedDate}</span>
           </div>
         )}
 
@@ -85,7 +85,7 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
             href={getUriWithOrg(orgslug, `/store/offers/${enrollment.offer_id}`)}
             className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors px-3 py-2 rounded-lg"
           >
-            View offer <ArrowRight size={11} />
+            Ver oferta <ArrowRight size={11} />
           </Link>
           {isSubscription && (
             <button
@@ -95,7 +95,7 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
             >
               {billingLoading
                 ? <Loader2 size={12} className="animate-spin" />
-                : <><ExternalLink size={11} /> Manage subscription</>
+                : <><ExternalLink size={11} /> Gerenciar assinatura</>
               }
             </button>
           )}
@@ -127,10 +127,10 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
       if (url) {
         window.location.href = url
       } else {
-        toast.error('Could not open billing portal. Please try again.')
+        toast.error('Não foi possível abrir o portal de cobrança. Tente novamente.')
       }
     } catch {
-      toast.error('An error occurred. Please try again.')
+      toast.error('Ocorreu um erro. Tente novamente.')
     } finally {
       setBillingLoading(false)
     }
@@ -147,7 +147,7 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
   if (error) {
     return (
       <div className="bg-white rounded-xl nice-shadow p-8 text-center text-sm text-red-400">
-        Could not load purchases. Please refresh and try again.
+        Não foi possível carregar as compras. Atualize a página e tente novamente.
       </div>
     )
   }
@@ -161,9 +161,9 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
             <ShoppingBag size={18} className="text-gray-700" />
           </div>
           <div>
-            <h1 className="font-bold text-gray-900">Purchases</h1>
+            <h1 className="font-bold text-gray-900">Compras</h1>
             <p className="text-sm text-gray-400 mt-0.5">
-              Your active purchases and subscriptions
+              Seus cursos e assinaturas ativos
             </p>
           </div>
         </div>
@@ -175,15 +175,15 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
           <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mb-4 nice-shadow">
             <ShoppingBag size={24} className="text-gray-300" strokeWidth={1.5} />
           </div>
-          <h2 className="font-bold text-gray-600 mb-1">No purchases yet</h2>
+          <h2 className="font-bold text-gray-600 mb-1">Nenhuma compra ainda</h2>
           <p className="text-sm text-gray-400 max-w-xs">
-            Your purchases and subscriptions will appear here once you buy something from the store.
+            Seus cursos e assinaturas aparecerão aqui após a compra.
           </p>
           <Link
             href={getUriWithOrg(orgslug, '/store')}
             className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 transition-colors px-4 py-2 rounded-xl"
           >
-            Browse store <ArrowRight size={14} />
+            Ver loja <ArrowRight size={14} />
           </Link>
         </div>
       ) : (
@@ -200,8 +200,8 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
           {/* Global billing portal link for one-time purchases (invoices) */}
           <div className="bg-white rounded-xl nice-shadow p-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-gray-700">Invoices & receipts</p>
-              <p className="text-xs text-gray-400 mt-0.5">View and download all your invoices via the billing portal</p>
+              <p className="text-sm font-semibold text-gray-700">Faturas e recibos</p>
+              <p className="text-xs text-gray-400 mt-0.5">Veja e baixe todas as suas faturas pelo portal de cobrança</p>
             </div>
             <button
               onClick={handleManageBilling}
@@ -209,7 +209,7 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
               className="shrink-0 flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 disabled:opacity-60 transition-colors"
             >
               {billingLoading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={13} />}
-              Open portal
+              Abrir portal
             </button>
           </div>
         </div>
