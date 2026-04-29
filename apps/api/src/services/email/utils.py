@@ -172,7 +172,7 @@ def get_base_url_from_request(request: Request) -> str:
 def send_email(to: EmailStr, subject: str, body: str):
     lh_config = get_learnhouse_config()
     mailing = lh_config.mailing_config
-    sender = f"LearnHouse <{mailing.system_email_address}>"
+    sender = f"Ikazin.io <{mailing.system_email_address}>"
 
     if mailing.email_provider == "smtp":
         return _send_email_smtp(sender, to, subject, body, mailing)
@@ -231,4 +231,3 @@ def _send_email_smtp(sender: str, to: EmailStr, subject: str, body: str, mailing
                 server.quit()
             except Exception:
                 pass
-

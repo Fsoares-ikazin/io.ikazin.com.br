@@ -43,7 +43,7 @@ function getActivityTypeBadgeColor(activityType: string): string {
     case 'TYPE_ASSIGNMENT':
       return 'bg-orange-100 text-orange-700'
     default:
-      return 'bg-gray-100 text-gray-700'
+      return 'bg-ikz-surface text-gray-300'
   }
 }
 
@@ -77,10 +77,10 @@ const ActivityTooltipContent = memo(({
 }) => {
   const { t } = useTranslation();
   return (
-  <div className="bg-white rounded-lg nice-shadow py-3 px-4 min-w-[200px] animate-in fade-in duration-200">
+  <div className="bg-ikz-surface rounded-lg shadow-lg shadow-black/30 py-3 px-4 min-w-[200px] animate-in fade-in duration-200">
     <div className="flex items-center gap-2">
       <ActivityTypeIcon activityType={activity.activity_type} />
-      <span className="text-sm text-gray-700">{activity.name}</span>
+      <span className="text-sm text-gray-300">{activity.name}</span>
       {isDone && (
         <span className="ml-auto text-gray-400">
           <Check size={14} />
@@ -115,15 +115,15 @@ const ChapterTooltipContent = memo(({
 }) => {
   const { t } = useTranslation();
   return (
-  <div className="bg-white rounded-lg nice-shadow py-3 px-4 min-w-[200px] animate-in fade-in duration-200">
+  <div className="bg-ikz-surface rounded-lg shadow-lg shadow-black/30 py-3 px-4 min-w-[200px] animate-in fade-in duration-200">
     <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-gray-900">{t('courses.chapter')} {chapterNumber}</span>
-      <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full text-gray-600">
+      <span className="text-sm font-medium text-gray-100">{t('courses.chapter')} {chapterNumber}</span>
+      <span className="text-xs bg-ikz-surface px-2 py-0.5 rounded-full text-gray-400">
         {completedActivities}/{totalActivities} {t('common.completed')}
       </span>
     </div>
     <div className="mt-1">
-      <span className="text-sm text-gray-700">{chapter.name}</span>
+      <span className="text-sm text-gray-300">{chapter.name}</span>
     </div>
   </div>
   );
@@ -147,15 +147,15 @@ const CertificationBadge = memo(({
     sideOffset={8}
     unstyled
     content={
-      <div className="bg-white rounded-lg nice-shadow py-3 px-4 min-w-[200px] animate-in fade-in duration-200">
+      <div className="bg-ikz-surface rounded-lg shadow-lg shadow-black/30 py-3 px-4 min-w-[200px] animate-in fade-in duration-200">
         <div className="flex items-center gap-2">
           <Trophy size={16} className="text-yellow-500" />
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm font-medium text-gray-100">
             {isCompleted ? t('courses.course_completed_exclamation') : t('courses.course_completion')}
           </span>
         </div>
         <div className="mt-1">
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-gray-300">
             {isCompleted 
               ? t('certificate.view_certificate')
               : t('courses.unlock_certificate_message')
@@ -223,7 +223,7 @@ const MobileChapterSelector = memo(({
     <div ref={dropdownRef} className="relative">
       <button
         onClick={() => setIsOpen((v) => !v)}
-        className="flex items-center gap-0.5 text-[10px] text-gray-500 font-medium hover:text-gray-700 transition-colors"
+        className="flex items-center gap-0.5 text-[10px] text-gray-500 font-medium hover:text-gray-300 transition-colors"
       >
         <span>{t('courses.chapter')} {currentChapterIndex + 1}/{chapters.length}</span>
         <ChevronDown size={10} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -231,7 +231,7 @@ const MobileChapterSelector = memo(({
 
       {isOpen && (
         <div
-          className="absolute top-full left-0 mt-2 bg-white rounded-lg nice-shadow py-1.5 min-w-[220px] max-h-[60vh] overflow-y-auto"
+          className="absolute top-full left-0 mt-2 bg-ikz-surface rounded-lg shadow-lg shadow-black/30 py-1.5 min-w-[220px] max-h-[60vh] overflow-y-auto"
           style={{ zIndex: 'var(--z-dropdown)' }}
         >
           {chapters.map((chapter: any, chapterIdx: number) => {
@@ -256,12 +256,12 @@ const MobileChapterSelector = memo(({
                       onClick={handleClose}
                       className={`flex items-center gap-2 px-3 py-2 text-xs transition-colors ${
                         isCurrent
-                          ? 'bg-gray-50 text-gray-900 font-medium'
-                          : 'text-gray-600 hover:bg-gray-50'
+                          ? 'bg-ikz-bg text-gray-100 font-medium'
+                          : 'text-gray-400 hover:bg-ikz-surface/80'
                       }`}
                     >
                       <div className={`w-[6px] h-[6px] rounded-full shrink-0 ${
-                        isDone ? 'bg-teal-500' : isCurrent ? 'bg-gray-500 animate-pulse' : 'bg-zinc-200'
+                        isDone ? 'bg-teal-500' : isCurrent ? 'bg-ikz-bg0 animate-pulse' : 'bg-zinc-200'
                       }`} />
                       <ActivityTypeIcon activityType={activity.activity_type} />
                       <span className="truncate">{activity.name}</span>
@@ -290,7 +290,7 @@ function ActivityIndicators(props: Props) {
 
   const done_activity_style = 'bg-teal-500 hover:bg-teal-600'
   const black_activity_style = 'bg-zinc-200/80 hover:bg-zinc-300'
-  const current_activity_style = 'bg-gray-500 animate-pulse hover:bg-gray-600'
+  const current_activity_style = 'bg-ikz-bg0 animate-pulse hover:bg-gray-600'
 
   // Flatten all activities for navigation and rendering
   const allActivities = useMemo(() => {
@@ -409,7 +409,7 @@ function ActivityIndicators(props: Props) {
           <button
             onClick={navigateToPrevious}
             disabled={currentActivityIndex <= 0}
-            className="p-1.5 rounded-full bg-gray-50 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+            className="p-1.5 rounded-full bg-ikz-bg hover:bg-ikz-surface/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
             aria-label={t('activities.previous_activity')}
           >
             <ChevronLeft size={16} className="text-gray-500" />
@@ -447,7 +447,7 @@ function ActivityIndicators(props: Props) {
           <button
             onClick={navigateToNext}
             disabled={currentActivityIndex >= allActivities.length - 1}
-            className="p-1.5 rounded-full bg-gray-50 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+            className="p-1.5 rounded-full bg-ikz-bg hover:bg-ikz-surface/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
             aria-label={t('activities.next_activity')}
           >
             <ChevronRight size={16} className="text-gray-500" />
@@ -461,10 +461,10 @@ function ActivityIndicators(props: Props) {
           <button
             onClick={navigateToPrevious}
             disabled={currentActivityIndex <= 0}
-            className="p-1 rounded-full hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+            className="p-1 rounded-full hover:bg-ikz-surface/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
             aria-label={t('activities.previous_activity')}
           >
-            <ChevronLeft size={18} className="text-gray-600" />
+            <ChevronLeft size={18} className="text-gray-400" />
           </button>
         )}
 
@@ -571,10 +571,10 @@ function ActivityIndicators(props: Props) {
           <button
             onClick={navigateToNext}
             disabled={currentActivityIndex >= allActivities.length - 1}
-            className="p-1 rounded-full hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+            className="p-1 rounded-full hover:bg-ikz-surface/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
             aria-label={t('activities.next_activity')}
           >
-            <ChevronRight size={18} className="text-gray-600" />
+            <ChevronRight size={18} className="text-gray-400" />
           </button>
         )}
       </div>

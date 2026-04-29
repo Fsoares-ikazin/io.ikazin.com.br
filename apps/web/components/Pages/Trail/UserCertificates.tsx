@@ -37,15 +37,15 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
           <div className="p-2 bg-yellow-50 rounded-lg">
             <Award className="w-5 h-5 text-yellow-500" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900">{t('certificate.my_certificates')}</h2>
+          <h2 className="text-lg font-bold text-gray-100">{t('certificate.my_certificates')}</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-xl nice-shadow overflow-hidden animate-pulse">
-              <div className="aspect-video bg-gray-100" />
+            <div key={i} className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 overflow-hidden animate-pulse">
+              <div className="aspect-video bg-ikz-surface" />
               <div className="p-3 space-y-2">
-                <div className="h-4 bg-gray-100 rounded w-3/4" />
-                <div className="h-3 bg-gray-100 rounded w-1/2" />
+                <div className="h-4 bg-ikz-surface rounded w-3/4" />
+                <div className="h-3 bg-ikz-surface rounded w-1/2" />
               </div>
             </div>
           ))}
@@ -61,10 +61,10 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
           <div className="p-2 bg-yellow-50 rounded-lg">
             <Award className="w-5 h-5 text-yellow-500" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900">{t('certificate.my_certificates')}</h2>
+          <h2 className="text-lg font-bold text-gray-100">{t('certificate.my_certificates')}</h2>
         </div>
-        <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/30">
-          <div className="p-4 bg-white rounded-full nice-shadow mb-4">
+        <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-ikz-border rounded-2xl bg-ikz-bg/30">
+          <div className="p-4 bg-ikz-surface rounded-full shadow-lg shadow-black/30 mb-4">
             <Award className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
           </div>
           <p className="text-gray-500">{t('certificate.failed_load_certificates')}</p>
@@ -80,13 +80,13 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
           <div className="p-2 bg-yellow-50 rounded-lg">
             <Award className="w-5 h-5 text-yellow-500" />
           </div>
-          <h2 className="text-lg font-bold text-gray-900">{t('certificate.my_certificates')}</h2>
+          <h2 className="text-lg font-bold text-gray-100">{t('certificate.my_certificates')}</h2>
         </div>
-        <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/30">
-          <div className="p-4 bg-white rounded-full nice-shadow mb-4">
+        <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-ikz-border rounded-2xl bg-ikz-bg/30">
+          <div className="p-4 bg-ikz-surface rounded-full shadow-lg shadow-black/30 mb-4">
             <Award className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
           </div>
-          <h1 className="text-xl font-bold text-gray-600 mb-2">
+          <h1 className="text-xl font-bold text-gray-400 mb-2">
             {t('certificate.no_certificates_earned')}
           </h1>
           <p className="text-md text-gray-400 mb-6 text-center max-w-xs">
@@ -103,7 +103,7 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
         <div className="p-2 bg-yellow-50 rounded-lg">
           <Award className="w-5 h-5 text-yellow-500" />
         </div>
-        <h2 className="text-lg font-bold text-gray-900">{t('certificate.my_certificates')}</h2>
+        <h2 className="text-lg font-bold text-gray-100">{t('certificate.my_certificates')}</h2>
         <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
           {certificatesData.length}
         </span>
@@ -121,7 +121,7 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
           return (
             <div
               key={certificate.certificate_user.user_certification_uuid}
-              className="group relative flex flex-col bg-white rounded-xl nice-shadow overflow-hidden w-full transition-all duration-300 hover:scale-[1.01]"
+              className="group relative flex flex-col bg-ikz-surface rounded-xl shadow-lg shadow-black/30 overflow-hidden w-full transition-all duration-300 hover:scale-[1.01]"
             >
               {/* Thumbnail */}
               <Link
@@ -142,7 +142,7 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
                   />
                 ) : null}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg">
+                  <div className="p-3 bg-ikz-surface/90 backdrop-blur-sm rounded-full shadow-lg">
                     <Award className="w-8 h-8 text-yellow-500" />
                   </div>
                 </div>
@@ -154,7 +154,7 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
                   href={verificationLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-base font-bold text-gray-900 leading-tight hover:text-black transition-colors line-clamp-1"
+                  className="text-base font-bold text-gray-100 leading-tight hover:text-black transition-colors line-clamp-1"
                 >
                   {certificate.certification.config.certification_name}
                 </Link>
@@ -164,7 +164,7 @@ const UserCertificates: React.FC<UserCertificatesProps> = ({ orgslug }) => {
                   <span className="truncate">{certificate.course.name}</span>
                 </div>
 
-                <div className="pt-1.5 flex items-center justify-between border-t border-gray-100">
+                <div className="pt-1.5 flex items-center justify-between border-t border-ikz-border">
                   <div className="flex items-center gap-1.5 text-gray-500">
                     <Calendar size={12} />
                     <span className="text-[10px] font-bold uppercase tracking-wider">

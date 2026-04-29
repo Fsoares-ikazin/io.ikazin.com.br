@@ -303,11 +303,23 @@ def get_learnhouse_config() -> LearnHouseConfig:
     )
     system_email_address = env_system_email_address or yaml_config.get(
         "mailing_config", {}
-    ).get("system_email_address")
-    smtp_host = env_smtp_host or yaml_config.get("mailing_config", {}).get("smtp_host")
-    smtp_port = int(env_smtp_port) if env_smtp_port else yaml_config.get("mailing_config", {}).get("smtp_port", 587)
-    smtp_username = env_smtp_username or yaml_config.get("mailing_config", {}).get("smtp_username")
-    smtp_password = env_smtp_password or yaml_config.get("mailing_config", {}).get("smtp_password")
+    ).get("system_email_address") or "suporte@ikazin.com.br"
+    smtp_host = (
+        env_smtp_host
+        or yaml_config.get("mailing_config", {}).get("smtp_host")
+        or "smtp.zoho.com"
+    )
+    smtp_port = (
+        int(env_smtp_port)
+        if env_smtp_port
+        else yaml_config.get("mailing_config", {}).get("smtp_port", 587)
+    )
+    smtp_username = env_smtp_username or yaml_config.get("mailing_config", {}).get(
+        "smtp_username"
+    )
+    smtp_password = env_smtp_password or yaml_config.get("mailing_config", {}).get(
+        "smtp_password"
+    )
     smtp_use_tls = (
         env_smtp_use_tls.lower() in ("true", "1", "yes") if env_smtp_use_tls
         else yaml_config.get("mailing_config", {}).get("smtp_use_tls", True)

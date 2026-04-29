@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from datetime import datetime, timezone
 from typing import Literal
 from uuid import uuid4
@@ -404,8 +405,20 @@ async def update_user(
     _PROTECTED_FIELDS = {"is_superadmin", "id", "user_uuid"}
     user_data = user_object.model_dump(exclude_unset=True)
     for key, value in user_data.items():
-        if key not in _PROTECTED_FIELDS:
+        if key not in _PROTECTED_FIELDS and key != "phone_number":
             setattr(user, key, value)
+
+    phone_number = getattr(user_object, "phone_number", None)
+    if phone_number is not None:
+        phone_number = phone_number.strip()
+        if phone_number and not re.fullmatch(r"\+\d{10,15}", phone_number):
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid phone number format. Use E.164 format, e.g. +5511999999999.",
+            )
+        profile = dict(user.profile or {})
+        profile["phone_number"] = phone_number
+        user.profile = profile
 
     user.update_date = str(datetime.now())
 

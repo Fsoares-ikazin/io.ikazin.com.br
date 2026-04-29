@@ -112,7 +112,7 @@ function TrailCourseCard(props: TrailCourseCardProps) {
       {/* Thumbnail */}
       <Link
         href={courseLink}
-        className="block relative aspect-video overflow-hidden bg-gray-50"
+        className="block relative aspect-video overflow-hidden bg-ikz-bg"
       >
         {props.course.thumbnail_image && org?.org_uuid ? (
           <img

@@ -1064,6 +1064,8 @@
         "email_placeholder": "Seu endereço de e-mail",
         "username": "Nome de usuário",
         "username_placeholder": "Seu nome de usuário",
+        "phone_number": "Telefone (WhatsApp)",
+        "phone_number_placeholder": "+5511999999999",
         "first_name": "Nome",
         "first_name_placeholder": "Seu nome",
         "last_name": "Sobrenome",

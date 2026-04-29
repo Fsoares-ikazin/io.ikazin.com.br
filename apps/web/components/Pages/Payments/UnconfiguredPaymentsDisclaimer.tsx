@@ -22,15 +22,15 @@ const STEPS = [
 
 function UnconfiguredPaymentsDisclaimer() {
   return (
-    <div className="ml-10 mr-10 mx-auto bg-white rounded-xl nice-shadow px-4 py-4">
+    <div className="ml-10 mr-10 mx-auto bg-ikz-surface rounded-xl shadow-lg shadow-black/30 px-4 py-4">
       {/* Empty state */}
       <div className="flex flex-col items-center py-12 px-6 text-center">
         {/* Icon cluster */}
-        <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gray-100 mb-5">
+        <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-ikz-surface mb-5">
           <CreditCard className="text-gray-400" size={26} />
         </div>
 
-        <h3 className="font-semibold text-gray-800 text-base mb-1">
+        <h3 className="font-semibold text-gray-100 text-base mb-1">
           Payments not configured yet
         </h3>
         <p className="text-sm text-gray-500 max-w-xs mb-8">
@@ -42,13 +42,13 @@ function UnconfiguredPaymentsDisclaimer() {
           {STEPS.map(({ icon: Icon, title, description }, i) => (
             <div
               key={i}
-              className="flex items-start space-x-3 border border-gray-100 rounded-xl px-4 py-3 bg-gray-50"
+              className="flex items-start space-x-3 border border-ikz-border rounded-xl px-4 py-3 bg-ikz-bg"
             >
-              <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-gray-200 shrink-0 mt-0.5">
+              <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-ikz-surface border border-ikz-border shrink-0 mt-0.5">
                 <Icon size={14} className="text-gray-500" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-700">{title}</p>
+                <p className="text-sm font-medium text-gray-300">{title}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{description}</p>
               </div>
             </div>

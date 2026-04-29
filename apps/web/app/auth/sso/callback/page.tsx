@@ -52,7 +52,7 @@ export default function SSOCallbackPage() {
         setError({
           message: getErrorMessage('missing_params'),
           errorCode: 'missing_params',
-          errorDescription: 'Missing required parameters: code and state',
+          errorDescription: 'Parâmetros obrigatórios ausentes: code e state',
           technicalDetails: `code: ${code ? 'present' : 'missing'}\nstate: ${state ? 'present' : 'missing'}`,
         })
         setStatus('error')
@@ -82,7 +82,7 @@ export default function SSOCallbackPage() {
         if (signInResult?.error) {
           console.error('Sign-in failed:', signInResult.error)
           setError({
-            message: 'Failed to complete sign-in after SSO authentication',
+            message: 'Falha ao concluir o login após a autenticação SSO',
             errorCode: 'signin_failed',
             errorDescription: signInResult.error,
             technicalDetails: `Sign-in error: ${signInResult.error}`,
@@ -117,7 +117,7 @@ export default function SSOCallbackPage() {
           setError({
             message: err.message || t('auth.sso_callback.error'),
             errorCode: 'unknown_error',
-            errorDescription: err.message || 'An unknown error occurred',
+            errorDescription: err.message || 'Ocorreu um erro desconhecido',
             technicalDetails: err.stack || err.message,
           })
         }
@@ -183,7 +183,7 @@ export default function SSOCallbackPage() {
           {/* Provider info */}
           {error?.provider && (
             <p className="text-sm text-gray-400 mb-4">
-              Provider: {error.provider}
+              Provedor: {error.provider}
             </p>
           )}
 
@@ -195,7 +195,7 @@ export default function SSOCallbackPage() {
                 className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-200"
               >
                 <Info className="w-4 h-4" />
-                {showTechnicalDetails ? 'Hide' : 'Show'} technical details
+                {showTechnicalDetails ? 'Ocultar' : 'Mostrar'} detalhes técnicos
               </button>
 
               {showTechnicalDetails && (
@@ -203,7 +203,7 @@ export default function SSOCallbackPage() {
                   <button
                     onClick={copyToClipboard}
                     className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-400"
-                    title="Copy to clipboard"
+                    title="Copiar para a área de transferência"
                   >
                     {copied ? (
                       <Check className="w-4 h-4 text-green-500" />
@@ -223,7 +223,7 @@ export default function SSOCallbackPage() {
           {error?.errorCode === 'access_denied' && (
             <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
               <p className="text-sm text-amber-200">
-                <strong>Tip:</strong> If you declined the login request by mistake, try again and accept the permissions.
+                <strong>Dica:</strong> Se você recusou a solicitação de login por engano, tente novamente e aceite as permissões.
               </p>
             </div>
           )}
@@ -231,7 +231,7 @@ export default function SSOCallbackPage() {
           {error?.errorCode === 'invalid_state' && (
             <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
               <p className="text-sm text-amber-200">
-                <strong>Tip:</strong> Your session may have expired. Please try logging in again.
+                <strong>Dica:</strong> Sua sessão pode ter expirado. Tente entrar novamente.
               </p>
             </div>
           )}
@@ -239,7 +239,7 @@ export default function SSOCallbackPage() {
           {error?.errorCode === 'domain_not_allowed' && (
             <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
               <p className="text-sm text-amber-200">
-                <strong>Tip:</strong> Contact your organization administrator to verify your email domain is allowed.
+                <strong>Dica:</strong> Fale com o administrador da organização para verificar se seu domínio de e-mail é permitido.
               </p>
             </div>
           )}
@@ -247,7 +247,7 @@ export default function SSOCallbackPage() {
           {(error?.errorCode === 'auto_provision_disabled' || error?.errorCode === 'user_not_found') && (
             <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
               <p className="text-sm text-amber-200">
-                <strong>Tip:</strong> Your organization requires an administrator to create your account first. Contact your organization admin to request access.
+                <strong>Dica:</strong> Sua organização exige que um administrador crie sua conta primeiro. Fale com o administrador para solicitar acesso.
               </p>
             </div>
           )}
@@ -255,7 +255,7 @@ export default function SSOCallbackPage() {
           {error?.errorCode === 'sso_misconfigured' && (
             <div className="mb-6 p-3 border border-amber-800/60 bg-amber-950/35 rounded-md text-left">
               <p className="text-sm text-amber-200">
-                <strong>Tip:</strong> There may be a configuration issue with SSO. Please contact your IT administrator.
+                <strong>Dica:</strong> Pode haver um problema de configuração no SSO. Fale com o administrador de TI.
               </p>
             </div>
           )}

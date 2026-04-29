@@ -92,10 +92,10 @@ export default function AuthBrandingPanel({ org, welcomeText }: AuthBrandingPane
           </div>
         ) : !isEnterprise ? (
           <div className="login-topbar">
-            <Link prefetch href="https://learnhouse.app" target="_blank">
+            <Link prefetch href="https://io.ikazin.com.br" target="_blank">
               <img
-                src="/lrn.svg"
-                alt="LearnHouse"
+                src="/logo.png"
+                alt="Ikazin.io"
                 width={30}
                 height={30}
                 className={cn(

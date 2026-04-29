@@ -35,6 +35,7 @@ class UserUpdate(UserBase):
     bio: Optional[str] = ""
     details: Optional[dict] = Field(default_factory=dict)
     profile: Optional[dict] = Field(default_factory=dict)
+    phone_number: Optional[str] = None
 
 
 class UserUpdatePassword(SQLModel):

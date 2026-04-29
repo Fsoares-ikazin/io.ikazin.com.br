@@ -144,7 +144,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           color: ${theme.secondary};
           font-weight: 500;
         ">ID: ${certificateId}</div>
-        
+
         <div style="
           position: absolute;
           top: 20px;
@@ -160,7 +160,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
         ">
           <img src="${qrCodeDataUrl}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;" />
         </div>
-        
+
         <div style="
           display: flex;
           align-items: center;
@@ -177,7 +177,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           Certificate
           <div style="width: 24px; height: 1px; background: linear-gradient(90deg, transparent, ${theme.secondary}, transparent);"></div>
         </div>
-        
+
         <div style="
           width: 80px;
           height: 80px;
@@ -190,7 +190,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           font-size: 40px;
           line-height: 1;
         ">🏆</div>
-        
+
         <div style="
           font-size: 32px;
           font-weight: bold;
@@ -199,7 +199,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           line-height: 1.2;
           max-width: 600px;
         ">${userCertificate.certification.config.certification_name}</div>
-        
+
         <div style="
           font-size: 18px;
           color: #6b7280;
@@ -207,7 +207,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           line-height: 1.5;
           max-width: 500px;
         ">${userCertificate.certification.config.certification_description || 'This is to certify that the course has been successfully completed.'}</div>
-        
+
         <div style="
           display: flex;
           align-items: center;
@@ -219,7 +219,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           <div style="width: 4px; height: 4px; background: ${theme.primary}; border-radius: 50%; opacity: 0.6;"></div>
           <div style="width: 8px; height: 1px; background: ${theme.secondary}; opacity: 0.5;"></div>
         </div>
-        
+
         <div style="
           display: inline-flex;
           align-items: center;
@@ -245,7 +245,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
             userCertificate.certification.config.certification_type === 'workshop' ? 'Workshop Attendance' :
             userCertificate.certification.config.certification_type === 'specialization' ? 'Specialization' : 'Course Completion'}</span>
         </div>
-        
+
         <div style="
           margin-top: 30px;
           padding: 24px;
@@ -255,22 +255,22 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
           max-width: 400px;
         ">
           <div style="margin: 8px 0; font-size: 14px; color: #374151;">
-            <strong style="color: ${theme.primary};">Certificate ID:</strong> ${certificateId}
+            <strong style="color: ${theme.primary};">ID do certificado:</strong> ${certificateId}
           </div>
           <div style="margin: 8px 0; font-size: 14px; color: #374151;">
-            <strong style="color: ${theme.primary};">Awarded:</strong> ${new Date(userCertificate.certificate_user.created_at).toLocaleDateString('en-US', {
+            <strong style="color: ${theme.primary};">Emitido em:</strong> ${new Date(userCertificate.certificate_user.created_at).toLocaleDateString('pt-BR', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
             })}
           </div>
-          ${userCertificate.certification.config.certificate_instructor ? 
+          ${userCertificate.certification.config.certificate_instructor ?
             `<div style="margin: 8px 0; font-size: 14px; color: #374151;">
-              <strong style="color: ${theme.primary};">Instructor:</strong> ${userCertificate.certification.config.certificate_instructor}
+              <strong style="color: ${theme.primary};">Instrutor:</strong> ${userCertificate.certification.config.certificate_instructor}
             </div>` : ''
           }
         </div>
-        
+
         <div style="
           margin-top: 20px;
           font-size: 12px;
@@ -299,26 +299,26 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
       // Create PDF
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('landscape', 'mm', 'a4');
-      
+
       // Calculate dimensions to center the certificate
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgWidth = 280; // mm
       const imgHeight = 210; // mm
-      
+
       // Center the image
       const x = (pdfWidth - imgWidth) / 2;
       const y = (pdfHeight - imgHeight) / 2;
-      
+
       pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-      
+
       // Save the PDF
       const fileName = `${userCertificate.certification.config.certification_name.replace(/[^a-zA-Z0-9]/g, '_')}_Certificate.pdf`;
       pdf.save(fileName);
 
     } catch (error) {
       console.error('Error generating PDF:', error);
-      toast.error('Failed to generate PDF. Please try again.');
+      toast.error('Falha ao gerar o PDF. Tente novamente.');
     }
   };
 
@@ -327,7 +327,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading certificate...</p>
+          <p className="text-gray-400">Carregando certificado...</p>
         </div>
       </div>
     );
@@ -338,14 +338,14 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-red-800 mb-2">Certificate Not Available</h2>
+            <h2 className="text-xl font-semibold text-red-800 mb-2">Certificado indisponível</h2>
             <p className="text-red-600 mb-4">{error}</p>
             <Link
               href={getUriWithOrg(orgslug, '') + `/course/${courseid}`}
               className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-200"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Back to Course</span>
+              <span>Voltar ao curso</span>
             </Link>
           </div>
         </div>
@@ -358,16 +358,16 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-yellow-800 mb-2">No Certificate Found</h2>
+            <h2 className="text-xl font-semibold text-yellow-800 mb-2">Nenhum certificado encontrado</h2>
             <p className="text-yellow-600 mb-4">
-              No certificate is available for this course. Please contact your instructor for more information.
+              Nenhum certificado está disponível para este curso. Entre em contato com o instrutor para mais informações.
             </p>
             <Link
               href={getUriWithOrg(orgslug, '') + `/course/${courseid}`}
               className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-200"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Back to Course</span>
+              <span>Voltar ao curso</span>
             </Link>
           </div>
         </div>
@@ -376,31 +376,31 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-ikz-bg py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link
             href={getUriWithOrg(orgslug, '') + `/course/${courseid}`}
-            className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition duration-200"
+            className="inline-flex items-center space-x-2 text-gray-400 hover:text-gray-100 transition duration-200"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back to Course</span>
+            <span>Voltar ao curso</span>
           </Link>
-          
+
           <div className="flex items-center space-x-4">
             <button
               onClick={downloadCertificate}
               className="inline-flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition duration-200"
             >
               <Download className="w-5 h-5" />
-              <span>Download PDF</span>
+              <span>Baixar PDF</span>
             </button>
           </div>
         </div>
 
         {/* Certificate Display */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-ikz-surface rounded-2xl shadow-lg p-8">
           <div className="max-w-2xl mx-auto">
             <CertificatePreview
               certificationName={userCertificate.certification.config.certification_name}
@@ -409,7 +409,7 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
               certificatePattern={userCertificate.certification.config.certificate_pattern}
               certificateInstructor={userCertificate.certification.config.certificate_instructor}
               certificateId={userCertificate.certificate_user.user_certification_uuid}
-              awardedDate={new Date(userCertificate.certificate_user.created_at).toLocaleDateString('en-US', {
+              awardedDate={new Date(userCertificate.certificate_user.created_at).toLocaleDateString('pt-BR', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
@@ -420,12 +420,12 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
         </div>
 
         {/* Instructions */}
-        <div className="mt-8 text-center text-gray-600">
+        <div className="mt-8 text-center text-gray-400">
           <p className="mb-2">
-            Click "Download PDF" to generate and download a high-quality certificate PDF.
+            Clique em "Baixar PDF" para gerar e baixar um certificado em PDF de alta qualidade.
           </p>
           <p className="text-sm">
-            The PDF includes a scannable QR code for certificate verification.
+            O PDF inclui um QR code escaneável para verificação do certificado.
           </p>
         </div>
       </div>
@@ -433,4 +433,4 @@ const CertificatePage: React.FC<CertificatePageProps> = ({ orgslug, courseid, qr
   );
 };
 
-export default CertificatePage; 
+export default CertificatePage;

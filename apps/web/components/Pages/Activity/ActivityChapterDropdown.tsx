@@ -91,7 +91,7 @@ export default function ActivityChapterDropdown(props: ActivityChapterDropdownPr
         onClick={toggleDropdown}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="bg-white rounded-full px-5 nice-shadow flex items-center space-x-2 p-2.5 text-gray-700 hover:bg-gray-50 transition delay-150 duration-300 ease-in-out"
+        className="bg-ikz-surface rounded-full px-5 shadow-lg shadow-black/30 flex items-center space-x-2 p-2.5 text-gray-300 hover:bg-ikz-surface/80 transition delay-150 duration-300 ease-in-out"
         aria-label="View all activities"
         title="View all activities"
       >
@@ -100,12 +100,12 @@ export default function ActivityChapterDropdown(props: ActivityChapterDropdownPr
       </button>
       
       {isOpen && (
-        <div className={`absolute z-dropdown mt-2 ${isMobile ? 'right-0 w-[90vw] sm:w-72' : 'right-0 w-72'} max-h-[70vh] cursor-pointer overflow-y-auto bg-white rounded-lg shadow-xl border border-gray-200 py-1 animate-in fade-in duration-200`}>
-          <div className="px-3 py-1.5 border-b border-gray-100 flex justify-between items-center">
-            <h3 className="text-sm font-semibold text-gray-800">{t('courses.course_content')}</h3>
+        <div className={`absolute z-dropdown mt-2 ${isMobile ? 'right-0 w-[90vw] sm:w-72' : 'right-0 w-72'} max-h-[70vh] cursor-pointer overflow-y-auto bg-ikz-surface rounded-lg shadow-xl border border-ikz-border py-1 animate-in fade-in duration-200`}>
+          <div className="px-3 py-1.5 border-b border-ikz-border flex justify-between items-center">
+            <h3 className="text-sm font-semibold text-gray-100">{t('courses.course_content')}</h3>
             <button 
               onClick={() => setIsOpen(false)}
-              className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 cursor-pointer"
+              className="text-gray-500 hover:text-gray-300 p-1 rounded-full hover:bg-ikz-surface/80 cursor-pointer"
             >
               <X size={14} />
             </button>
@@ -114,9 +114,9 @@ export default function ActivityChapterDropdown(props: ActivityChapterDropdownPr
           <div className="py-0.5">
             {props.course.chapters.map((chapter: any, index: number) => (
               <div key={chapter.id} className="mb-1">
-                <div className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 border-y border-gray-100 flex items-center">
+                <div className="px-3 py-1.5 text-sm font-medium text-gray-400 bg-ikz-bg border-y border-ikz-border flex items-center">
                   <div className="flex items-center space-x-1.5">
-                    <div className="bg-gray-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    <div className="bg-ikz-bg0 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                       {index + 1}
                     </div>
                     <span>{chapter.name}</span>
