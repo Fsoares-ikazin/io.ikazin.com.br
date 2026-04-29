@@ -69,7 +69,7 @@ function CourseBoxes({ resources, orgUuid }: { resources: Resource[]; orgUuid: s
         return (
           <div
             key={r.resource_uuid}
-            className="relative h-20 w-32 overflow-hidden rounded-lg border-2 border-white shadow-lg shrink-0 bg-gray-200"
+            className="relative h-20 w-32 overflow-hidden rounded-lg border-2 border-ikz-border shadow-lg shadow-black/30 shrink-0 bg-ikz-bg"
             style={{
               backgroundImage: src ? `url(${src})` : undefined,
               backgroundSize: 'cover',
@@ -78,7 +78,7 @@ function CourseBoxes({ resources, orgUuid }: { resources: Resource[]; orgUuid: s
             }}
           >
             {!src && (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-ikz-surface to-ikz-bg">
                 {resourceIcon(r.resource_type)}
               </div>
             )}
@@ -96,11 +96,11 @@ function OfferCard({ offer, orgslug, orgUuid }: { offer: Offer; orgslug: string;
 
   return (
     <Link href={getUriWithOrg(orgslug, `/store/offers/${offer.offer_uuid}`)}>
-      <div className="group bg-white rounded-xl nice-shadow overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-200 hover:scale-[1.01]">
+      <div className="group bg-ikz-surface rounded-xl border border-ikz-border shadow-lg shadow-black/30 overflow-hidden flex flex-col h-full cursor-pointer transition-all duration-200 hover:scale-[1.01]">
 
         {/* Thumbnail area */}
         <div className={`relative aspect-video overflow-hidden flex items-center justify-center ${
-          isSubscription ? 'bg-gradient-to-br from-indigo-50 to-purple-50' : 'bg-gray-50'
+          isSubscription ? 'bg-gradient-to-br from-ikz-cyan/20 to-ikz-surface' : 'bg-ikz-bg'
         }`}>
           {resources.length > 0 ? (
             <div className="p-4 w-full">
@@ -117,7 +117,7 @@ function OfferCard({ offer, orgslug, orgUuid }: { offer: Offer; orgslug: string;
                 <RefreshCcw size={10} /> Assinatura
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-ikz-text bg-ikz-surface/90 backdrop-blur-sm rounded-full border border-ikz-border px-2.5 py-0.5">
                 <SquareCheck size={10} /> Compra única
               </span>
             )}
@@ -126,7 +126,7 @@ function OfferCard({ offer, orgslug, orgUuid }: { offer: Offer; orgslug: string;
 
         {/* Body */}
         <div className="p-4 flex flex-col flex-1 gap-2">
-          <h2 className="font-bold text-base text-gray-900 leading-snug group-hover:text-indigo-700 transition-colors">
+          <h2 className="font-bold text-base text-ikz-text leading-snug group-hover:text-ikz-cyan transition-colors">
             {offer.name}
           </h2>
           <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">{offer.description}</p>
@@ -147,12 +147,12 @@ function OfferCard({ offer, orgslug, orgUuid }: { offer: Offer; orgslug: string;
                     key={r.resource_uuid}
                     href={url}
                     onClick={e => e.stopPropagation()}
-                    className="flex items-center gap-2 text-xs text-gray-500 hover:text-indigo-600 transition-colors"
+                    className="flex items-center gap-2 text-xs text-gray-400 hover:text-ikz-cyan transition-colors"
                   >
                     {inner}
                   </a>
                 ) : (
-                  <div key={r.resource_uuid} className="flex items-center gap-2 text-xs text-gray-500">
+                  <div key={r.resource_uuid} className="flex items-center gap-2 text-xs text-gray-400">
                     {inner}
                   </div>
                 )
@@ -175,9 +175,9 @@ function OfferCard({ offer, orgslug, orgUuid }: { offer: Offer; orgslug: string;
           )}
 
           {/* Price + CTA */}
-          <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between">
+          <div className="mt-auto pt-3 border-t border-ikz-border flex items-center justify-between">
             <div>
-              <div className={`text-xl font-black ${isSubscription ? 'text-indigo-700' : 'text-gray-900'}`}>
+              <div className={`text-xl font-black ${isSubscription ? 'text-ikz-cyan' : 'text-ikz-text'}`}>
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: offer.currency }).format(offer.amount)}
               </div>
               {offer.price_type === 'customer_choice' && (
@@ -189,8 +189,8 @@ function OfferCard({ offer, orgslug, orgUuid }: { offer: Offer; orgslug: string;
             </div>
             <div className={`flex items-center gap-1.5 text-sm font-semibold px-3.5 py-2 rounded-xl transition-colors ${
               isSubscription
-                ? 'bg-indigo-600 text-white group-hover:bg-indigo-700'
-                : 'bg-gray-900 text-white group-hover:bg-gray-800'
+                ? 'bg-ikz-cyan text-white group-hover:bg-ikz-cyan/90'
+                : 'bg-ikz-cyan text-white group-hover:bg-ikz-cyan/90'
             }`}>
               {isSubscription ? 'Assinar' : 'Acessar'}
               <ArrowRight size={13} />
@@ -209,11 +209,11 @@ function Store({ orgslug, offers }: StoreProps) {
     <div className="w-full">
       <GeneralWrapperStyled>
         <div className="flex items-center gap-3 my-6">
-          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-white nice-shadow">
-            <ShoppingBag size={18} className="text-gray-800" />
+          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-ikz-cyan/10 border border-ikz-border shadow-lg shadow-black/30">
+            <ShoppingBag size={18} className="text-ikz-cyan" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-gray-900 tracking-tight">Loja</h1>
+            <h1 className="text-2xl font-black text-ikz-text tracking-tight">Loja</h1>
             {org?.name && (
               <p className="text-sm text-gray-400 mt-0.5">Desbloqueie conteúdos premium de {org.name}</p>
             )}
@@ -222,10 +222,10 @@ function Store({ orgslug, offers }: StoreProps) {
 
         {offers.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center mb-4 nice-shadow">
-              <ShoppingBag size={28} className="text-gray-300" strokeWidth={1.5} />
+            <div className="w-16 h-16 rounded-2xl bg-ikz-cyan/10 border border-ikz-border flex items-center justify-center mb-4 shadow-lg shadow-black/30">
+              <ShoppingBag size={28} className="text-ikz-cyan" strokeWidth={1.5} />
             </div>
-            <h2 className="text-xl font-bold text-gray-600 mb-2">Nenhuma oferta disponível ainda</h2>
+            <h2 className="text-xl font-bold text-ikz-text mb-2">Nenhuma oferta disponível ainda</h2>
             <p className="text-gray-400 text-sm max-w-sm">
               Volte em breve. Ofertas e assinaturas aparecerão aqui quando estiverem disponíveis.
             </p>

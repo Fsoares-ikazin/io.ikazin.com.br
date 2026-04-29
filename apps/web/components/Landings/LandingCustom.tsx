@@ -34,7 +34,7 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
         return (
           <div 
             key={`hero-${section.title}`}
-            className="min-h-[400px] sm:min-h-[500px] mt-[20px] sm:mt-[40px] mx-2 sm:mx-4 lg:mx-16 w-full flex items-center justify-center rounded-xl border border-gray-100"
+            className="min-h-[400px] sm:min-h-[500px] mt-[20px] sm:mt-[40px] mx-2 sm:mx-4 lg:mx-16 w-full flex items-center justify-center rounded-xl border border-ikz-border"
             style={{
               background: section.background.type === 'solid' 
                 ? section.background.color 
@@ -110,13 +110,13 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
             key={`text-image-${section.title}`}
             className="py-16 mx-2 sm:mx-4 lg:mx-16 w-full"
           >
-            <div className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 bg-white rounded-xl p-6 md:p-8 lg:p-12 nice-shadow ${
+            <div className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 bg-ikz-surface rounded-xl p-6 md:p-8 lg:p-12 shadow-lg shadow-black/30 ${
               section.flow === 'right' ? 'md:flex-row-reverse' : ''
             }`}>
               <div className="flex-1 w-full max-w-2xl">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900 tracking-tight">{section.title}</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-100 tracking-tight">{section.title}</h2>
                 <div className="prose prose-lg prose-gray max-w-none">
-                  <p className="text-base md:text-lg leading-relaxed text-gray-600 whitespace-pre-line">
+                  <p className="text-base md:text-lg leading-relaxed text-gray-400 whitespace-pre-line">
                     {section.text}
                   </p>
                 </div>
@@ -157,7 +157,7 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
             className="py-16 mx-2 sm:mx-4 lg:mx-16 w-full"
           >
             {section.title && (
-              <h2 className="text-2xl md:text-3xl font-bold text-left mb-16 text-gray-900">{section.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-left mb-16 text-gray-100">{section.title}</h2>
             )}
             <div className="flex justify-center w-full">
               <div className="flex flex-wrap justify-center gap-16 max-w-7xl">
@@ -180,7 +180,7 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
             key={`people-${section.title}`}
             className="py-16 mx-2 sm:mx-4 lg:mx-16 w-full"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-left mb-10 text-gray-900">{section.title}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-left mb-10 text-gray-100">{section.title}</h2>
             <div className="flex flex-wrap justify-center gap-x-20 gap-y-8">
               {section.people.map((person, index) => (
                 <div key={index} className="w-[140px] flex flex-col items-center">
@@ -197,12 +197,12 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
                       <img
                         src={person.image_url}
                         alt={person.name}
-                        className="w-full h-full rounded-full object-cover border-4 border-white nice-shadow"
+                        className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg shadow-black/30"
                       />
                     )}
                   </div>
-                  <h3 className="text-lg font-semibold text-center text-gray-900">{person.name}</h3>
-                  <p className="text-sm text-center text-gray-600 mt-1">{person.description}</p>
+                  <h3 className="text-lg font-semibold text-center text-gray-100">{person.name}</h3>
+                  <p className="text-sm text-center text-gray-400 mt-1">{person.description}</p>
                 </div>
               ))}
             </div>
@@ -215,7 +215,7 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
               key={`featured-courses-${section.title}`}
               className="py-16 mx-2 sm:mx-4 lg:mx-16 w-full"
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-left mb-6 text-gray-900">{section.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-left mb-6 text-gray-100">{section.title}</h2>
               <div className="text-center py-6 text-gray-500">{t('courses.loading_courses')}</div>
             </div>
           )
@@ -230,7 +230,7 @@ function LandingCustom({ landing, orgslug }: LandingCustomProps) {
             key={`featured-courses-${section.title}`}
             className="py-16 mx-2 sm:mx-4 lg:mx-16 w-full"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-left mb-6 text-gray-900">{section.title}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-left mb-6 text-gray-100">{section.title}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
               {featuredCourses.map((course: any) => (
                 <div key={course.course_uuid} className="w-full flex justify-center">

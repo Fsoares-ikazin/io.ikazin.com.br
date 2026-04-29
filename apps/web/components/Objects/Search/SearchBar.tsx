@@ -79,15 +79,15 @@ interface SearchBarProps {
 const CourseResultsSkeleton = () => (
   <div className="p-2 ">
     <div className="flex items-center gap-2 px-2 py-2">
-      <div className="w-4 h-4 bg-black/5 rounded animate-pulse" />
-      <div className="w-20 h-4 bg-black/5 rounded animate-pulse" />
+      <div className="w-4 h-4 bg-ikz-border rounded animate-pulse" />
+      <div className="w-20 h-4 bg-ikz-border rounded animate-pulse" />
     </div>
     {[1, 2].map((i) => (
       <div key={i} className="flex items-center gap-3 p-2">
-        <div className="w-10 h-10 bg-black/5 rounded-lg animate-pulse" />
+        <div className="w-10 h-10 bg-ikz-border rounded-lg animate-pulse" />
         <div className="flex-1">
-          <div className="w-48 h-4 bg-black/5 rounded animate-pulse mb-2" />
-          <div className="w-32 h-4 bg-black/5 rounded animate-pulse" />
+          <div className="w-48 h-4 bg-ikz-border rounded animate-pulse mb-2" />
+          <div className="w-32 h-4 bg-ikz-border rounded animate-pulse" />
         </div>
       </div>
     ))}
@@ -183,13 +183,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       return (
         <div className="py-8 px-4 bg-ikz-bg">
           <div className="flex flex-col items-center text-center">
-            <div className="mb-4 p-3 bg-black/5 rounded-full">
-              <Sparkles className="w-6 h-6 text-black/70" />
+            <div className="mb-4 p-3 bg-ikz-cyan/10 rounded-full">
+              <Sparkles className="w-6 h-6 text-ikz-cyan" />
             </div>
             <h3 className="text-sm font-medium text-ikz-cyan mb-1">
               {t('search.discover_next_journey')}
             </h3>
-            <p className="text-xs text-ikz-text max-w-[240px]">
+            <p className="text-xs text-gray-400 max-w-[240px]">
               {t('search.start_typing_to_search')}
             </p>
           </div>
@@ -200,16 +200,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchQuery, t]);
 
   const searchTerms = useMemo(() => [
-    { term: searchQuery, type: 'exact', icon: <Search size={14} className="text-black/40" /> },
-    { term: `${searchQuery} courses`, type: 'courses', icon: <BookCopy size={14} className="text-black/40" /> },
-    { term: `${searchQuery} collections`, type: 'collections', icon: <SquareLibrary size={14} className="text-black/40" /> },
+    { term: searchQuery, type: 'exact', icon: <Search size={14} className="text-gray-400" /> },
+    { term: `${searchQuery} cursos`, type: 'courses', icon: <BookCopy size={14} className="text-gray-400" /> },
+    { term: `${searchQuery} coleções`, type: 'collections', icon: <SquareLibrary size={14} className="text-gray-400" /> },
   ], [searchQuery]);
 
   const MemoizedSearchSuggestions = useMemo(() => {
     if (searchQuery.trim()) {
       return (
         <div className="p-2">
-          <div className="flex items-center gap-2 px-2 py-2 text-sm text-black/50">
+          <div className="flex items-center gap-2 px-2 py-2 text-sm text-gray-400">
             <ScanSearch size={16} />
             <span className="font-medium">{t('search.search_suggestions')}</span>
           </div>
@@ -218,13 +218,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <Link
                 key={`${term}-${type}`}
                 href={getUriWithOrg(orgslug, `/search?q=${encodeURIComponent(term)}`)}
-                className="flex items-center px-3 py-2 hover:bg-black/[0.02] rounded-lg transition-colors group"
+                className="flex items-center px-3 py-2 hover:bg-ikz-bg/80 rounded-lg transition-colors group"
               >
                 <div className="flex items-center gap-2 flex-1">
                   {icon}
-                  <span className="text-sm text-black/70">{term}</span>
+                  <span className="text-sm text-ikz-text">{term}</span>
                 </div>
-                <ArrowUpRight size={14} className="text-black/30 group-hover:text-black/50 transition-colors" />
+                <ArrowUpRight size={14} className="text-gray-500 group-hover:text-ikz-cyan transition-colors" />
               </Link>
             ))}
           </div>
@@ -243,7 +243,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     
     return (
       <div className="p-2">
-        <div className="flex items-center gap-2 px-2 py-2 text-sm text-black/50">
+        <div className="flex items-center gap-2 px-2 py-2 text-sm text-gray-400">
           <TextSearch size={16} />
           <span className="font-medium">{t('search.quick_results')}</span>
         </div>
@@ -251,7 +251,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         {/* Courses Section */}
         {searchResults.courses.length > 0 && (
           <div className="mb-2">
-            <div className="flex items-center gap-2 px-2 py-1 text-xs text-black/40">
+            <div className="flex items-center gap-2 px-2 py-1 text-xs text-gray-400">
               <BookCopy size={12} />
               <span>{t('courses.courses')}</span>
             </div>
@@ -259,7 +259,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <Link
                 key={course.course_uuid}
                 href={getUriWithOrg(orgslug, `/course/${removeCoursePrefix(course.course_uuid)}`)}
-                className="flex items-center gap-3 p-2 hover:bg-black/[0.02] rounded-lg transition-colors"
+                className="flex items-center gap-3 p-2 hover:bg-ikz-bg/80 rounded-lg transition-colors"
               >
                 <div className="relative">
                   {course.thumbnail_image ? (
@@ -269,20 +269,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                       className="w-10 h-10 object-cover rounded-lg"
                     />
                   ) : (
-                    <div className="w-10 h-10 bg-black/5 rounded-lg flex items-center justify-center">
-                      <BookCopy size={20} className="text-black/40" />
+                    <div className="w-10 h-10 bg-ikz-bg rounded-lg flex items-center justify-center">
+                      <BookCopy size={20} className="text-gray-400" />
                     </div>
                   )}
-                  <div className="absolute -bottom-1 -right-1 bg-white shadow-sm p-1 rounded-full">
-                    <BookCopy size={11} className="text-black/60" />
+                  <div className="absolute -bottom-1 -right-1 bg-ikz-surface shadow-sm p-1 rounded-full border border-ikz-border">
+                    <BookCopy size={11} className="text-ikz-cyan" />
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-black/80 truncate">{course.name}</h3>
-                    <span className="text-[10px] font-medium text-black/40 uppercase tracking-wide whitespace-nowrap">{t('search.course')}</span>
+                    <h3 className="text-sm font-medium text-ikz-text truncate">{course.name}</h3>
+                    <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap">{t('search.course')}</span>
                   </div>
-                  <p className="text-xs text-black/50 truncate">{course.description}</p>
+                  <p className="text-xs text-gray-400 truncate">{course.description}</p>
                 </div>
               </Link>
             ))}
@@ -292,7 +292,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         {/* Collections Section */}
         {searchResults.collections.length > 0 && (
           <div className="mb-2">
-            <div className="flex items-center gap-2 px-2 py-1 text-xs text-black/40">
+            <div className="flex items-center gap-2 px-2 py-1 text-xs text-gray-400">
               <SquareLibrary size={12} />
               <span>{t('collections.collections')}</span>
             </div>
@@ -300,17 +300,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <Link
                 key={collection.collection_uuid}
                 href={getUriWithOrg(orgslug, `/collection/${collection.collection_uuid}`)}
-                className="flex items-center gap-3 p-2 hover:bg-black/[0.02] rounded-lg transition-colors"
+                className="flex items-center gap-3 p-2 hover:bg-ikz-bg/80 rounded-lg transition-colors"
               >
-                <div className="w-10 h-10 bg-black/5 rounded-lg flex items-center justify-center">
-                  <SquareLibrary size={20} className="text-black/40" />
+                <div className="w-10 h-10 bg-ikz-bg rounded-lg flex items-center justify-center">
+                  <SquareLibrary size={20} className="text-ikz-cyan" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-black/80 truncate">{collection.name}</h3>
-                    <span className="text-[10px] font-medium text-black/40 uppercase tracking-wide whitespace-nowrap">{t('collections.collection')}</span>
+                    <h3 className="text-sm font-medium text-ikz-text truncate">{collection.name}</h3>
+                    <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap">{t('collections.collection')}</span>
                   </div>
-                  <p className="text-xs text-black/50 truncate">{collection.description}</p>
+                  <p className="text-xs text-gray-400 truncate">{collection.description}</p>
                 </div>
               </Link>
             ))}
@@ -320,7 +320,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         {/* Users Section */}
         {searchResults.users.length > 0 && (
           <div className="mb-2">
-            <div className="flex items-center gap-2 px-2 py-1 text-xs text-black/40">
+            <div className="flex items-center gap-2 px-2 py-1 text-xs text-gray-400">
               <Users size={12} />
               <span>{t('common.users')}</span>
             </div>
@@ -328,7 +328,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               <Link
                 key={user.user_uuid}
                 href={getUriWithOrg(orgslug, `/user/${user.username}`)}
-                className="flex items-center gap-3 p-2 hover:bg-black/[0.02] rounded-lg transition-colors"
+                className="flex items-center gap-3 p-2 hover:bg-ikz-bg/80 rounded-lg transition-colors"
               >
                 <UserAvatar
                   width={40}
@@ -341,12 +341,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-black/80 truncate">
+                    <h3 className="text-sm font-medium text-ikz-text truncate">
                       {user.first_name} {user.last_name}
                     </h3>
-                    <span className="text-[10px] font-medium text-black/40 uppercase tracking-wide whitespace-nowrap">{t('search.user')}</span>
+                    <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap">{t('search.user')}</span>
                   </div>
-                  <p className="text-xs text-black/50 truncate">@{user.username}</p>
+                  <p className="text-xs text-gray-400 truncate">@{user.username}</p>
                 </div>
               </Link>
             ))}
@@ -381,8 +381,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </div>
 
       <div 
-        className={`absolute z-dropdown w-full mt-2 bg-white rounded-xl nice-shadow 
-                   overflow-hidden divide-y divide-black/5
+        className={`absolute z-dropdown w-full mt-2 bg-ikz-surface rounded-xl shadow-lg shadow-black/30 border border-ikz-border
+                   overflow-hidden divide-y divide-ikz-border
                    transition-all duration-200 ease-in-out transform
                    ${showResults ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}
                    ${isMobile ? 'max-w-full' : 'min-w-[400px]'}`}
@@ -403,7 +403,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                    searchQuery.trim()) && (
                   <Link
                     href={getUriWithOrg(orgslug, `/search?q=${encodeURIComponent(searchQuery)}`)}
-                    className="flex items-center justify-between px-4 py-2.5 text-xs text-black/50 hover:text-black/70 hover:bg-black/[0.02] transition-colors"
+                    className="flex items-center justify-between px-4 py-2.5 text-xs text-gray-400 hover:text-ikz-text hover:bg-ikz-bg/80 transition-colors"
                   >
                     <span>{t('search.view_all_results')}</span>
                     <ArrowRight size={14} />

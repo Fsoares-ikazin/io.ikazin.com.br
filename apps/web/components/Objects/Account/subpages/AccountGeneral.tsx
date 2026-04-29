@@ -169,7 +169,7 @@ const DetailCard = React.memo(({
   }, [detail.label]);
 
   return (
-    <div className="space-y-2 p-4 border rounded-lg bg-white shadow-sm">
+    <div className="space-y-2 p-4 border rounded-lg bg-ikz-surface shadow-sm">
       <div className="flex justify-between items-center mb-3">
         <Input
           value={localLabel}
@@ -263,8 +263,8 @@ const UserEditForm = ({
   return (
     <Form>
       <div className="flex flex-col gap-0">
-        <div className="flex flex-col bg-gray-50 -space-y-1 px-5 py-3 mx-3 my-3 rounded-md">
-          <h1 className="font-bold text-xl text-gray-800">
+        <div className="flex flex-col bg-ikz-bg -space-y-1 px-5 py-3 mx-3 my-3 rounded-md">
+          <h1 className="font-bold text-xl text-gray-100">
             {t('user.settings.general.title')}
           </h1>
           <h2 className="text-gray-500 text-md">
@@ -473,7 +473,7 @@ const UserEditForm = ({
 
           {/* Profile Picture Section */}
           <div className="lg:w-80 w-full">
-            <div className="bg-gray-50/50 p-6 rounded-lg nice-shadow h-full">
+            <div className="bg-ikz-surface/70 border border-ikz-border p-6 rounded-lg shadow-lg shadow-black/30 h-full">
               <div className="flex flex-col items-center space-y-6">
                 <Label className="font-bold">{t('user.settings.general.profile_picture')}</Label>
                 {profilePicture.error && (
@@ -607,7 +607,7 @@ function AccountGeneral() {
 
   if (!userData) {
     return (
-      <div className="bg-white rounded-xl nice-shadow p-8">
+      <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 p-8">
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
         </div>
@@ -616,7 +616,7 @@ function AccountGeneral() {
   }
 
   return (
-    <div className="bg-white rounded-xl nice-shadow">
+    <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30">
       <Formik<FormValues>
         enableReinitialize
         initialValues={{

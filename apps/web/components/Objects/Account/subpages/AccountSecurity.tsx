@@ -57,10 +57,10 @@ function AccountSecurity() {
   }
 
   return (
-    <div className="bg-white rounded-xl nice-shadow">
+    <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30">
       <div className="flex flex-col gap-0">
-        <div className="flex flex-col bg-gray-50 -space-y-1 px-5 py-3 mx-3 my-3 rounded-md">
-          <h1 className="font-bold text-xl text-gray-800">
+        <div className="flex flex-col bg-ikz-bg -space-y-1 px-5 py-3 mx-3 my-3 rounded-md">
+          <h1 className="font-bold text-xl text-gray-100">
             {t('user.settings.password.title')}
           </h1>
           <h2 className="text-gray-500 text-md">

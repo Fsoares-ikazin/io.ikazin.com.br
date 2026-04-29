@@ -27,9 +27,9 @@ export function AccountSidebar({ orgslug, currentSubpage }: AccountSidebarProps)
   return (
     <div className="space-y-4">
       {/* User Info Card */}
-      <div className="bg-white nice-shadow rounded-lg overflow-hidden">
+      <div className="bg-ikz-surface shadow-lg shadow-black/30 rounded-lg overflow-hidden">
         {/* User Profile Header */}
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-4 border-b border-ikz-border">
           <div className="flex flex-col items-center text-center">
             <UserAvatar
               border="border-4"
@@ -37,7 +37,7 @@ export function AccountSidebar({ orgslug, currentSubpage }: AccountSidebarProps)
               width={80}
             />
             <div className="mt-3">
-              <h2 className="font-semibold text-gray-900">
+              <h2 className="font-semibold text-gray-100">
                 {user?.first_name} {user?.last_name}
               </h2>
               <p className="text-sm text-gray-500">@{user?.username}</p>
@@ -47,8 +47,8 @@ export function AccountSidebar({ orgslug, currentSubpage }: AccountSidebarProps)
 
         {/* User Bio (truncated) */}
         {user?.bio && (
-          <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+          <div className="px-4 py-3 border-b border-ikz-border">
+            <p className="text-sm text-gray-400 leading-relaxed line-clamp-3">
               {user.bio}
             </p>
           </div>
@@ -67,7 +67,7 @@ export function AccountSidebar({ orgslug, currentSubpage }: AccountSidebarProps)
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                     isActive
                       ? 'bg-gray-900 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      : 'text-gray-300 hover:bg-ikz-surface'
                   }`}
                 >
                   <Icon size={18} className={isActive ? 'text-white' : 'text-gray-500'} />

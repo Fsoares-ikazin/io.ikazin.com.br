@@ -85,7 +85,7 @@ function Trail(params: any) {
                   disabled={isQuittingAll}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors
                     ${isQuittingAll
-                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                      ? 'bg-ikz-surface text-gray-500 cursor-not-allowed border border-ikz-border'
                       : 'bg-red-50 text-red-700 hover:bg-red-100'
                     }`}
                 >
@@ -104,11 +104,11 @@ function Trail(params: any) {
         {!trail ? (
           <PageLoading></PageLoading>
         ) : trail.runs.length === 0 ? (
-          <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50/30">
-            <div className="p-4 bg-white rounded-full nice-shadow mb-4">
-              <BookOpen className="w-8 h-8 text-gray-300" strokeWidth={1.5} />
+          <div className="col-span-full flex flex-col justify-center items-center py-12 px-4 border-2 border-dashed border-ikz-border rounded-2xl bg-ikz-surface/60">
+            <div className="p-4 bg-ikz-cyan/10 rounded-full shadow-lg shadow-black/30 mb-4">
+              <BookOpen className="w-8 h-8 text-ikz-cyan" strokeWidth={1.5} />
             </div>
-            <h1 className="text-xl font-bold text-gray-600 mb-2">
+            <h1 className="text-xl font-bold text-ikz-text mb-2">
               {t('user.no_courses_in_progress')}
             </h1>
             <p className="text-md text-gray-400 mb-6 text-center max-w-xs">

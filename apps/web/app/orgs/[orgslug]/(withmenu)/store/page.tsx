@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: { params: PageParams }): Prom
     ? getOrgOgImageMediaDirectory(org?.org_uuid, seoConfig.default_og_image)
     : null
   const imageUrl = ogImageUrl || (org ? getOrgThumbnailMediaDirectory(org.org_uuid, org.thumbnail_image) : undefined)
-  const title = buildPageTitle('Store', org?.name || 'Organization', seoConfig)
-  const description = `Browse offers and subscriptions from ${org?.name || 'this organization'}`
+  const title = buildPageTitle('Loja', org?.name || 'Ikazin.io', seoConfig)
+  const description = `Explore formações, ofertas e assinaturas de ${org?.name || 'Ikazin.io'}`
   const canonical = getCanonicalUrl(orgslug, '/store')
 
   return {
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: PageParams }): Prom
       title,
       description,
       type: 'website',
-      ...(imageUrl && { images: [{ url: imageUrl, width: 800, height: 600, alt: org?.name || 'Store' }] }),
+      ...(imageUrl && { images: [{ url: imageUrl, width: 800, height: 600, alt: org?.name || 'Loja' }] }),
     },
     twitter: {
       card: 'summary_large_image',
@@ -49,12 +49,12 @@ export default async function StorePage({ params }: { params: PageParams }) {
   if (!paymentsEnabled) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-        <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center mb-4 nice-shadow">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <div className="w-16 h-16 rounded-2xl bg-ikz-cyan/10 border border-ikz-border flex items-center justify-center mb-4 shadow-lg shadow-black/30">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-ikz-cyan"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         </div>
-        <h2 className="text-xl font-bold text-gray-600 mb-2">Store not available</h2>
+        <h2 className="text-xl font-bold text-ikz-text mb-2">Loja indisponível</h2>
         <p className="text-gray-400 text-sm max-w-sm">
-          This organization has not enabled their store yet.
+          As ofertas e assinaturas ainda não foram habilitadas.
         </p>
       </div>
     )
@@ -69,8 +69,8 @@ export default async function StorePage({ params }: { params: PageParams }) {
   }
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
-    { name: 'Home', url: getCanonicalUrl(orgslug, '/') },
-    { name: 'Store', url: getCanonicalUrl(orgslug, '/store') },
+    { name: 'Início', url: getCanonicalUrl(orgslug, '/') },
+    { name: 'Loja', url: getCanonicalUrl(orgslug, '/store') },
   ])
 
   return (

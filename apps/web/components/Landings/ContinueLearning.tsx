@@ -73,7 +73,7 @@ export default function ContinueLearning({ orgslug }: ContinueLearningProps) {
             </div>
             <p className="mt-0.5 text-[10px] text-gray-500">{pct}% concluído</p>
           </div>
-          <ArrowRight size={14} className="text-gray-600 group-hover:text-ikz-cyan shrink-0 transition-colors" />
+          <ArrowRight size={14} className="text-gray-400 group-hover:text-ikz-cyan shrink-0 transition-colors" />
         </Link>
       )
     }
@@ -88,7 +88,7 @@ export default function ContinueLearning({ orgslug }: ContinueLearningProps) {
             <img src={thumbnail} alt={course.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           ) : (
             <div className="flex items-center justify-center h-full w-full">
-              <BookOpen size={40} className="text-gray-700" />
+              <BookOpen size={40} className="text-gray-300" />
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

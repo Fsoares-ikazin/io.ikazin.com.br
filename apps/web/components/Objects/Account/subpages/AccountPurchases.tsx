@@ -40,15 +40,15 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
     : null
 
   return (
-    <div className="bg-white rounded-xl nice-shadow overflow-hidden">
+    <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 overflow-hidden">
       {/* Type stripe */}
-      <div className={`px-4 py-2 flex items-center justify-between ${isSubscription ? 'bg-indigo-50' : 'bg-gray-50'}`}>
-        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${isSubscription ? 'text-indigo-700' : 'text-gray-600'}`}>
+      <div className={`px-4 py-2 flex items-center justify-between ${isSubscription ? 'bg-indigo-50' : 'bg-ikz-bg'}`}>
+        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${isSubscription ? 'text-indigo-700' : 'text-gray-400'}`}>
           {isSubscription ? <RefreshCcw size={11} /> : <SquareCheck size={11} />}
           {isSubscription ? 'Assinatura' : 'Compra única'}
         </span>
         <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded-full ${
-          isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+          isActive ? 'bg-green-100 text-green-700' : 'bg-ikz-surface text-gray-500'
         }`}>
           <BadgeCheck size={11} />
           {isActive ? 'Ativo' : enrollment.status}
@@ -58,10 +58,10 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
       <div className="p-4 space-y-3">
         {/* Offer name + price */}
         <div className="flex items-start justify-between gap-3">
-          <p className="font-bold text-gray-900 leading-snug">{enrollment.offer_name}</p>
+          <p className="font-bold text-gray-100 leading-snug">{enrollment.offer_name}</p>
           {formattedPrice && (
             <div className="shrink-0 text-right">
-              <p className={`font-black text-lg ${isSubscription ? 'text-indigo-700' : 'text-gray-900'}`}>
+              <p className={`font-black text-lg ${isSubscription ? 'text-indigo-700' : 'text-gray-100'}`}>
                 {formattedPrice}
               </p>
               {isSubscription && (
@@ -83,7 +83,7 @@ function EnrollmentCard({ enrollment, orgslug, onManageBilling, billingLoading }
         <div className="flex items-center gap-2 pt-1">
           <Link
             href={getUriWithOrg(orgslug, `/store/offers/${enrollment.offer_id}`)}
-            className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors px-3 py-2 rounded-lg"
+            className="flex-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-400 bg-ikz-surface hover:bg-gray-200 transition-colors px-3 py-2 rounded-lg"
           >
             Ver oferta <ArrowRight size={11} />
           </Link>
@@ -138,7 +138,7 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl nice-shadow p-12 flex items-center justify-center">
+      <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 p-12 flex items-center justify-center">
         <Loader2 size={24} className="animate-spin text-gray-300" />
       </div>
     )
@@ -146,7 +146,7 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
 
   if (error) {
     return (
-      <div className="bg-white rounded-xl nice-shadow p-8 text-center text-sm text-red-400">
+      <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 p-8 text-center text-sm text-red-400">
         Não foi possível carregar as compras. Atualize a página e tente novamente.
       </div>
     )
@@ -155,13 +155,13 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="bg-white rounded-xl nice-shadow p-5">
+      <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 p-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center nice-shadow">
-            <ShoppingBag size={18} className="text-gray-700" />
+          <div className="w-10 h-10 rounded-xl bg-ikz-bg flex items-center justify-center shadow-lg shadow-black/30">
+            <ShoppingBag size={18} className="text-gray-300" />
           </div>
           <div>
-            <h1 className="font-bold text-gray-900">Compras</h1>
+            <h1 className="font-bold text-gray-100">Compras</h1>
             <p className="text-sm text-gray-400 mt-0.5">
               Seus cursos e assinaturas ativos
             </p>
@@ -171,11 +171,11 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
 
       {/* Enrollment list */}
       {enrollments.length === 0 ? (
-        <div className="bg-white rounded-xl nice-shadow p-12 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mb-4 nice-shadow">
+        <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 p-12 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-2xl bg-ikz-bg flex items-center justify-center mb-4 shadow-lg shadow-black/30">
             <ShoppingBag size={24} className="text-gray-300" strokeWidth={1.5} />
           </div>
-          <h2 className="font-bold text-gray-600 mb-1">Nenhuma compra ainda</h2>
+          <h2 className="font-bold text-gray-400 mb-1">Nenhuma compra ainda</h2>
           <p className="text-sm text-gray-400 max-w-xs">
             Seus cursos e assinaturas aparecerão aqui após a compra.
           </p>
@@ -198,9 +198,9 @@ function AccountPurchases({ orgId, orgslug }: AccountPurchasesProps) {
             />
           ))}
           {/* Global billing portal link for one-time purchases (invoices) */}
-          <div className="bg-white rounded-xl nice-shadow p-4 flex items-center justify-between gap-3">
+          <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30 p-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-gray-700">Faturas e recibos</p>
+              <p className="text-sm font-semibold text-gray-300">Faturas e recibos</p>
               <p className="text-xs text-gray-400 mt-0.5">Veja e baixe todas as suas faturas pelo portal de cobrança</p>
             </div>
             <button

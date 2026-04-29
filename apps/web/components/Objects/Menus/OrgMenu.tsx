@@ -161,7 +161,7 @@ export const OrgMenu = (props: any) => {
                       className="rounded-md"
                     />
                   ) : (
-                    <LearnHouseLogo />
+                    <IkazinLogo />
                   )}
                 </div>
               </Link>
@@ -545,7 +545,7 @@ const CopilotMenuButton = ({
   )
 }
 
-const LearnHouseLogo = () => {
+const IkazinLogo = () => {
   return (
     <Image
       src="/logo.png"
