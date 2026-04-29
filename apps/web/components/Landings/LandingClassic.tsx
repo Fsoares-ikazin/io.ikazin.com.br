@@ -14,9 +14,11 @@ interface LandingClassicProps {
   collections: any[]
   orgslug: string
   org_id: string | number
+  headline?: string
+  subtitle?: string
 }
 
-function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassicProps) {
+function LandingClassic({ courses, collections, orgslug, org_id, headline, subtitle }: LandingClassicProps) {
   const session = useLHSession() as any
   const org = useOrg() as any
   const token = session?.data?.tokens?.access_token
@@ -55,12 +57,12 @@ function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassi
   const uncategorised = publishedCourses.filter((c) => !collectionCourseIds.has(c.course_uuid))
 
   return (
-    <div className="w-full bg-ikz-bg">
+    <div className="w-full bg-ikz-bg text-ikz-text">
       {/* Hero */}
-      <NetflixHero course={featuredCourse} orgslug={orgslug} />
+      <NetflixHero course={featuredCourse} orgslug={orgslug} headline={headline} subtitle={subtitle} />
 
       {/* Rows */}
-      <div className="px-6 md:px-12 lg:px-16 pt-6 pb-12">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-8 pb-12 sm:px-6 lg:px-8">
         {/* Continue Watching */}
         {inProgressRuns.length > 0 && (
           <NetflixRow
@@ -94,9 +96,9 @@ function LandingClassic({ courses, collections, orgslug, org_id }: LandingClassi
 
         {/* Empty state */}
         {publishedCourses.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <p className="text-gray-500 text-sm mb-2">Nenhum curso disponível ainda.</p>
-            <p className="text-gray-600 text-xs">Os cursos publicados aparecerão aqui.</p>
+          <div className="flex min-h-[320px] flex-col items-center justify-center rounded-lg border border-ikz-border bg-ikz-surface/70 px-6 py-24 text-center shadow-lg shadow-black/20">
+            <p className="mb-2 text-sm font-semibold text-ikz-text">Nenhum curso disponível ainda.</p>
+            <p className="text-xs text-gray-400">Os cursos publicados aparecerão aqui.</p>
           </div>
         )}
       </div>

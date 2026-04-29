@@ -64,7 +64,7 @@ export default function SSOCallbackPage() {
         const result = await handleSSOCallback(code, state)
 
         // Use absolute URL with current origin for custom domain support
-        const defaultRedirect = `${window.location.origin}/redirect_from_auth`
+        const defaultRedirect = `${window.location.origin}/auth/post-login`
         const redirectUrl = result.redirect_url || defaultRedirect
 
         // Use the credentials provider with SSO tokens

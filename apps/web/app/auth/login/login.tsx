@@ -52,7 +52,7 @@ const LoginClient = (props: LoginClientProps) => {
       document.cookie = `learnhouse_oauth_org_id=${props.org.id}${baseAttributes}${domainAttr}`;
     }
     // Use absolute URL with current origin for custom domain support
-    signIn('google', { callbackUrl: `${window.location.origin}/redirect_from_auth` });
+    signIn('google', { callbackUrl: `${window.location.origin}/auth/post-login` });
   };
 
   // Check if SSO is enabled for this organization (requires enterprise plan)
@@ -152,7 +152,7 @@ const LoginClient = (props: LoginClientProps) => {
       }
 
       // Use absolute URL with current origin for custom domain support
-      const callbackUrl = `${window.location.origin}/redirect_from_auth`;
+      const callbackUrl = `${window.location.origin}/auth/post-login`;
 
       const res = await signIn('credentials', {
         redirect: false,

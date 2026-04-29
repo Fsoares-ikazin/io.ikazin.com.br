@@ -32,7 +32,7 @@ function NetflixCard({ course, orgslug, trailRun }: { course: any; orgslug: stri
     <Link
       href={courseLink}
       prefetch={false}
-      className="group relative shrink-0 w-[200px] md:w-[220px] lg:w-[240px] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:z-10 hover:shadow-2xl"
+      className="group relative w-[190px] shrink-0 cursor-pointer overflow-hidden rounded-lg border border-ikz-border bg-ikz-surface transition-all duration-300 hover:z-10 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40 sm:w-[220px] lg:w-[240px]"
     >
       {/* Thumbnail */}
       <div className="relative aspect-video bg-ikz-surface overflow-hidden">
@@ -44,7 +44,7 @@ function NetflixCard({ course, orgslug, trailRun }: { course: any; orgslug: stri
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-ikz-surface">
-            <BookOpen size={32} className="text-gray-700" />
+            <BookOpen size={32} className="text-gray-500" />
           </div>
         )}
 
@@ -75,7 +75,7 @@ function NetflixCard({ course, orgslug, trailRun }: { course: any; orgslug: stri
       </div>
 
       {/* Title always visible below */}
-      <div className="bg-ikz-surface px-2 py-2">
+      <div className="min-h-12 bg-ikz-surface px-2.5 py-2">
         <p className="text-white text-xs font-semibold line-clamp-1">{course.name}</p>
         {pct !== null && pct > 0 && (
           <p className="text-[10px] text-gray-500 mt-0.5">{pct}% concluído</p>
@@ -100,14 +100,14 @@ export default function NetflixRow({ title, courses, orgslug, trailRuns }: Netfl
     trailRuns?.find((r: any) => r.course.course_uuid === course_uuid)
 
   return (
-    <div className="mb-8 group/row">
-      <h2 className="text-sm font-bold text-gray-200 mb-3 px-1">{title}</h2>
+    <section className="mb-10 group/row">
+      <h2 className="mb-3 px-1 text-base font-bold text-gray-100">{title}</h2>
       <div className="relative">
         {/* Left arrow */}
         <button
           onClick={() => scroll('left')}
           aria-label="Scroll left"
-          className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center bg-black/70 hover:bg-black text-white rounded-full opacity-0 group-hover/row:opacity-100 transition-opacity shadow-lg"
+          className="absolute -left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/70 text-white opacity-0 shadow-lg transition-opacity hover:bg-black group-hover/row:opacity-100"
         >
           <ChevronLeft size={18} />
         </button>
@@ -115,7 +115,7 @@ export default function NetflixRow({ title, courses, orgslug, trailRuns }: Netfl
         {/* Scroll container */}
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth pb-2"
+          className="flex gap-3 overflow-x-auto scroll-smooth pb-3"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {courses.map((course: any) => (
@@ -132,11 +132,11 @@ export default function NetflixRow({ title, courses, orgslug, trailRuns }: Netfl
         <button
           onClick={() => scroll('right')}
           aria-label="Scroll right"
-          className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center bg-black/70 hover:bg-black text-white rounded-full opacity-0 group-hover/row:opacity-100 transition-opacity shadow-lg"
+          className="absolute -right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/70 text-white opacity-0 shadow-lg transition-opacity hover:bg-black group-hover/row:opacity-100"
         >
           <ChevronRight size={18} />
         </button>
       </div>
-    </div>
+    </section>
   )
 }

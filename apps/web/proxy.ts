@@ -269,8 +269,7 @@ export default async function proxy(req: NextRequest) {
   if (pathname == '/redirect_from_auth') {
     const searchParams = req.nextUrl.searchParams
     const queryString = searchParams.toString()
-    // Redirect to /dash so the proxy routes to the org dashboard, not the marketing landing page
-    const redirectPathname = '/dash'
+    const redirectPathname = '/auth/post-login'
 
     // Check if we have a custom domain cookie
     const customDomain = req.cookies.get('learnhouse_custom_domain')?.value

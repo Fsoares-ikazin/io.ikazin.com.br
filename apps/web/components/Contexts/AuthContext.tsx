@@ -725,7 +725,7 @@ export function useSession(): UseSessionReturn {
 
 // Validate OAuth state parameter (call this on callback page)
 export function validateOAuthState(state: string): { valid: boolean; callbackUrl: string } {
-  const defaultResult = { valid: false, callbackUrl: '/redirect_from_auth' }
+  const defaultResult = { valid: false, callbackUrl: '/auth/post-login' }
 
   try {
     const stateData = JSON.parse(atob(state))
@@ -754,7 +754,7 @@ export function validateOAuthState(state: string): { valid: boolean; callbackUrl
 
     return {
       valid: true,
-      callbackUrl: stateData.callbackUrl || '/redirect_from_auth',
+      callbackUrl: stateData.callbackUrl || '/auth/post-login',
     }
   } catch (error) {
     console.error('OAuth state validation error:', error)

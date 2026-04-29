@@ -105,7 +105,7 @@ function OpenSignUpComponent() {
       document.cookie = `learnhouse_oauth_org_id=${org.id}${baseAttributes}${domainAttr}`;
     }
     // Use absolute URL with current origin for custom domain support
-    signIn('google', { callbackUrl: `${window.location.origin}/redirect_from_auth` });
+    signIn('google', { callbackUrl: `${window.location.origin}/auth/post-login` });
   };
 
   return (
