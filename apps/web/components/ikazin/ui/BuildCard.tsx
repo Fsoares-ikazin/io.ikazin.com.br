@@ -26,6 +26,8 @@ export type BuildCardProps = {
   thumbnailUrl?: string
   durationSeconds?: number | null
   status?: BuildStatus
+  /** Se true, a imagem é tratada como above-the-fold (sem lazy). Default: false. */
+  priority?: boolean
 }
 
 function formatDuration(seconds: number): string {
@@ -52,6 +54,7 @@ export default function BuildCard({
   thumbnailUrl,
   durationSeconds,
   status,
+  priority = false,
 }: BuildCardProps) {
   const pct = progress?.percent ?? 0
   const completed = progress?.completed ?? false
@@ -74,6 +77,8 @@ export default function BuildCard({
           <img
             src={thumbnailUrl}
             alt={title}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
             className="h-full w-full object-cover"
           />
         ) : (

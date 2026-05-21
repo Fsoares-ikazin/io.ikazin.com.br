@@ -227,7 +227,7 @@ Para cada bloco, validar manual em browser:
 - [ ] **Marketing usa `ikz-lime`/`ikz-cyan`** — atualmente mitigado por CSS alias (P0.3 do plan). Refactor formal: substituir classes para emerald. ~6h.
 - [ ] **CSS vars vs tokens.ts desconexão** — `tailwind.config.js` usa `hsl(var(--primary))` mas Ikazin usa hex em tokens.ts. Unificar fazendo Tailwind extend com `ikz.*` tokens. ~2h.
 - [ ] **TIER_CONFIG legado em `constants.ts`** — marcado `@deprecated`, mas ainda importado em `dashboard/page.tsx` (já migrado para TIERS), `HeroContinueCard` antigo, `NextBuildCompactCard` antigo. Validar: rodar `grep -rn "TIER_CONFIG\|IKAZIN_DESIGN\|getTierForBuild" apps/web/` e remover referências. ~1h.
-- [ ] **`react-hot-toast` E `sonner` coexistem no package.json** — escolher um (decisão: sonner) e remover o outro + callsites. ~30min.
+- [x] ~~**`react-hot-toast` E `sonner` coexistem no package.json**~~ — **decisão: coexistir**. `sonner` para componentes Ikazin (`/components/ikazin/`, `/app/orgs/[orgslug]/(ikazin)/`), `react-hot-toast` mantido em 20+ arquivos LH-stock (regra CLAUDE.md isolamento — não tocar fora de /ikazin/). Sem ação.
 - [ ] **`emoji-mart` força React peer 16-18** — uso `--legacy-peer-deps`. Avaliar substituto ou aceitar. Documentar.
 - [ ] **Border radius múltiplos valores** (`rounded-xl`, `rounded-[18px]`, `rounded-[20px]`, `rounded-[24px]`) — padronizar 3 valores via `tokens.radius.{md,lg,xl}` e Tailwind extend. ~1h.
 - [ ] **Tinybird offline em dev** — admin Analytics tab sem fallback. Adicionar empty state genérico. ~30min.
