@@ -4,9 +4,17 @@ import { useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js'
 import { Play, ChevronDown } from 'lucide-react'
 import { track } from '@/lib/ikazin/analytics'
+import { toast } from '@/lib/ikazin/toast'
+import { copy } from '@/lib/ikazin/copy'
+import { useNowPlaying } from '@/lib/ikazin/now-playing-context'
+import { color, type BuildTier } from '@/lib/ikazin/tokens'
 
 type BuildVideoPlayerProps = {
   buildId: string
+  buildNumber?: number
+  title?: string
+  tier?: BuildTier
+  thumbnailUrl?: string
   playbackUrl: string | null
   accessToken?: string
   onCompleted: () => void
@@ -14,8 +22,14 @@ type BuildVideoPlayerProps = {
 
 const PLAYBACK_SPEEDS = [0.75, 1, 1.25, 1.5, 2] as const
 
+const PROGRESS_INTERVAL_SECONDS = 10
+
 export default function BuildVideoPlayer({
   buildId,
+  buildNumber,
+  title,
+  tier = 'basic',
+  thumbnailUrl,
   playbackUrl,
   accessToken,
   onCompleted,
@@ -25,11 +39,28 @@ export default function BuildVideoPlayer({
   const lastPostedSecondRef = useRef(0)
   const startedRef = useRef(false)
   const milestonesRef = useRef<Set<number>>(new Set())
+  const nowPlayingUpdateRef = useRef(0)
+
   const [speed, setSpeed] = useState<number>(1)
+  const { setNowPlaying, update: updateNowPlaying } = useNowPlaying()
 
   useEffect(() => {
     if (!playbackUrl || !videoRef.current) return
     const video = videoRef.current
+
+    // Register this build as NowPlaying immediately
+    if (buildNumber) {
+      setNowPlaying({
+        buildId,
+        buildNumber,
+        title: title ?? `Build ${buildNumber}`,
+        thumbnailUrl: thumbnailUrl ?? null,
+        tier,
+        currentTime: 0,
+        duration: 0,
+        isPlaying: false,
+      })
+    }
 
     async function applyResumePosition() {
       try {
@@ -70,28 +101,34 @@ export default function BuildVideoPlayer({
       const second = Math.floor(video.currentTime ?? 0)
       if (second <= 0) return
 
-      const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0
-      if (duration > 0) {
-        const currentPercent = Math.round((second / duration) * 100)
+      const videoDuration =
+        Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0
+
+      if (videoDuration > 0) {
+        const currentPercent = Math.round((second / videoDuration) * 100)
         for (const milestone of [25, 50, 75, 100]) {
           if (currentPercent >= milestone && !milestonesRef.current.has(milestone)) {
             milestonesRef.current.add(milestone)
-            track('video_progress', {
-              build_id: buildId,
-              percent: milestone,
-            })
+            track('video_progress', { build_id: buildId, percent: milestone })
           }
         }
       }
 
-      if (second - lastPostedSecondRef.current < 10) return
+      // Throttle NowPlaying updates to avoid React re-renders every frame
+      const now = Date.now()
+      if (now - nowPlayingUpdateRef.current > 2000) {
+        nowPlayingUpdateRef.current = now
+        updateNowPlaying({ currentTime: second, duration: videoDuration, isPlaying: !video.paused })
+      }
 
+      if (second - lastPostedSecondRef.current < PROGRESS_INTERVAL_SECONDS) return
       lastPostedSecondRef.current = second
-      const percent = duration > 0 ? second / duration : 0
+      const percent = videoDuration > 0 ? second / videoDuration : 0
       void persistProgress(second, percent)
     }
 
     async function handleEnded() {
+      updateNowPlaying({ isPlaying: false, currentTime: video.duration })
       try {
         await fetch(`/api/v1/ikazin/progress/${buildId}/complete`, {
           method: 'PUT',
@@ -99,21 +136,23 @@ export default function BuildVideoPlayer({
           headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
         })
       } catch {}
-      track('video_completed', {
-        build_id: buildId,
-      })
+      track('video_completed', { build_id: buildId })
       onCompleted()
     }
 
     function handlePlay() {
+      updateNowPlaying({ isPlaying: true })
       if (startedRef.current) return
       startedRef.current = true
-      track('video_started', {
-        build_id: buildId,
-      })
+      track('video_started', { build_id: buildId })
+    }
+
+    function handlePause() {
+      updateNowPlaying({ isPlaying: false, currentTime: Math.floor(video.currentTime) })
     }
 
     function handleLoadedMetadata() {
+      updateNowPlaying({ duration: video.duration })
       void applyResumePosition()
     }
 
@@ -124,6 +163,11 @@ export default function BuildVideoPlayer({
       hlsRef.current = hls
       hls.loadSource(playbackUrl)
       hls.attachMedia(video)
+      hls.on(Hls.Events.ERROR, (_event, data) => {
+        if (data.fatal) {
+          toast.error(copy.errors.videoLoadFailed)
+        }
+      })
     } else {
       video.src = playbackUrl
     }
@@ -132,12 +176,14 @@ export default function BuildVideoPlayer({
     video.addEventListener('timeupdate', handleTimeUpdate)
     video.addEventListener('ended', handleEnded)
     video.addEventListener('play', handlePlay)
+    video.addEventListener('pause', handlePause)
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata)
       video.removeEventListener('timeupdate', handleTimeUpdate)
       video.removeEventListener('ended', handleEnded)
       video.removeEventListener('play', handlePlay)
+      video.removeEventListener('pause', handlePause)
       if (hlsRef.current) {
         hlsRef.current.destroy()
         hlsRef.current = null
@@ -145,7 +191,7 @@ export default function BuildVideoPlayer({
       video.removeAttribute('src')
       video.load()
     }
-  }, [accessToken, buildId, onCompleted, playbackUrl])
+  }, [accessToken, buildId, buildNumber, onCompleted, playbackUrl, setNowPlaying, thumbnailUrl, tier, title, updateNowPlaying])
 
   async function handleSpeedChange(nextSpeed: number) {
     setSpeed(nextSpeed)
@@ -180,15 +226,17 @@ export default function BuildVideoPlayer({
         className="h-full w-full bg-black object-contain"
       />
 
+      {/* Watermark */}
       <div className="pointer-events-none absolute right-4 top-4 rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[11px] font-bold tracking-[0.28em] text-white/30">
         IKAZIN
       </div>
 
+      {/* Speed control */}
       <div className="absolute left-4 top-4 z-10">
         <div className="group relative">
           <button
             type="button"
-            className="flex items-center gap-2 rounded-full border border-zinc-700 bg-black/60 px-3 py-1.5 text-xs font-semibold text-zinc-100 backdrop-blur-sm"
+            className="flex items-center gap-2 rounded-full border border-zinc-700 bg-black/60 px-3 py-1.5 text-xs font-semibold text-zinc-100 backdrop-blur-sm transition-colors hover:border-zinc-600"
           >
             {speed}x
             <ChevronDown className="h-3.5 w-3.5" />
@@ -200,12 +248,12 @@ export default function BuildVideoPlayer({
                 key={option}
                 type="button"
                 onClick={() => void handleSpeedChange(option)}
-                className={[
-                  'block w-full px-3 py-2 text-left text-xs transition-colors',
+                className="block w-full px-3 py-2 text-left text-xs transition-colors"
+                style={
                   speed === option
-                    ? 'bg-emerald-500/15 text-emerald-400'
-                    : 'text-zinc-300 hover:bg-zinc-900 hover:text-zinc-100',
-                ].join(' ')}
+                    ? { background: color.primary.soft, color: color.primary.text }
+                    : { color: '#d4d4d8' }
+                }
               >
                 {option}x
               </button>

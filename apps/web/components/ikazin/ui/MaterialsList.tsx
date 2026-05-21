@@ -5,6 +5,8 @@ import { Archive, Microchip, Code2, FileText, Download } from 'lucide-react'
 
 import { Button } from '@components/ui/button'
 import { track } from '@/lib/ikazin/analytics'
+import { toast } from '@/lib/ikazin/toast'
+import { copy } from '@/lib/ikazin/copy'
 import {
   Tooltip,
   TooltipContent,
@@ -112,18 +114,16 @@ export default function MaterialsList({
   accessToken,
 }: MaterialsListProps) {
   const [downloadingType, setDownloadingType] = useState<string | null>(null)
-  const [downloadError, setDownloadError] = useState<string | null>(null)
   const downloadableMaterials = materials.filter((item) => item.available && item.type !== 'scl')
 
   async function handleDownload(fileType: MaterialItem['type']) {
     if (!buildId) return
     setDownloadingType(fileType)
-    setDownloadError(null)
 
     try {
       await requestSignedDownload(buildId, fileType, accessToken)
     } catch (error) {
-      setDownloadError(error instanceof Error ? error.message : 'Nao foi possivel preparar o download')
+      toast.error(copy.errors.materialsDownloadFailed)
     } finally {
       setDownloadingType(null)
     }
@@ -145,12 +145,6 @@ export default function MaterialsList({
           />
         ) : null}
       </div>
-
-      {downloadError ? (
-        <div className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-          {downloadError}
-        </div>
-      ) : null}
 
       <div className="space-y-3">
         {materials.map((item) => {

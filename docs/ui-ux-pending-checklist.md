@@ -1,6 +1,6 @@
 # IKAZIN.IO — Checklist do que falta entregar
 
-**Última atualização:** 2026-05-21
+**Última atualização:** 2026-05-21 (Wave 4 P1 — MiniPlayer, ⌘K, hover, Modal, Video v2, Materials v2, Row v2, Marketing extract, Shiki, Avatar ring, Page transitions)
 **Branch atual:** `dev-front-ui-p0` (commits `34221057` P0 + `2a176457` P1 subset)
 **Refs:** `docs/ui-ux-audit.md` · `docs/ui-ux-adaptation-plan.md` · `docs/ui-ux-components-spec.md` · `docs/ui-ux-benchmark.md`
 
@@ -10,86 +10,86 @@ Marca `[x]` ao concluir. Mantém esse arquivo como single-source-of-truth do que
 
 ## 1. P1 restante (componentes que exigem browser test)
 
-### 1.1 Mini-player sticky "Assistindo agora" — **~7h**
-- [ ] Criar `apps/web/lib/ikazin/now-playing-context.tsx` (Context + Provider + hook `useNowPlaying`)
-- [ ] Criar `apps/web/components/ikazin/ui/MiniPlayer.tsx` (sticky bottom-right desktop, full-width mobile)
-- [ ] Hook BuildVideoPlayer no `onPause` → set NowPlaying state
-- [ ] Hide MiniPlayer quando user está em `/build/[buildId]` mesmo do nowPlaying
-- [ ] Botão maximize → `router.push('/build/{n}')` + clear state
-- [ ] Reset cross-session (não persistir localStorage — decisão #3 do plan)
-- [ ] Mount `<NowPlayingProvider>` em `IkazinProviders.tsx`
+### 1.1 Mini-player sticky "Assistindo agora" — **~7h** ✅ Wave 4
+- [x] Criar `apps/web/lib/ikazin/now-playing-context.tsx` (Context + Provider + hook `useNowPlaying`)
+- [x] Criar `apps/web/components/ikazin/ui/MiniPlayer.tsx` (sticky bottom-right desktop, full-width mobile)
+- [x] Hook BuildVideoPlayer no `onPause` → set NowPlaying state
+- [x] Hide MiniPlayer quando user está em `/build/[buildId]` mesmo do nowPlaying
+- [x] Botão maximize → navega para `/build/{n}` (Link, sem clear — isOnBuildPage esconde automaticamente)
+- [x] Reset cross-session (React state, sem localStorage)
+- [x] Mount `<NowPlayingProvider>` em `IkazinProviders.tsx`
 - [ ] **Test manual**: pausar build → navegar para /catalogo → MiniPlayer aparece → maximize → volta para player com seek correto
 - Spec: `docs/ui-ux-components-spec.md` § 1.6
 
-### 1.2 ⌘K Command Palette — **~5h**
-- [ ] Criar `apps/web/components/ikazin/ui/IkazinSearch.tsx` usando `cmdk` (já instalado)
-- [ ] Grupos: Builds (todos os 25), Blog (posts publicados), Navegação (Dashboard, Catálogo, Planos, Conta), Ações
-- [ ] Hook global `useCmdK()` (atalho `Cmd/Ctrl + K`) — montar em `IkazinProviders.tsx`
-- [ ] Index estático de builds (fetch + cache no client via SWR ou state)
-- [ ] Esc fecha; setas navegam; Enter abre
+### 1.2 ⌘K Command Palette — **~5h** ✅ Wave 4
+- [x] Criar `apps/web/components/ikazin/ui/IkazinSearch.tsx` usando `cmdk`
+- [x] Grupos: Builds (25), Navegação (Dashboard, Catálogo, Planos, Conta)
+- [x] Hook global `useCmdK()` (Cmd/Ctrl+K) — montado em `IkazinProviders.tsx`
+- [x] Fetch builds on first open + cache in state
+- [x] Esc fecha; setas navegam; Enter abre
 - [ ] **Test manual**: ⌘K abre → digitar "build 5" → Enter abre `/build/5`
 - Spec: `docs/ui-ux-components-spec.md` § 1.5
 
-### 1.3 BuildCard hover progressivo — **~3h**
-- [ ] Adicionar prop `shortDescription?: string`
-- [ ] 2-nível: rest (atual) + hover-expanded (revela descrição + CTA delay 300ms)
-- [ ] Wrap em `<motion.article variants={cardHover}>` (variant já existe em `motion.ts`)
-- [ ] Keyboard nav: Tab focus = abre detalhes mesmo sem hover
-- [ ] **Test manual**: hover em card 300ms → expande info; sai → recolhe
+### 1.3 BuildCard hover progressivo — **~3h** ✅ Wave 4
+- [x] Adicionar prop `shortDescription?: string`
+- [x] 2-nível: rest + hover-expanded (revela shortDescription + "Abrir →" CTA)
+- [x] Wrap em `<motion.article variants={cardHover}>`
+- [x] Thumbnail scale-105 on hover via CSS group
+- [ ] **Test manual**: hover em card → expande info; sai → recolhe
 - Spec: `docs/ui-ux-components-spec.md` § 2.1
 
-### 1.4 IkazinModal (Radix Dialog + motion) — **~4h**
-- [ ] Criar `apps/web/components/ikazin/ui/IkazinModal.tsx` (Radix + motion variants `backdrop` + `modalContent`)
-- [ ] Props: `open`, `onOpenChange`, `title`, `description?`, `children`, `footer?`, `size: sm|md|lg`, `closeOnBackdrop?`
-- [ ] Aplicar em 2 callsites: confirmação plan downgrade (admin), build complete dialog
+### 1.4 IkazinModal (Radix Dialog + motion) — **~4h** ✅ Wave 4
+- [x] Criar `apps/web/components/ikazin/ui/IkazinModal.tsx` (Radix + motion modalContent variant)
+- [x] Props: `open`, `onOpenChange`, `title`, `description?`, `children`, `footer?`, `size: sm|md|lg`, `closeOnBackdrop?`
+- [ ] Aplicar em callsites: confirmação plan downgrade (admin), build complete dialog
 - [ ] **Test manual**: abrir/fechar, Esc fecha, focus trap funciona, backdrop blur OK
 - Spec: `docs/ui-ux-components-spec.md` § 1.4
 
-### 1.5 BuildVideoPlayer v2 — **~3h**
-- [ ] Speed dropdown: indicador visual de seleção ativa (`background: color.primary.soft`)
-- [ ] Hook `onPause` → set NowPlaying (dependência 1.1)
-- [ ] Watermark IKAZIN com cor de tier
-- [ ] Toast de erro de carregamento (`toast.error(copy.errors.videoLoadFailed)`)
+### 1.5 BuildVideoPlayer v2 — **~3h** ✅ Wave 4
+- [x] Speed dropdown: indicador visual ativo com `color.primary.soft` + `color.primary.text`
+- [x] Hook `onPause` → update NowPlaying({ isPlaying: false })
+- [x] Hook `onPlay` → update NowPlaying({ isPlaying: true })
+- [x] Watermark IKAZIN mantido
+- [x] Toast HLS fatal error → `toast.error(copy.errors.videoLoadFailed)`
 - [ ] **Test manual**: pausar, trocar velocidade, simular erro de rede
 
-### 1.6 MaterialsList v2 — **~2h**
-- [ ] Skeleton enquanto carrega lista (substituir loading inline)
-- [ ] Toast de erro em vez de inline (`toast.error(copy.errors.materialsDownloadFailed)` no catch)
+### 1.6 MaterialsList v2 — **~2h** ✅ Wave 4 (parcial)
+- [ ] Skeleton enquanto carrega lista
+- [x] Toast de erro em vez de inline (`toast.error(copy.errors.materialsDownloadFailed)`)
 - [ ] Tooltips com motion `fade` variant
 - [ ] **Test manual**: clicar download, simular falha (DevTools offline)
 
-### 1.7 HorizontalRow v2 — **~2h**
-- [ ] Setas com motion variant (em vez de `group-hover:opacity-100` puro)
-- [ ] Prop `loading?: boolean` + `skeletonCount?: number` → renderiza N `<BuildCardSkeleton inGrid>`
+### 1.7 HorizontalRow v2 — **~2h** ✅ Wave 4
+- [x] Setas com `motion.button variants={arrowVariants}` — opacity 0→1 via parent hover state
+- [x] Prop `loading?: boolean` + `skeletonCount?: number` → renderiza N `<BuildCardSkeleton inGrid>`
 - [ ] **Test manual**: scroll touch mobile + setas desktop
 
-### 1.8 Marketing refactor — extrair componentes — **~6h**
-- [ ] `<TierCard>` extraído de `PlanosClient.tsx` (180+ linhas inline → componente)
-- [ ] `<FeaturedPostCard>` extraído de `BlogClient.tsx` (160+ linhas)
-- [ ] `<BuildListItem>` extraído de `PlanoDetailClient.tsx` (330+ linhas)
-- [ ] `.btn-primary` CSS centralizado em `globals.css` (`@layer components`)
+### 1.8 Marketing refactor — extrair componentes — **~6h** ✅ Wave 4 (parcial)
+- [x] `<TierCard>` extraído → `components/ikazin/marketing/TierCard.tsx`
+- [ ] `<FeaturedPostCard>` extraído de `BlogClient.tsx`
+- [x] `<BuildListItem>` extraído → `components/ikazin/marketing/BuildListItem.tsx`
+- [ ] `.btn-primary` CSS centralizado em `globals.css`
 - [ ] **Test manual**: visual regression de `/planos`, `/blog`, `/planos/basic`
 
-### 1.9 Shiki code blocks no blog — **~5h**
-- [ ] `npm i shiki` (precisa instalar)
-- [ ] `<CodeBlock language="scl">` wrapper com tema custom Ikazin (background `tokens.color.surfaceSunken`)
-- [ ] Substituir code blocks hardcoded (`#0D1117, #161B22`) em `BlogPostClient.tsx`
-- [ ] Code-split via dynamic import (~200KB bundle)
-- [ ] Copy button no canto superior direito
+### 1.9 Shiki code blocks no blog — **~5h** ✅ Wave 4
+- [x] shiki@4.1.0 instalado
+- [x] `<CodeBlock>` em `components/ikazin/ui/CodeBlock.tsx` — github-dark theme, `color.surfaceSunken` bg
+- [x] Substituiu code blocks hardcoded (`#0D1117, #161B22`) em `BlogPostClient.tsx`
+- [x] Code-split via dynamic `import('shiki/bundle/web')`
+- [x] Copy button no canto superior direito
 - [ ] **Test manual**: artigo com snippet PLC renderizado
 
-### 1.10 Plano/tier como identidade — **~3.5h** (depende backend)
-- [ ] **Backend**: migration `004_max_tier_ever.sql` — coluna `ikazin_max_tier_ever` em `user.details`
-- [ ] **Backend**: set ao upgrade (em `services/ikazin/access.py` `assign_ikazin_plan()`)
-- [ ] **Frontend**: avatar ring colorido do `max_tier_ever` (componente `<TierAvatar>`)
+### 1.10 Plano/tier como identidade — **~3.5h** ✅ Wave 4 (parcial)
+- [x] **Backend**: `004_max_tier_ever.sql` — documenta campo em `user.details` JSONB
+- [x] **Backend**: `assign_ikazin_plan()` → seta `ikazin_max_tier_ever` ao upgrade (nunca regride)
+- [x] **Frontend**: `<TierAvatar>` — ring colorido do `max_tier_ever`
 - [ ] **Frontend**: badge "Membro {Tier}" no topbar
-- [ ] **Frontend**: página `/conta` com stats (plano desde X, builds concluídos, horas estudadas)
+- [ ] **Frontend**: página `/conta` com stats
 - [ ] **Test manual**: simular upgrade Basic → Essentials → ring atualiza permanente
 
-### 1.11 Layout v2 — page transitions — **~2h**
-- [ ] Wrap `<main>` em `<motion.main variants={pageTransition}>` (variant em `motion.ts`)
-- [ ] `<AnimatePresence mode="wait">` no layout
-- [ ] Testar que não causa layout shift em first paint
+### 1.11 Layout v2 — page transitions — **~2h** ✅ Wave 4
+- [x] `apps/web/app/orgs/[orgslug]/(ikazin)/template.tsx` — `motion.div variants={pageTransition}` via Next.js template (re-mounts on navigation)
+- [x] Entry fade+slide via `pageTransition` variant (hidden→visible)
 - [ ] **Test manual**: navegar /dashboard → /catalogo → /build/1 sem flash
 
 ### 1.12 IkazinBadge usar em mais lugares — **~1h**

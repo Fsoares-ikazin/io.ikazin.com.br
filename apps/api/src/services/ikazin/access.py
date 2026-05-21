@@ -12,6 +12,8 @@ from src.db.users import User
 from src.services.email.utils import get_base_url_from_request
 from src.services.ikazin.builds import VALID_TIER_NAMES
 
+_TIER_ORDER = {"basic": 0, "essentials": 1, "advanced": 2, "premium": 3}
+
 
 def resolve_user_for_ikazin_activation(
     db_session: Session,
@@ -61,6 +63,13 @@ def assign_ikazin_plan(
         details["ikazin_plan_source"] = source
         if metadata:
             details["ikazin_plan_metadata"] = metadata
+
+        # Track highest tier ever reached — never decrements (permanent identity)
+        current_max = details.get("ikazin_max_tier_ever")
+        current_rank = _TIER_ORDER.get(current_max or "", -1)
+        new_rank = _TIER_ORDER.get(normalized_plan, -1)
+        if new_rank > current_rank:
+            details["ikazin_max_tier_ever"] = normalized_plan
 
     user.details = details
     user.update_date = str(datetime.now())

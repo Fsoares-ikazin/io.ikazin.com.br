@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { Check, Users, ChevronRight, BookOpen, Settings, Zap, Cpu } from 'lucide-react'
+import { Users, ChevronRight } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
+import { TierCard } from '@components/ikazin/marketing/TierCard'
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -140,43 +141,13 @@ export function PlanosClient() {
       <section className="px-6 pb-20">
         <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2 lg:grid-cols-4">
           {tiers.map((tier) => (
-            <div
+            <TierCard
               key={tier.label}
-              className={`relative flex flex-col rounded-2xl border ${tier.style.border} bg-ikz-surface p-6 transition-all hover:-translate-y-1 ${
-                tier.style.featured ? 'ring-1 ring-ikz-lime/40 shadow-glow-lime' : ''
-              }`}
-            >
-              {tier.style.featured && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-ikz-lime px-4 py-1 text-xs font-black text-ikz-bg">
-                  {t.mostPopular}
-                </div>
-              )}
-              <div className={`mb-3 inline-block self-start rounded-full px-3 py-0.5 text-xs font-black tracking-widest ${tier.style.badge}`}>
-                {tier.label}
-              </div>
-              <div className="mb-1 text-4xl font-black text-white">{tier.price}</div>
-              <div className="mb-0.5 text-xs text-zinc-300">{t.priceNote}</div>
-              <div className="mb-1 text-sm font-semibold text-gray-400">{tier.builds}</div>
-              <div className="mb-5 text-xs italic text-zinc-300">{tier.audience}</div>
-              <ul className="mb-8 flex-1 space-y-2.5">
-                {tier.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-gray-300">
-                    <Check size={14} className="mt-0.5 shrink-0 text-ikz-cyan" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={`/checkout?plan=${tier.label.toLowerCase()}`}
-                className={`block rounded-xl py-3 text-center text-sm font-bold transition-opacity hover:opacity-90 ${
-                  tier.style.cta === 'primary'
-                    ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg'
-                    : 'border border-ikz-border text-gray-300 hover:border-gray-600'
-                }`}
-              >
-                {t.ctaPrefix} {tier.label}
-              </Link>
-            </div>
+              tier={tier}
+              ctaPrefix={t.ctaPrefix}
+              priceNote={t.priceNote}
+              mostPopular={t.mostPopular}
+            />
           ))}
         </div>
       </section>

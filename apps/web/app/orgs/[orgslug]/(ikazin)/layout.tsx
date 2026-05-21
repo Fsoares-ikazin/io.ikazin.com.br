@@ -28,8 +28,9 @@ export default function IkazinLayout({ children }: { children: ReactNode }) {
       }}
     >
       <IkazinAnalyticsProvider />
-      <IkazinProviders />
-      {children}
+      <IkazinProviders>
+        {children}
+      </IkazinProviders>
     </div>
   )
 }

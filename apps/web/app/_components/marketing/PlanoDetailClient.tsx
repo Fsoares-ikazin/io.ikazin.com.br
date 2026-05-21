@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { useRef, useState } from 'react'
-import { Check, ChevronRight, Play, ArrowLeft, Cpu, Zap, BookOpen, Award, Lock } from 'lucide-react'
+import { Check, ChevronRight, Play, ArrowLeft, Award, Zap, BookOpen } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
+import { BuildListItem } from '@components/ikazin/marketing/BuildListItem'
 
 // ─── Plan definitions ─────────────────────────────────────────────────────────
 
@@ -326,23 +327,11 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
             <h2 className="mb-8 text-xl font-black text-white">{t.buildsTitle} <span className={`text-sm font-semibold ${plan.color}`}>({plan.builds.length})</span></h2>
             <div className="space-y-3">
               {plan.builds.map((build, i) => (
-                <div key={build.number} className="group flex gap-5 rounded-xl border border-ikz-border bg-ikz-surface p-5 hover:border-ikz-cyan/40 transition-all hover:-translate-y-0.5">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-black ${i === plan.builds.length - 1 ? 'bg-ikz-lime/15 text-ikz-lime' : 'bg-ikz-border text-gray-500'}`}>
-                    {build.number}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3 mb-1">
-                      <h3 className="font-bold text-white text-sm">{build.title}</h3>
-                      <Lock size={12} className="text-gray-700 shrink-0 mt-0.5" />
-                    </div>
-                    <p className="text-xs text-gray-500 mb-2">{build.description}</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {build.tags.map(tag => (
-                        <span key={tag} className="text-[10px] font-semibold text-gray-600 border border-ikz-border rounded px-1.5 py-0.5">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <BuildListItem
+                  key={build.number}
+                  build={build}
+                  isCapstone={i === plan.builds.length - 1}
+                />
               ))}
             </div>
           </div>

@@ -257,6 +257,9 @@ export default function BuildDetailPage({
             <div className="sticky top-16 z-20 lg:static">
               <BuildVideoPlayer
                 buildId={data.id}
+                buildNumber={data.build_number}
+                title={data.title}
+                tier={data.tier}
                 playbackUrl={data.playback_url}
                 accessToken={accessToken}
                 onCompleted={() => {

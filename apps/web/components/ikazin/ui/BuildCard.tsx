@@ -1,8 +1,10 @@
 'use client'
 
-import { CheckCircle2, Clock } from 'lucide-react'
+import { motion } from 'motion/react'
+import { CheckCircle2, Clock, ChevronRight } from 'lucide-react'
 import IkazinBadge from './IkazinBadge'
 import { color, tier as tierToken } from '@/lib/ikazin/tokens'
+import { cardHover } from '@/lib/ikazin/motion'
 import type { BuildTier } from '@/lib/ikazin/tokens'
 
 export type { BuildTier }
@@ -26,6 +28,7 @@ export type BuildCardProps = {
   thumbnailUrl?: string
   durationSeconds?: number | null
   status?: BuildStatus
+  shortDescription?: string
   /** Se true, a imagem é tratada como above-the-fold (sem lazy). Default: false. */
   priority?: boolean
 }
@@ -54,6 +57,7 @@ export default function BuildCard({
   thumbnailUrl,
   durationSeconds,
   status,
+  shortDescription,
   priority = false,
 }: BuildCardProps) {
   const pct = progress?.percent ?? 0
@@ -62,13 +66,15 @@ export default function BuildCard({
   const t = tierToken(tier)
 
   return (
-    <article
+    <motion.article
+      variants={cardHover}
+      initial="rest"
+      whileHover={locked ? undefined : 'hover'}
+      whileTap={locked ? undefined : 'tap'}
       className={[
-        'group relative flex flex-col overflow-hidden rounded-xl border transition-all duration-150',
+        'group relative flex flex-col overflow-hidden rounded-xl border transition-colors duration-150',
         'border-ikz-border bg-ikz-surface',
-        locked
-          ? 'cursor-not-allowed opacity-50'
-          : 'cursor-pointer hover:scale-[1.02] hover:border-emerald-500/50 hover:shadow-[0_0_18px_rgba(16,185,129,0.15)]',
+        locked ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
       ].join(' ')}
     >
       {/* Thumbnail / 16:9 */}
@@ -79,7 +85,7 @@ export default function BuildCard({
             alt={title}
             loading={priority ? 'eager' : 'lazy'}
             decoding="async"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
@@ -145,13 +151,30 @@ export default function BuildCard({
           ))}
         </div>
 
-        {durationSeconds && (
-          <div className="mt-auto flex items-center gap-1 text-[11px] text-zinc-300">
-            <Clock className="h-3 w-3" />
-            {formatDuration(durationSeconds)}
-          </div>
+        {/* Progressive reveal: short description on hover */}
+        {shortDescription && (
+          <p className="mt-1 line-clamp-2 max-h-0 overflow-hidden text-[11px] leading-relaxed text-zinc-400 opacity-0 transition-all delay-100 duration-200 group-hover:max-h-10 group-hover:opacity-100">
+            {shortDescription}
+          </p>
         )}
+
+        <div className="mt-auto flex items-center justify-between gap-2">
+          {durationSeconds ? (
+            <div className="flex items-center gap-1 text-[11px] text-zinc-300">
+              <Clock className="h-3 w-3" />
+              {formatDuration(durationSeconds)}
+            </div>
+          ) : (
+            <span />
+          )}
+
+          {!locked && shortDescription && (
+            <span className="flex items-center gap-0.5 text-[11px] font-medium opacity-0 transition-opacity duration-200 group-hover:opacity-100" style={{ color: color.primary.text }}>
+              Abrir <ChevronRight className="h-3 w-3" />
+            </span>
+          )}
+        </div>
       </div>
-    </article>
+    </motion.article>
   )
 }

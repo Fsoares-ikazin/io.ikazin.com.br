@@ -1,0 +1,16 @@
+-- 004_max_tier_ever.sql
+-- Rastreia o tier mais alto que o usuário já atingiu (imutável após upgrade).
+--
+-- Implementação: campo `ikazin_max_tier_ever` em `user.details` (JSONB).
+-- Não modifica tabelas do LearnHouse — usa a coluna `details` já existente.
+--
+-- Valores: 'basic' | 'essentials' | 'advanced' | 'premium' | null
+-- Lógica: só atualiza quando novo tier for maior que o atual max.
+--         Nunca regride (refunds não diminuem o max).
+--
+-- O campo é setado por `assign_ikazin_plan()` em services/ikazin/access.py.
+-- Frontend: componente <TierAvatar> usa max_tier_ever para o ring colorido.
+--
+-- Nenhuma alteração SQL necessária (JSONB é dinâmico).
+-- Este arquivo é registro de intenção arquitetural para auditoria.
+SELECT 'No schema change required — stored in user.details JSONB' AS migration_note;

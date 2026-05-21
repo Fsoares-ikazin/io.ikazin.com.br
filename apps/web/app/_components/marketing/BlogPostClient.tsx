@@ -8,6 +8,7 @@ import type { BlogPost, ContentBlock, Lang } from '../../_data/blog-posts'
 import { posts } from '../../_data/blog-posts'
 import { trackPublicMarketingEvent } from './PublicMarketingTracker'
 import BlogBuildCTA from './BlogBuildCTA'
+import { CodeBlock } from '@components/ikazin/ui/CodeBlock'
 
 // ─── Copy ──────────────────────────────────────────────────────────────────────
 
@@ -99,14 +100,7 @@ function renderBlock(block: ContentBlock, idx: number) {
       )
     case 'code':
       return (
-        <div key={idx} className="my-6 rounded-xl overflow-hidden border border-ikz-border">
-          <div className="flex items-center justify-between px-4 py-2 bg-[#161B22] border-b border-ikz-border">
-            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">{block.lang}</span>
-          </div>
-          <pre className="p-5 overflow-x-auto bg-[#0D1117] text-sm font-mono text-gray-200 leading-relaxed">
-            <code>{block.code}</code>
-          </pre>
-        </div>
+        <CodeBlock key={idx} code={block.code} language={block.lang} />
       )
     case 'ul':
       return (
