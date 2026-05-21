@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { useParams, useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
 import BuildCard from '@components/ikazin/ui/BuildCard'
@@ -42,6 +42,7 @@ const TIER_ORDER: BuildTier[] = ['basic', 'essentials', 'advanced', 'premium']
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function CatalogoPage() {
+  const params = useParams<{ orgslug?: string }>()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -56,7 +57,9 @@ export default function CatalogoPage() {
 
   const status      = session?.status ?? 'loading'
   const accessToken = session?.data?.tokens?.access_token
-  const orgslug = session?.data?.roles?.[0]?.org?.slug || 'default'
+  const orgslug = typeof params?.orgslug === 'string'
+    ? params.orgslug
+    : session?.data?.roles?.[0]?.org?.slug || 'default'
   const pricingHref = getPlatformUrl('/planos') ?? '/planos'
 
   useEffect(() => {

@@ -16,6 +16,8 @@ type BuildVideoPlayerProps = {
   tier?: BuildTier
   thumbnailUrl?: string
   playbackUrl: string | null
+  playbackStatus?: 'ready' | 'locked' | 'missing_assets' | 'storage_not_configured' | string | null
+  playbackMessage?: string | null
   accessToken?: string
   onCompleted: () => void
 }
@@ -31,6 +33,8 @@ export default function BuildVideoPlayer({
   tier = 'basic',
   thumbnailUrl,
   playbackUrl,
+  playbackStatus,
+  playbackMessage,
   accessToken,
   onCompleted,
 }: BuildVideoPlayerProps) {
@@ -203,6 +207,16 @@ export default function BuildVideoPlayer({
   }
 
   if (!playbackUrl) {
+    const title =
+      playbackStatus === 'storage_not_configured'
+        ? 'Storage de video nao configurado'
+        : 'Video em producao'
+    const description =
+      playbackMessage ??
+      (playbackStatus === 'missing_assets'
+        ? 'Publique os segmentos HLS para liberar o player.'
+        : 'Disponivel em breve')
+
     return (
       <div className="relative aspect-video w-full overflow-hidden rounded-[18px] border border-zinc-800 bg-zinc-900">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.14),_transparent_32%),linear-gradient(145deg,_rgba(20,26,24,1),_rgba(24,24,27,1))]" />
@@ -210,8 +224,8 @@ export default function BuildVideoPlayer({
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-zinc-300">
             <Play className="ml-1 h-7 w-7" />
           </div>
-          <p className="text-lg font-semibold text-zinc-100">Video em producao</p>
-          <p className="mt-2 text-sm text-zinc-400">Disponivel em breve</p>
+          <p className="text-lg font-semibold text-zinc-100">{title}</p>
+          <p className="mt-2 max-w-xl text-sm text-zinc-400">{description}</p>
         </div>
       </div>
     )

@@ -44,6 +44,8 @@ import { signOut } from '@components/Contexts/AuthContext'
 import { getUriWithoutOrg } from '@services/config/config';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
+import AccountIkazinStats from '@components/Objects/Account/AccountIkazinStats'
+import { extractIkazinAccountSummary, fetchIkazinAccountRemoteData } from '@components/Objects/Account/accountIkazin'
 
 const SUPPORTED_FILES = constructAcceptValue(['jpg', 'png', 'webp', 'gif'])
 
@@ -547,7 +549,7 @@ const UserEditForm = ({
   );
 };
 
-function AccountGeneral() {
+function AccountGeneral({ orgslug }: { orgslug: string }) {
   const session = useLHSession() as any;
   const access_token = session?.data?.tokens?.access_token;
   const [localAvatar, setLocalAvatar] = React.useState(null) as any
@@ -555,6 +557,11 @@ function AccountGeneral() {
   const [error, setError] = React.useState() as any
   const [success, setSuccess] = React.useState('') as any
   const [userData, setUserData] = useState<any>(null);
+  const [ikazinRemoteData, setIkazinRemoteData] = useState<{ dashboard: any; downloads: any }>({
+    dashboard: null,
+    downloads: null,
+  });
+  const [ikazinLoading, setIkazinLoading] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -572,6 +579,24 @@ function AccountGeneral() {
 
     fetchUserData();
   }, [session?.data?.user?.id, access_token]);
+
+  useEffect(() => {
+    let alive = true
+
+    async function loadIkazinData() {
+      setIkazinLoading(true)
+      const next = await fetchIkazinAccountRemoteData(access_token)
+      if (alive) {
+        setIkazinRemoteData(next)
+        setIkazinLoading(false)
+      }
+    }
+
+    loadIkazinData()
+    return () => {
+      alive = false
+    }
+  }, [access_token])
 
   const handleFileChange = async (event: any) => {
     const file = event.target.files[0]
@@ -615,8 +640,19 @@ function AccountGeneral() {
     );
   }
 
+  const ikazinSummary = extractIkazinAccountSummary(
+    userData,
+    ikazinRemoteData.dashboard,
+    ikazinRemoteData.downloads,
+  )
+
   return (
     <div className="bg-ikz-surface rounded-xl shadow-lg shadow-black/30">
+      <AccountIkazinStats
+        orgslug={orgslug}
+        summary={ikazinSummary}
+        loading={ikazinLoading}
+      />
       <Formik<FormValues>
         enableReinitialize
         initialValues={{

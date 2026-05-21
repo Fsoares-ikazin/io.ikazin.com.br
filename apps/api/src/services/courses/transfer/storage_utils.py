@@ -47,10 +47,26 @@ def get_storage_client():
         if _s3_client is not None:
             return _s3_client
         learnhouse_config = get_learnhouse_config()
+        s3_config = learnhouse_config.hosting_config.content_delivery.s3api
+
+        if get_s3_configuration_errors():
+            logger.error("S3 storage misconfigured: %s", ", ".join(get_s3_configuration_errors()))
+            return None
+
+        client_kwargs = {
+            "endpoint_url": s3_config.endpoint_url,
+            "config": botocore.config.Config(connect_timeout=10, read_timeout=60, retries={"max_attempts": 2}),
+        }
+        if s3_config.access_key_id:
+            client_kwargs["aws_access_key_id"] = s3_config.access_key_id
+        if s3_config.secret_access_key:
+            client_kwargs["aws_secret_access_key"] = s3_config.secret_access_key
+        if s3_config.region_name:
+            client_kwargs["region_name"] = s3_config.region_name
+
         _s3_client = boto3.client(
             "s3",
-            endpoint_url=learnhouse_config.hosting_config.content_delivery.s3api.endpoint_url,
-            config=botocore.config.Config(connect_timeout=10, read_timeout=60, retries={"max_attempts": 2}),
+            **client_kwargs,
         )
         return _s3_client
 
@@ -66,6 +82,39 @@ def get_s3_bucket_name() -> str:
 def is_s3_enabled() -> bool:
     """Check if S3 storage is enabled (cached)."""
     return get_content_delivery_type() == "s3api"
+
+
+def get_s3_configuration_errors() -> list[str]:
+    """Return missing/invalid S3 configuration keys for the current process."""
+    if get_content_delivery_type() != "s3api":
+        return []
+
+    s3_config = get_learnhouse_config().hosting_config.content_delivery.s3api
+    errors: list[str] = []
+
+    if not s3_config.bucket_name:
+        errors.append("LEARNHOUSE_S3_API_BUCKET_NAME")
+
+    if not s3_config.endpoint_url:
+        errors.append("LEARNHOUSE_S3_API_ENDPOINT_URL")
+
+    if not (s3_config.access_key_id or os.environ.get("AWS_ACCESS_KEY_ID")):
+        errors.append("LEARNHOUSE_S3_API_ACCESS_KEY_ID")
+
+    if not (s3_config.secret_access_key or os.environ.get("AWS_SECRET_ACCESS_KEY")):
+        errors.append("LEARNHOUSE_S3_API_SECRET_ACCESS_KEY")
+
+    return errors
+
+
+def get_s3_configuration_error_message(context: str = "storage") -> str:
+    missing = get_s3_configuration_errors()
+    if not missing:
+        return f"{context.capitalize()} S3/MinIO not configured"
+    return (
+        f"{context.capitalize()} S3/MinIO not configured. "
+        f"Missing: {', '.join(missing)}."
+    )
 
 
 def read_file_content(file_path: str) -> Optional[bytes]:

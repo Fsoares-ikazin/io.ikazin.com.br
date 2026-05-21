@@ -17,6 +17,11 @@ Fluxo:
   3. Faz upload para:
      ikazin/builds/<build_number>/hls/
   4. Mostra os arquivos publicados
+
+Pre-requisitos:
+  - API com `LEARNHOUSE_CONTENT_DELIVERY_TYPE=s3api`
+  - Mesmo bucket configurado em `LEARNHOUSE_S3_API_BUCKET_NAME`
+  - Alias `mc` apontando para o mesmo endpoint/credenciais do `.env` da API
 EOF
 }
 

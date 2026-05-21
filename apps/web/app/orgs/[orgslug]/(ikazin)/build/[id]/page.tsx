@@ -7,6 +7,7 @@ import { ChevronDown, CheckCircle2 } from 'lucide-react'
 
 import { useLHSession } from '@components/Contexts/LHSessionContext'
 import BuildVideoPlayer from '@components/ikazin/ui/BuildVideoPlayer'
+import IkazinModal from '@components/ikazin/ui/IkazinModal'
 import MaterialsList, { StickyDownloadBar } from '@components/ikazin/ui/MaterialsList'
 import NextBuildCompactCard from '@components/ikazin/ui/NextBuildCompactCard'
 import IkazinBadge from '@components/ikazin/ui/IkazinBadge'
@@ -28,10 +29,13 @@ type BuildDetailResponse = {
     vimeo_id: string | null
     video_provider: 'minio_hls'
     playback_url: string | null
+    playback_status?: 'ready' | 'locked' | 'missing_assets' | 'storage_not_configured' | string | null
+    playback_message?: string | null
     materials: Array<{
       type: 'exe' | 'zip' | 'pdf' | 'scl'
       label: string
       available: boolean
+      note?: string | null
     }>
     next_build: {
       id: string
@@ -86,6 +90,7 @@ export default function BuildDetailPage({
   const [error, setError] = useState<string | null>(null)
   const [mobileMaterialsOpen, setMobileMaterialsOpen] = useState(false)
   const [showCompletionState, setShowCompletionState] = useState(false)
+  const [completionModalOpen, setCompletionModalOpen] = useState(false)
   const pricingHref = getPlatformUrl('/planos') ?? '/planos'
 
   useEffect(() => {
@@ -171,6 +176,7 @@ export default function BuildDetailPage({
           : current
       )
       setShowCompletionState(true)
+      setCompletionModalOpen(true)
     } catch (completionError) {
       setError(completionError instanceof Error ? completionError.message : 'Erro ao concluir build')
     }
@@ -191,6 +197,11 @@ export default function BuildDetailPage({
   }
 
   const t = TIERS[data.tier]
+  const buildStatus = data.progress.completed
+    ? 'completed'
+    : data.progress.percent > 0
+      ? 'in_progress'
+      : 'new'
 
   if (data.locked) {
     return (
@@ -261,9 +272,12 @@ export default function BuildDetailPage({
                 title={data.title}
                 tier={data.tier}
                 playbackUrl={data.playback_url}
+                playbackStatus={data.playback_status}
+                playbackMessage={data.playback_message}
                 accessToken={accessToken}
                 onCompleted={() => {
                   setShowCompletionState(true)
+                  setCompletionModalOpen(true)
                   setData((current) =>
                     current
                       ? {
@@ -279,7 +293,10 @@ export default function BuildDetailPage({
             <section className="rounded-[20px] border border-zinc-800 bg-[#141a18] p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
-                  <IkazinBadge variant="tier" tier={data.tier} size="md" />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <IkazinBadge variant="tier" tier={data.tier} size="md" />
+                    <IkazinBadge variant="status" status={buildStatus} size="md" />
+                  </div>
                   <h1 className="mt-4 text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
                     Build {data.build_number} — {data.title}
                   </h1>
@@ -361,20 +378,61 @@ export default function BuildDetailPage({
             ) : null}
           </div>
         </section>
-
-        {showCompletionState && data.next_build ? (
-          <div className="mt-6 rounded-[20px] border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-200">
-            Build concluido. Proximo passo:
-            {' '}
-            <Link
-              href={getUriWithOrg(resolvedParams.orgslug, `/build/${data.next_build.build_number}`)}
-              className="font-semibold text-emerald-300 hover:text-emerald-200"
-            >
-              abrir Build {data.next_build.build_number}
-            </Link>
-          </div>
-        ) : null}
       </div>
+
+      <IkazinModal
+        open={completionModalOpen}
+        onOpenChange={setCompletionModalOpen}
+        title="Build concluido"
+        description={
+          data.next_build
+            ? `Build ${data.build_number} concluido. Voce pode seguir para o build ${data.next_build.build_number}.`
+            : `Build ${data.build_number} concluido.`
+        }
+        size="md"
+        footer={
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setCompletionModalOpen(false)}
+              className="h-11 rounded-xl border border-zinc-700 bg-zinc-900/70 px-5 text-sm font-semibold text-zinc-100 hover:bg-zinc-800"
+            >
+              Continuar aqui
+            </Button>
+            {data.next_build ? (
+              <Button
+                asChild
+                className="h-11 rounded-xl bg-emerald-500 px-5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
+              >
+                <Link href={getUriWithOrg(resolvedParams.orgslug, `/build/${data.next_build.build_number}`)}>
+                  Abrir Build {data.next_build.build_number}
+                </Link>
+              </Button>
+            ) : null}
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-300">
+            <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm leading-7 text-zinc-300">
+              Seu progresso foi salvo e este build agora aparece como concluido.
+            </p>
+            {data.next_build ? (
+              <p className="text-sm leading-7 text-zinc-300">
+                Proximo passo recomendado: seguir para <span className="font-semibold text-zinc-100">Build {data.next_build.build_number}</span>.
+              </p>
+            ) : (
+              <p className="text-sm leading-7 text-zinc-300">
+                Nao ha um proximo build sugerido no momento.
+              </p>
+            )}
+          </div>
+        </div>
+      </IkazinModal>
 
       <StickyDownloadBar hasDownloadableMaterials={data.materials.some((item) => item.available && item.type !== 'scl')} />
     </main>

@@ -98,13 +98,24 @@ async def upload_content(
             f.close()
 
     elif content_delivery == "s3api":
+        s3_config = learnhouse_config.hosting_config.content_delivery.s3api
+        client_kwargs = {
+            "endpoint_url": s3_config.endpoint_url,
+            "config": botocore.config.Config(connect_timeout=10, read_timeout=60, retries={"max_attempts": 2}),
+        }
+        if s3_config.access_key_id:
+            client_kwargs["aws_access_key_id"] = s3_config.access_key_id
+        if s3_config.secret_access_key:
+            client_kwargs["aws_secret_access_key"] = s3_config.secret_access_key
+        if s3_config.region_name:
+            client_kwargs["region_name"] = s3_config.region_name
+
         s3 = boto3.client(
             "s3",
-            endpoint_url=learnhouse_config.hosting_config.content_delivery.s3api.endpoint_url,
-            config=botocore.config.Config(connect_timeout=10, read_timeout=60, retries={"max_attempts": 2}),
+            **client_kwargs,
         )
 
-        bucket_name = learnhouse_config.hosting_config.content_delivery.s3api.bucket_name or "learnhouse-media"
+        bucket_name = s3_config.bucket_name or "learnhouse-media"
         local_path = f"content/{type_of_dir}/{uuid}/{directory}/{file_and_format}"
         s3_key = local_path
 

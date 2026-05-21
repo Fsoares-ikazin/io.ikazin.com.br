@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 
 import stripe
@@ -10,10 +11,11 @@ from sqlmodel import Session
 from src.core.events.database import get_db_session
 from src.db.users import PublicUser
 from src.security.auth import get_authenticated_user
-from src.services.ikazin.access import assign_ikazin_plan, resolve_user_for_ikazin_activation
+from src.services.ikazin.access import activate_ikazin_plan_from_stripe_checkout
 from src.services.ikazin.builds import VALID_TIER_NAMES
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 _PRICE_IDS: dict[str, str] = {
     "basic": os.getenv("STRIPE_PRICE_BASIC", ""),
@@ -34,15 +36,33 @@ class CheckoutRequest(BaseModel):
     plan: str
 
 
+def _normalize_plan(plan: str) -> str:
+    normalized = plan.strip().lower()
+    if normalized not in VALID_TIER_NAMES:
+        raise HTTPException(status_code=400, detail=f"Invalid plan: {normalized}")
+    return normalized
+
+
+def _resolve_org_slug() -> str:
+    return os.getenv("IKAZIN_DEFAULT_ORG_SLUG", "default").strip() or "default"
+
+
+def _build_checkout_metadata(current_user: PublicUser, plan: str) -> dict[str, str]:
+    return {
+        "user_id": str(current_user.id),
+        "email": current_user.email,
+        "ikazin_plan": plan,
+        "org_slug": _resolve_org_slug(),
+    }
+
+
 @router.post("/checkout", summary="Create Stripe Checkout Session for an Ikazin plan")
 async def create_checkout_session(
     payload: CheckoutRequest,
     request: Request,
     current_user: PublicUser = Depends(get_authenticated_user),
 ) -> dict:
-    plan = payload.plan.strip().lower()
-    if plan not in VALID_TIER_NAMES:
-        raise HTTPException(status_code=400, detail=f"Invalid plan: {plan}")
+    plan = _normalize_plan(payload.plan)
 
     price_id = _PRICE_IDS.get(plan, "")
     if not price_id:
@@ -50,7 +70,8 @@ async def create_checkout_session(
 
     client = _client()
     base = str(request.base_url).rstrip("/")
-    success_url = f"{base}/orgs/default/welcome?plan={plan}&session_id={{CHECKOUT_SESSION_ID}}"
+    org_slug = _resolve_org_slug()
+    success_url = f"{base}/orgs/{org_slug}/welcome?plan={plan}&session_id={{CHECKOUT_SESSION_ID}}"
     cancel_url = f"{base}/planos"
 
     session = client.v1.checkout.sessions.create(
@@ -58,7 +79,7 @@ async def create_checkout_session(
             "mode": "payment",
             "line_items": [{"price": price_id, "quantity": 1}],
             "customer_email": current_user.email,
-            "metadata": {"user_id": str(current_user.id), "ikazin_plan": plan},
+            "metadata": _build_checkout_metadata(current_user, plan),
             "success_url": success_url,
             "cancel_url": cancel_url,
         }
@@ -76,6 +97,8 @@ async def stripe_webhook(
     secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
     if not key:
         raise HTTPException(status_code=503, detail="Stripe not configured")
+    if not secret:
+        raise HTTPException(status_code=503, detail="Stripe webhook not configured")
 
     raw_body = await request.body()
 
@@ -90,22 +113,22 @@ async def stripe_webhook(
     except Exception:
         raise HTTPException(status_code=400, detail="Webhook error")
 
-    if event["type"] == "checkout.session.completed":
-        obj = event["data"]["object"]
-        meta: dict = obj.get("metadata") or {}
-        uid = meta.get("user_id")
-        plan = meta.get("ikazin_plan")
-        if uid and plan:
-            try:
-                user = resolve_user_for_ikazin_activation(db_session, user_id=int(uid))
-                assign_ikazin_plan(
-                    db_session,
-                    user,
-                    plan=plan,
-                    source="stripe",
-                    metadata={"stripe_session_id": obj.get("id")},
-                )
-            except Exception:
-                pass  # never fail the webhook — plan activation is idempotent
+    event_type = event.get("type")
+    if event_type != "checkout.session.completed":
+        return {"ok": True, "status": "ignored", "event_type": event_type}
 
-    return {"ok": True}
+    checkout_session = event["data"]["object"]
+    checkout_metadata = dict(checkout_session.get("metadata") or {})
+    checkout_metadata["stripe_customer_id"] = checkout_session.get("customer")
+    checkout_metadata["stripe_payment_status"] = checkout_session.get("payment_status")
+
+    result = activate_ikazin_plan_from_stripe_checkout(
+        db_session,
+        event_id=event.get("id"),
+        session_id=checkout_session.get("id"),
+        metadata=checkout_metadata,
+    )
+    if result["status"] != "activated":
+        logger.warning("Stripe Ikazin webhook finished with status=%s payload=%s", result["status"], result)
+
+    return {"ok": True, **result}

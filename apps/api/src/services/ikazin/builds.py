@@ -1,4 +1,6 @@
+import logging
 from typing import Optional
+from sqlalchemy import text
 from sqlmodel import Session, select
 
 from src.db.ikazin_builds import IkazinBuild
@@ -14,6 +16,7 @@ TIER_MAX: dict[str, int] = {
 }
 
 VALID_TIER_NAMES = frozenset(TIER_MAX.keys())
+logger = logging.getLogger(__name__)
 
 
 def _extract_user_plan_tier(user: PublicUser | AnonymousUser) -> Optional[str]:
@@ -63,6 +66,37 @@ def _get_progress_map(
         select(IkazinProgressMeta).where(IkazinProgressMeta.user_id == str(user.id))
     ).all()
     return {row.build_id: row for row in rows}
+
+
+def _get_recent_view_rows(
+    db_session: Session,
+    user: PublicUser | AnonymousUser,
+) -> list[dict]:
+    if isinstance(user, AnonymousUser):
+        return []
+
+    try:
+        rows = db_session.execute(
+            text(
+                """
+                SELECT
+                    build_id,
+                    last_viewed_at,
+                    last_position_seconds,
+                    last_percent,
+                    completed,
+                    total_views
+                FROM ikazin_user_recent_views
+                WHERE user_id = :user_id
+                ORDER BY last_viewed_at DESC, total_views DESC
+                """
+            ),
+            {"user_id": str(user.id)},
+        ).mappings().all()
+        return [dict(row) for row in rows]
+    except Exception:
+        logger.debug("Ikazin recent views lookup failed for user %s", user.id, exc_info=True)
+        return []
 
 
 def _serialize_progress(progress_row: Optional[IkazinProgressMeta]) -> dict:
@@ -131,6 +165,7 @@ def get_dashboard_data(
 
     max_build = get_user_plan_max_build(user)
     progress_map = _get_progress_map(db_session, user)
+    recent_view_rows = _get_recent_view_rows(db_session, user)
     build_map = {build.id: build for build in builds}
 
     serialized_builds = {
@@ -144,19 +179,28 @@ def get_dashboard_data(
         if build.build_number <= max_build
     ]
 
-    progress_rows = [row for row in progress_map.values() if row.build_id in build_map]
-    progress_rows.sort(
-        key=lambda row: (row.updated_at is not None, row.updated_at),
+    recent_build_ids = [
+        row["build_id"]
+        for row in recent_view_rows
+        if row["build_id"] in build_map
+    ]
+    fallback_progress_rows = [row for row in progress_map.values() if row.build_id in build_map]
+    fallback_progress_rows.sort(
+        key=lambda row: (row.last_watched_at is not None, row.last_watched_at, row.updated_at),
         reverse=True,
+    )
+    seen_build_ids = set(recent_build_ids)
+    recent_build_ids.extend(
+        row.build_id for row in fallback_progress_rows if row.build_id not in seen_build_ids
     )
 
     in_progress = [
-        serialized_builds[row.build_id]
-        for row in progress_rows
-        if 0 < row.percent < 100
+        serialized_builds[build_id]
+        for build_id in recent_build_ids
+        if build_id in progress_map and 0 < progress_map[build_id].percent < 100
     ][:10]
 
-    last_accessed = serialized_builds[progress_rows[0].build_id] if progress_rows else None
+    last_accessed = serialized_builds[recent_build_ids[0]] if recent_build_ids else None
 
     recently_added = [
         serialized_builds[build.id]

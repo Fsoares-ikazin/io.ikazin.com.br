@@ -6,6 +6,7 @@ import { User, Lock, ShoppingBag, Settings } from 'lucide-react'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
 import UserAvatar from '@components/Objects/UserAvatar'
 import { getUriWithOrg } from '@services/config/config'
+import { extractIkazinAccountSummary, getTierLabel, getTierTone } from '@components/Objects/Account/accountIkazin'
 
 interface AccountSidebarProps {
   orgslug: string
@@ -23,6 +24,7 @@ export function AccountSidebar({ orgslug, currentSubpage }: AccountSidebarProps)
   const { t } = useTranslation()
   const session = useLHSession() as any
   const user = session?.data?.user
+  const ikazinSummary = extractIkazinAccountSummary(user)
 
   return (
     <div className="space-y-4">
@@ -53,6 +55,22 @@ export function AccountSidebar({ orgslug, currentSubpage }: AccountSidebarProps)
             </p>
           </div>
         )}
+
+        <div className="px-4 py-3 border-b border-ikz-border">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                Ikazin
+              </p>
+              <p className="mt-1 text-sm font-semibold text-gray-200">
+                {getTierLabel(ikazinSummary.currentPlan)}
+              </p>
+            </div>
+            <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${getTierTone(ikazinSummary.maxTierEver)}`}>
+              Pico: {getTierLabel(ikazinSummary.maxTierEver)}
+            </span>
+          </div>
+        </div>
 
         {/* Navigation */}
         <div className="p-2">

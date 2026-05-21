@@ -10,7 +10,13 @@ from src.db.ikazin_builds import IkazinBuild
 from src.db.users import User
 from src.db.users import PublicUser, AnonymousUser
 from src.security.auth import get_current_user
-from src.services.courses.transfer.storage_utils import file_exists, read_file_content
+from src.services.courses.transfer.storage_utils import (
+    file_exists,
+    get_s3_configuration_error_message,
+    get_s3_configuration_errors,
+    is_s3_enabled,
+    read_file_content,
+)
 from src.services.ikazin.builds import (
     get_builds_with_locked,
     get_user_plan_max_build,
@@ -18,6 +24,35 @@ from src.services.ikazin.builds import (
 
 router = APIRouter()
 IKAZIN_HLS_PREFIX = "ikazin/builds"
+
+HLS_STORAGE_PENDING_MESSAGE = (
+    "Storage HLS ainda nao configurado. Preencha o .env da API com as variaveis S3/MinIO."
+)
+HLS_ASSET_PENDING_MESSAGE = (
+    "Manifesto HLS ainda nao publicado para este build. Execute o publish_build_hls.sh e envie os segmentos."
+)
+DOWNLOAD_STORAGE_PENDING_MESSAGE = (
+    "Downloads indisponiveis: configure o storage S3/MinIO da API antes de publicar os arquivos."
+)
+
+
+def _build_material_entry(
+    *,
+    file_type: str,
+    label: str,
+    file_key: Optional[str],
+    downloads_ready: bool,
+) -> dict:
+    if file_type == "scl":
+        return {"type": "scl", "label": label, "available": False, "note": "Material ainda nao publicado"}
+
+    if not file_key:
+        return {"type": file_type, "label": label, "available": False, "note": "Arquivo ainda nao publicado"}
+
+    if not downloads_ready:
+        return {"type": file_type, "label": label, "available": False, "note": DOWNLOAD_STORAGE_PENDING_MESSAGE}
+
+    return {"type": file_type, "label": label, "available": True, "note": "Arquivo pronto para download"}
 
 
 def _build_hls_path(build_number: int, asset_path: str = "index.m3u8") -> str:
@@ -54,6 +89,8 @@ def _serialize_build_detail(
 ) -> dict:
     max_build = get_user_plan_max_build(current_user)
     is_locked = build.build_number > max_build
+    playback = _resolve_playback_state(build, is_locked=is_locked)
+    downloads_ready = not (is_s3_enabled() and get_s3_configuration_errors())
     return {
         "id": build.uuid,
         "build_number": build.build_number,
@@ -65,17 +102,35 @@ def _serialize_build_detail(
         "progress": progress or {"percent": 0, "second": 0, "completed": False},
         "vimeo_id": build.vimeo_video_id,
         "video_provider": "minio_hls",
-        "playback_url": (
-            f"/api/v1/ikazin/builds/{build.uuid}/hls/index.m3u8"
-            if (not is_locked and file_exists(_build_hls_path(build.build_number)))
-            else None
-        ),
+        "playback_url": playback["playback_url"],
+        "playback_status": playback["status"],
+        "playback_message": playback["message"],
         "duration_seconds": (build.duration_minutes * 60) if build.duration_minutes else None,
         "materials": [
-            {"type": "exe", "label": "Executavel .exe", "available": bool(build.exe_file_key)},
-            {"type": "zip", "label": "Projeto TIA Portal", "available": bool(build.tia_portal_file_key)},
-            {"type": "pdf", "label": "Guia PDF", "available": bool(build.pdf_guide_key)},
-            {"type": "scl", "label": "Logica SCL", "available": False},
+            _build_material_entry(
+                file_type="exe",
+                label="Executavel .exe",
+                file_key=build.exe_file_key,
+                downloads_ready=downloads_ready,
+            ),
+            _build_material_entry(
+                file_type="zip",
+                label="Projeto TIA Portal",
+                file_key=build.tia_portal_file_key,
+                downloads_ready=downloads_ready,
+            ),
+            _build_material_entry(
+                file_type="pdf",
+                label="Guia PDF",
+                file_key=build.pdf_guide_key,
+                downloads_ready=downloads_ready,
+            ),
+            _build_material_entry(
+                file_type="scl",
+                label="Logica SCL",
+                file_key=None,
+                downloads_ready=False,
+            ),
         ],
         "next_build": (
             {
@@ -87,6 +142,32 @@ def _serialize_build_detail(
             if next_build
             else None
         ),
+    }
+
+
+def _resolve_playback_state(build: IkazinBuild, *, is_locked: bool) -> dict[str, str | None]:
+    if is_locked:
+        return {"status": "locked", "message": "Build bloqueado para o plano atual", "playback_url": None}
+
+    manifest_path = _build_hls_path(build.build_number)
+    if is_s3_enabled() and get_s3_configuration_errors():
+        return {
+            "status": "storage_not_configured",
+            "message": HLS_STORAGE_PENDING_MESSAGE,
+            "playback_url": None,
+        }
+
+    if file_exists(manifest_path):
+        return {
+            "status": "ready",
+            "message": None,
+            "playback_url": f"/api/v1/ikazin/builds/{build.uuid}/hls/index.m3u8",
+        }
+
+    return {
+        "status": "missing_assets",
+        "message": HLS_ASSET_PENDING_MESSAGE,
+        "playback_url": None,
     }
 
 
@@ -169,9 +250,13 @@ async def get_ikazin_build_playback(
         raise HTTPException(status_code=403, detail="Build locked for current plan")
 
     manifest_path = _build_hls_path(build.build_number)
+    playback = _resolve_playback_state(build, is_locked=False)
     return {
         "provider": "minio_hls",
-        "playback_url": f"/api/v1/ikazin/builds/{build.uuid}/hls/index.m3u8" if file_exists(manifest_path) else None,
+        "playback_url": playback["playback_url"],
+        "status": playback["status"],
+        "message": playback["message"],
+        "manifest_path": manifest_path,
     }
 
 
@@ -189,6 +274,12 @@ async def stream_ikazin_hls_asset(
     max_build = get_user_plan_max_build(current_user)
     if build.build_number > max_build:
         raise HTTPException(status_code=403, detail="Build locked for current plan")
+
+    if is_s3_enabled() and get_s3_configuration_errors():
+        raise HTTPException(
+            status_code=503,
+            detail=get_s3_configuration_error_message("HLS playback"),
+        )
 
     normalized_asset_path = asset_path.strip("/")
     if ".." in normalized_asset_path:

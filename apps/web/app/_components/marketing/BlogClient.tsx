@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
-import { Clock, ArrowRight, Rss } from 'lucide-react'
-import { useMarketingLang, type Lang } from './LanguageToggle'
+import { Rss } from 'lucide-react'
+import { useMarketingLang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 import { posts as allPosts } from '../../_data/blog-posts'
 import { trackPublicMarketingEvent } from './PublicMarketingTracker'
+import { FeaturedPostCard } from '@/components/ikazin/marketing/FeaturedPostCard'
+import { BlogPostCard } from '@/components/ikazin/marketing/BlogPostCard'
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -37,19 +39,6 @@ const copy = {
     newsletterError: 'Nao foi possivel enviar o guia agora.',
     footerCopy: 'Todos os direitos reservados.',
   },
-}
-
-const tagColors: Record<string, string> = {
-  vc: 'bg-ikz-cyan/10 text-ikz-cyan',
-  plc: 'bg-ikz-lime/10 text-ikz-lime',
-  drives: 'bg-[rgba(168,85,247,0.12)] text-purple-400',
-  dt: 'bg-[rgba(251,146,60,0.12)] text-orange-400',
-}
-
-function formatDate(dateStr: string, lang: Lang) {
-  return new Date(dateStr).toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
-    year: 'numeric', month: 'short', day: 'numeric',
-  })
 }
 
 // ─── Component ─────────────────────────────────────────────────────────────────
@@ -113,79 +102,25 @@ export function BlogClient() {
         {/* Featured post */}
         <div className="mb-12">
           <span className="mb-4 inline-block text-xs font-bold uppercase tracking-widest text-ikz-cyan">{t.featured}</span>
-          <Link
-            href={`/blog/${featured.slug[lang]}`}
+          <FeaturedPostCard
+            lang={lang}
+            post={featured}
+            copy={{ readMore: t.readMore, tags: t.tags }}
             onClick={() => trackPublicMarketingEvent('blog_card_click', { slug: featured.slug[lang], featured: true })}
-            className="group block rounded-2xl border border-ikz-lime/40 bg-ikz-surface p-8 hover:border-ikz-lime hover:shadow-glow-lime transition-all"
-          >
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ${tagColors[featured.tag]}`}>
-                    {t.tags[featured.tag as keyof typeof t.tags]}
-                  </span>
-                  <span className="text-xs text-gray-500 flex items-center gap-1.5">
-                    <Clock size={11} /> {featured.readMin} min
-                  </span>
-                  <span className="text-xs text-gray-500">{formatDate(featured.date, lang)}</span>
-                </div>
-                <h2 className="text-2xl font-black text-white mb-3 group-hover:text-ikz-cyan transition-colors leading-tight">
-                  {featured.title[lang]}
-                </h2>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-2xl">{featured.excerpt[lang]}</p>
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-ikz-cyan group-hover:gap-3 transition-all">
-                  {t.readMore} <ArrowRight size={14} />
-                </span>
-              </div>
-              <div className="hidden md:block h-40 w-64 shrink-0 overflow-hidden rounded-xl border border-ikz-border bg-ikz-bg">
-                <img
-                  src={`/api/og/blog/${featured.slug[lang]}`}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </Link>
+          />
         </div>
 
         {/* Post grid */}
         <h2 className="mb-6 text-sm font-bold uppercase tracking-widest text-gray-500">{t.allPosts}</h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {rest.map(post => (
-            <Link
+            <BlogPostCard
               key={post.slug.en}
-              href={`/blog/${post.slug[lang]}`}
+              lang={lang}
+              post={post}
+              copy={{ readMore: t.readMore, tags: t.tags }}
               onClick={() => trackPublicMarketingEvent('blog_card_click', { slug: post.slug[lang], featured: false })}
-              className="group flex flex-col rounded-xl border border-ikz-border bg-ikz-surface p-6 hover:border-ikz-cyan/40 transition-all hover:-translate-y-0.5"
-            >
-              <div className="mb-4 aspect-[1.91/1] overflow-hidden rounded-lg border border-ikz-border bg-ikz-bg">
-                <img
-                  src={`/api/og/blog/${post.slug[lang]}`}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex items-center gap-2 mb-4">
-                <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${tagColors[post.tag]}`}>
-                  {t.tags[post.tag as keyof typeof t.tags]}
-                </span>
-                <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                  <Clock size={10} /> {post.readMin} min
-                </span>
-              </div>
-              <h3 className="font-bold text-white text-base leading-snug mb-2 group-hover:text-ikz-cyan transition-colors flex-1">
-                {post.title[lang]}
-              </h3>
-              <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed mb-4">{post.excerpt[lang]}</p>
-              <div className="flex items-center justify-between border-t border-ikz-border pt-3 mt-auto">
-                <span className="text-[10px] text-gray-600">{formatDate(post.date, lang)}</span>
-                <span className="text-[10px] font-bold text-ikz-cyan flex items-center gap-1 group-hover:gap-2 transition-all">
-                  {t.readMore} <ArrowRight size={10} />
-                </span>
-              </div>
-            </Link>
+            />
           ))}
         </div>
 
@@ -209,7 +144,7 @@ export function BlogClient() {
               <button
                 type="submit"
                 disabled={newsletterState === 'loading'}
-                className="w-full shrink-0 rounded-lg bg-ikz-lime px-5 py-2.5 text-sm font-semibold text-ikz-bg shadow-glow-lime transition-all hover:opacity-90 hover:shadow-glow-lime-lg sm:w-auto"
+                className="btn-primary w-full shrink-0 sm:w-auto"
               >
                 {newsletterState === 'loading' ? '...' : t.newsletter.cta}
               </button>

@@ -27,6 +27,7 @@ import { changeLanguage } from '@/lib/i18n'
 import { AVAILABLE_LANGUAGES } from '@/lib/languages'
 import LanguageSwitcher from '@components/Utils/LanguageSwitcher'
 import { getMenuColorClasses } from '@services/utils/ts/colorUtils'
+import { TIERS, type BuildTier } from '@/lib/ikazin/tokens'
 
 interface RoleInfo {
   name: string;
@@ -39,6 +40,14 @@ interface RoleInfo {
 interface CustomRoleInfo {
   name: string;
   description?: string;
+}
+
+const VALID_TIERS: BuildTier[] = ['basic', 'essentials', 'advanced', 'premium']
+
+function normalizeTier(value: unknown): BuildTier | null {
+  if (typeof value !== 'string') return null
+  const normalized = value.trim().toLowerCase()
+  return VALID_TIERS.includes(normalized as BuildTier) ? (normalized as BuildTier) : null
 }
 
 export const HeaderProfileBox = ({ primaryColor = '' }: { primaryColor?: string }) => {
@@ -145,6 +154,29 @@ export const HeaderProfileBox = ({ primaryColor = '' }: { primaryColor?: string 
     }));
   }, [userRoles, org?.id]);
 
+  const memberTier = useMemo((): BuildTier | null => {
+    const user = session?.data?.user
+    if (!user) return null
+    if (user.is_superadmin) return 'premium'
+
+    const detailsTier = normalizeTier(user.details?.ikazin_max_tier_ever)
+      ?? normalizeTier(user.profile?.ikazin_max_tier_ever)
+    if (detailsTier) return detailsTier
+
+    return (
+      normalizeTier(user.details?.ikazin_plan)
+      ?? normalizeTier(user.profile?.ikazin_plan)
+    )
+  }, [session?.data?.user])
+
+  const memberTierStyles = memberTier
+    ? {
+        backgroundColor: TIERS[memberTier].bgSoft,
+        borderColor: TIERS[memberTier].color,
+        color: TIERS[memberTier].textColor,
+      }
+    : null
+
   return (
     <div className="flex items-stretch items-center">
       {session.status == 'unauthenticated' && (
@@ -174,6 +206,15 @@ export const HeaderProfileBox = ({ primaryColor = '' }: { primaryColor?: string 
                   <div className="flex flex-col items-start space-y-0">
                     <div className="flex items-center space-x-2">
                       <p className={`text-sm font-semibold capitalize ${colors.profileName}`}>{session.data.user.username}</p>
+                      {memberTier && memberTierStyles && (
+                        <span
+                          className="inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold tracking-wide"
+                          style={memberTierStyles}
+                          title={`Plano máximo: ${TIERS[memberTier].label}`}
+                        >
+                          {`Membro ${TIERS[memberTier].label}`}
+                        </span>
+                      )}
                       {userRoleInfo && userRoleInfo.name !== 'USER' && (
                         <Tooltip 
                           content={userRoleInfo.description}
@@ -211,7 +252,17 @@ export const HeaderProfileBox = ({ primaryColor = '' }: { primaryColor?: string 
                   <div className="flex items-center space-x-2">
                     <UserAvatar border="border-2" rounded="rounded-full" width={24} />
                     <div>
-                      <p className="text-sm font-medium">{session.data.user.username}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium">{session.data.user.username}</p>
+                        {memberTier && memberTierStyles && (
+                          <span
+                            className="inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold tracking-wide"
+                            style={memberTierStyles}
+                          >
+                            {`Membro ${TIERS[memberTier].label}`}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-500 capitalize">{session.data.user.email}</p>
                     </div>
                   </div>

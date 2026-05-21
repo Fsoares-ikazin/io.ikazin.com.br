@@ -147,10 +147,10 @@ Da seção "Bloqueios por ambiente" do `PLATFORM.md`:
 - [ ] **Downloads**: configurar MinIO em `apps/api/.env` (`content_delivery=s3api` + credenciais) + upload .exe/.zip/.pdf reais
 - [ ] **Lead magnet email**: SMTP em `apps/api/.env` (Zoho conforme `scope.md`)
 - [ ] **Analytics**: criar projeto PostHog + setar `NEXT_PUBLIC_POSTHOG_KEY`
-- [ ] **Welcome link pós-compra**: integrar Stripe webhook → `POST /api/v1/ikazin/admin/activate`
-- [ ] **Webhook handler**: criar endpoint que recebe Stripe (já tem checkout) → ativa plano automaticamente
-- [ ] **Migration `004_max_tier_ever.sql`** (depende item 1.10)
-- [ ] **Migration `005_user_recent_views.sql`**: tabela para tracking de personalização (item 2.4)
+- [x] **Welcome link pós-compra**: checkout Stripe já redireciona para `/orgs/{slug}/welcome`; ativação do plano ocorre no webhook
+- [x] **Webhook handler**: existe `/api/v1/ikazin/stripe/webhook` e ativa plano automaticamente no backend
+- [ ] **Aplicar migration `004_max_tier_ever.sql`** nos ambientes reais
+- [ ] **Aplicar migration `005_user_recent_views.sql`** nos ambientes reais
 
 ---
 

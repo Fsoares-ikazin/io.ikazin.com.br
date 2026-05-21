@@ -11,9 +11,8 @@ from src.core.events.database import get_db_session
 from src.db.users import PublicUser
 from src.security.auth import get_authenticated_user
 from src.services.ikazin.access import (
-    assign_ikazin_plan,
+    activate_ikazin_user as activate_ikazin_user_service,
     build_ikazin_welcome_link,
-    resolve_user_for_ikazin_activation,
 )
 
 router = APIRouter()
@@ -44,14 +43,10 @@ async def activate_ikazin_user(
 ) -> dict:
     _require_superadmin(current_user)
 
-    user = resolve_user_for_ikazin_activation(
+    user = activate_ikazin_user_service(
         db_session,
         user_id=payload.user_id,
         email=payload.email,
-    )
-    user = assign_ikazin_plan(
-        db_session,
-        user,
         plan=payload.plan,
         source=payload.source,
         metadata=payload.metadata,

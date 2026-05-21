@@ -290,7 +290,7 @@ function BuildPreviewStrip({ previewTitle, previewCta }: { previewTitle: string;
         <div className="mt-10 text-center">
           <Link
             href="/planos"
-            className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg transition-all hover:opacity-90"
+            className="btn-primary"
           >
             {previewCta} <ChevronRight size={16} />
           </Link>
@@ -391,7 +391,7 @@ export function LandingClient() {
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-400 leading-relaxed">{t.sub}</p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link href="/planos" className="rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg transition-all hover:opacity-90 flex items-center gap-2">
+            <Link href="/planos" className="btn-primary">
               {t.ctaPrimary} <ChevronRight size={16} />
             </Link>
             <Link href="#builds" className="rounded-xl border border-ikz-border px-8 py-4 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:text-white">
@@ -457,7 +457,7 @@ export function LandingClient() {
           <div className="mt-10 text-center">
             <Link
               href="/planos"
-              className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg transition-all hover:opacity-90"
+              className="btn-primary"
             >
               {t.tiersCtaSingle} <ChevronRight size={16} />
             </Link>
@@ -489,7 +489,7 @@ export function LandingClient() {
           </h2>
           <p className="mb-10 text-gray-400 max-w-xl mx-auto">{t.finalSub}</p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link href="/planos" className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-10 py-4 text-base font-bold text-ikz-bg transition-all hover:opacity-90">
+            <Link href="/planos" className="btn-primary px-10 text-base">
               {t.finalCta} <ChevronRight size={16} />
             </Link>
             <Link href="/blog" className="inline-flex items-center gap-2 rounded-xl border border-ikz-border px-8 py-4 text-sm font-semibold text-gray-400 hover:border-gray-600 hover:text-white transition-colors">

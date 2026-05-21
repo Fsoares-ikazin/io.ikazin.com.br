@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'motion/react'
-import { CheckCircle2, Clock, ChevronRight } from 'lucide-react'
+import { Clock, ChevronRight } from 'lucide-react'
 import IkazinBadge from './IkazinBadge'
 import { color, tier as tierToken } from '@/lib/ikazin/tokens'
 import { cardHover } from '@/lib/ikazin/motion'
@@ -126,10 +126,22 @@ export default function BuildCard({
           </div>
         )}
 
-        {/* Completed checkmark */}
-        {completed && !locked && (
+        {/* Status badge */}
+        {!locked && finalStatus === 'completed' && (
           <div className="absolute bottom-2 right-2">
-            <CheckCircle2 className="h-5 w-5 drop-shadow" style={{ color: color.success }} />
+            <IkazinBadge variant="status" status="completed" size="sm" />
+          </div>
+        )}
+
+        {!locked && finalStatus === 'in_progress' && (
+          <div className="absolute bottom-2 right-2">
+            <IkazinBadge variant="status" status="in_progress" size="sm" />
+          </div>
+        )}
+
+        {!locked && finalStatus === 'not_started' && (
+          <div className="absolute bottom-2 right-2">
+            <IkazinBadge variant="status" status="new" size="sm" />
           </div>
         )}
       </div>

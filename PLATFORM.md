@@ -129,16 +129,34 @@ Ikazin usará `MinIO/S3-compatible + HLS single bitrate` para lançamento.
   - `POST /api/v1/ikazin/progress`
   - `PUT /api/v1/ikazin/progress/{id}/complete`
 
+### Env mínimo para MinIO / S3-compatible (`apps/api/.env`)
+
+Use `apps/api/.env.example` como base. Campos obrigatórios para player HLS e downloads reais:
+
+```bash
+LEARNHOUSE_CONTENT_DELIVERY_TYPE=s3api
+LEARNHOUSE_S3_API_BUCKET_NAME=ikazin-media
+LEARNHOUSE_S3_API_ENDPOINT_URL=http://localhost:9000
+LEARNHOUSE_S3_API_ACCESS_KEY_ID=minioadmin
+LEARNHOUSE_S3_API_SECRET_ACCESS_KEY=minioadmin
+LEARNHOUSE_S3_API_REGION_NAME=us-east-1
+```
+
+Observações operacionais:
+- O backend agora faz proxy autenticado dos downloads em `/api/v1/ikazin/downloads/{build_id}/file`, então o browser nao precisa acessar o endpoint do MinIO diretamente.
+- Se `content_delivery=s3api` estiver sem bucket/credenciais, HLS e downloads retornam `503` com erro explicito de configuracao.
+- HLS continua esperando objetos em `ikazin/builds/{build_number}/hls/`.
+
 ## Bloqueios por ambiente (pré-lançamento)
 
 | Bloqueio | Detalhe | O que falta |
 |---------|---------|------------|
 | **HLS / player** | `playback_url` retorna `null` se não houver assets no bucket | Fazer upload dos HLS segments em `ikazin/builds/{n}/hls/` no MinIO |
-| **Downloads** | Retorna 503 se `content_delivery != "s3api"` | Configurar MinIO em `apps/api/.env` + upload dos arquivos .exe/.zip/.pdf |
+| **Downloads** | Retorna 503 se bucket/credenciais S3-MinIO nao estiverem configurados | Configurar MinIO em `apps/api/.env` + upload dos arquivos .exe/.zip/.pdf |
 | **Lead magnet email** | Retorna 503 se SMTP não configurado | Preencher SMTP em `apps/api/.env` |
 | **Analytics** | `track()` silencioso sem `NEXT_PUBLIC_POSTHOG_KEY` | Criar projeto PostHog e setar env var |
-| **Welcome link pós-compra** | Retorna URL direta `/orgs/{slug}/welcome` (sem magic token) | Integrar com gateway de pagamento para acionar `POST /api/v1/ikazin/admin/activate` |
-| **Atribuição de plano** | Só via API superadmin (`/admin/activate`) ou UI em `/admin` | Integrar Hotmart/Stripe webhook → chamar endpoint de ativação |
+| **Welcome link pós-compra** | Checkout Stripe já redireciona para `/orgs/{slug}/welcome` (sem magic token) | Homologar compra real + garantir ambiente com webhook/credenciais válidos |
+| **Atribuição de plano** | API superadmin continua existindo, mas Stripe webhook já ativa plano automaticamente | Validar webhook com segredos reais e smoke test ponta a ponta |
 
 ## Fluxo de ativação pós-pagamento (estrutura pronta)
 

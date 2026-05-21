@@ -281,7 +281,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
                   {t.contactCta} <ChevronRight size={16} />
                 </Link>
               ) : (
-                <Link href={`/checkout?plan=${slug}`} className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-8 py-4 text-sm font-bold text-ikz-bg hover:opacity-90 transition-all">
+                <Link href={`/checkout?plan=${slug}`} className="btn-primary">
                   {t.buyNow} <ChevronRight size={16} />
                 </Link>
               )}
@@ -348,7 +348,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
               {t.contactCta} <ChevronRight size={16} />
             </Link>
           ) : (
-            <Link href={`/checkout?plan=${slug}`} className="inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime hover:shadow-glow-lime-lg px-10 py-4 text-base font-bold text-ikz-bg hover:opacity-90 transition-all">
+            <Link href={`/checkout?plan=${slug}`} className="btn-primary px-10 text-base">
               {t.buyNow} <ChevronRight size={16} />
             </Link>
           )}

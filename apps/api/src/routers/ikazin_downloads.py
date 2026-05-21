@@ -1,6 +1,12 @@
 from typing import Literal
+import mimetypes
+import os
+from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import FileResponse, StreamingResponse
+from botocore.exceptions import ClientError
 from pydantic import BaseModel
 from sqlalchemy import text
 from sqlmodel import Session, select
@@ -10,6 +16,9 @@ from src.db.ikazin_builds import IkazinBuild
 from src.db.users import PublicUser
 from src.security.auth import get_authenticated_user
 from src.services.courses.transfer.storage_utils import (
+    get_content_delivery_type,
+    get_s3_configuration_error_message,
+    get_s3_configuration_errors,
     get_s3_bucket_name,
     get_storage_client,
     is_s3_enabled,
@@ -59,24 +68,65 @@ def _get_file_key(build: IkazinBuild, file_type: Literal["exe", "tia_portal", "p
     return build.pdf_guide_key or ""
 
 
-def _create_presigned_download_url(file_key: str) -> str:
-    if not file_key:
-        raise HTTPException(status_code=404, detail="File not available for this build")
-    if not is_s3_enabled():
-        raise HTTPException(status_code=503, detail="File storage not configured")
+def _build_download_filename(
+    build: IkazinBuild,
+    file_type: Literal["exe", "tia_portal", "pdf_guide"],
+    file_key: str,
+) -> str:
+    extension = Path(file_key).suffix or {
+        "exe": ".exe",
+        "tia_portal": ".zip",
+        "pdf_guide": ".pdf",
+    }[file_type]
+    return f"ikazin-build-{build.build_number}-{file_type}{extension}"
+
+
+def _guess_media_type(file_key: str) -> str:
+    guessed, _ = mimetypes.guess_type(file_key)
+    return guessed or "application/octet-stream"
+
+
+def _attachment_headers(filename: str) -> dict[str, str]:
+    return {"Content-Disposition": f"attachment; filename*=UTF-8''{quote(filename)}"}
+
+
+def _stream_s3_object(file_key: str):
+    if get_s3_configuration_errors():
+        raise HTTPException(
+            status_code=503,
+            detail=get_s3_configuration_error_message("downloads"),
+        )
 
     client = get_storage_client()
     if client is None:
         raise HTTPException(status_code=503, detail="Storage client unavailable")
 
     try:
-        return client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": get_s3_bucket_name(), "Key": file_key},
-            ExpiresIn=DOWNLOAD_URL_EXPIRY,
-        )
-    except Exception:
-        raise HTTPException(status_code=500, detail="Could not generate download link")
+        response = client.get_object(Bucket=get_s3_bucket_name(), Key=file_key)
+    except ClientError as exc:
+        error_code = exc.response.get("Error", {}).get("Code", "")
+        if error_code in {"NoSuchKey", "404"}:
+            raise HTTPException(status_code=404, detail="File not found in storage") from exc
+        raise HTTPException(status_code=502, detail="Failed to read file from storage") from exc
+
+    body = response["Body"]
+
+    def iterator():
+        try:
+            while True:
+                chunk = body.read(1024 * 1024)
+                if not chunk:
+                    break
+                yield chunk
+        finally:
+            body.close()
+
+    media_type = response.get("ContentType") or _guess_media_type(file_key)
+    return StreamingResponse(iterator(), media_type=media_type)
+
+
+def _proxy_download_url(build_id: str, file_type: DownloadType) -> str:
+    return f"/api/v1/ikazin/downloads/{build_id}/file?file_type={file_type}"
 
 
 def _log_download(
@@ -146,7 +196,7 @@ async def log_ikazin_download(
     }
 
 
-@router.get("/{build_id}", summary="Get a signed Ikazin download URL")
+@router.get("/{build_id}", summary="Get the authenticated Ikazin download URL")
 async def get_ikazin_download_url(
     build_id: str,
     file_type: DownloadType,
@@ -156,19 +206,62 @@ async def get_ikazin_download_url(
     normalized_type = _normalize_file_type(file_type)
     build = _get_build_for_download(db_session, current_user, build_id)
     file_key = _get_file_key(build, normalized_type)
-    url = _create_presigned_download_url(file_key)
-    download = _log_download(
+    if not file_key:
+        raise HTTPException(status_code=404, detail="File not available for this build")
+
+    storage_mode = "proxy"
+    if is_s3_enabled() and not get_s3_configuration_errors():
+        storage_mode = "proxy_s3"
+
+    return {
+        "ok": True,
+        "url": _proxy_download_url(build_id, file_type),
+        "expires_in": DOWNLOAD_URL_EXPIRY,
+        "storage_mode": storage_mode,
+    }
+
+
+@router.get("/{build_id}/file", summary="Download an Ikazin file through the authenticated API")
+async def download_ikazin_file(
+    build_id: str,
+    file_type: DownloadType,
+    current_user: PublicUser = Depends(get_authenticated_user),
+    db_session: Session = Depends(get_db_session),
+):
+    normalized_type = _normalize_file_type(file_type)
+    build = _get_build_for_download(db_session, current_user, build_id)
+    file_key = _get_file_key(build, normalized_type)
+    if not file_key:
+        raise HTTPException(status_code=404, detail="File not available for this build")
+
+    filename = _build_download_filename(build, normalized_type, file_key)
+    if get_content_delivery_type() == "s3api":
+        response = _stream_s3_object(file_key)
+        _log_download(
+            db_session,
+            user_id=current_user.id,
+            build_id=build_id,
+            file_type=normalized_type,
+        )
+        response.headers.update(_attachment_headers(filename))
+        return response
+
+    absolute_path = os.path.abspath(file_key)
+    if not os.path.exists(absolute_path):
+        raise HTTPException(status_code=404, detail="File not found on filesystem storage")
+
+    _log_download(
         db_session,
         user_id=current_user.id,
         build_id=build_id,
         file_type=normalized_type,
     )
-    return {
-        "ok": True,
-        "url": url,
-        "expires_in": DOWNLOAD_URL_EXPIRY,
-        "download": download,
-    }
+    return FileResponse(
+        absolute_path,
+        media_type=_guess_media_type(file_key),
+        filename=filename,
+        headers=_attachment_headers(filename),
+    )
 
 
 @router.get("", summary="List current user's Ikazin download history")

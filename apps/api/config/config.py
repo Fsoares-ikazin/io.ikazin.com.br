@@ -44,6 +44,9 @@ class AIConfig(BaseModel):
 class S3ApiConfig(BaseModel):
     bucket_name: str | None
     endpoint_url: str | None
+    access_key_id: str | None = None
+    secret_access_key: str | None = None
+    region_name: str | None = None
 
 
 class ContentDeliveryConfig(BaseModel):
@@ -242,6 +245,13 @@ def get_learnhouse_config() -> LearnHouseConfig:
 
     env_bucket_name = os.environ.get("LEARNHOUSE_S3_API_BUCKET_NAME")
     env_endpoint_url = os.environ.get("LEARNHOUSE_S3_API_ENDPOINT_URL")
+    env_access_key_id = os.environ.get("LEARNHOUSE_S3_API_ACCESS_KEY_ID")
+    env_secret_access_key = os.environ.get("LEARNHOUSE_S3_API_SECRET_ACCESS_KEY")
+    env_region_name = (
+        os.environ.get("LEARNHOUSE_S3_API_REGION_NAME")
+        or os.environ.get("AWS_DEFAULT_REGION")
+        or os.environ.get("AWS_REGION")
+    )
     bucket_name = (
         yaml_config.get("hosting_config", {})
         .get("content_delivery", {})
@@ -254,10 +264,34 @@ def get_learnhouse_config() -> LearnHouseConfig:
         .get("s3api", {})
         .get("endpoint_url")
     ) or env_endpoint_url
+    access_key_id = (
+        yaml_config.get("hosting_config", {})
+        .get("content_delivery", {})
+        .get("s3api", {})
+        .get("access_key_id")
+    ) or env_access_key_id
+    secret_access_key = (
+        yaml_config.get("hosting_config", {})
+        .get("content_delivery", {})
+        .get("s3api", {})
+        .get("secret_access_key")
+    ) or env_secret_access_key
+    region_name = (
+        yaml_config.get("hosting_config", {})
+        .get("content_delivery", {})
+        .get("s3api", {})
+        .get("region_name")
+    ) or env_region_name
 
     content_delivery = ContentDeliveryConfig(
         type=content_delivery_type,  # type: ignore
-        s3api=S3ApiConfig(bucket_name=bucket_name, endpoint_url=endpoint_url),  # type: ignore
+        s3api=S3ApiConfig(
+            bucket_name=bucket_name,
+            endpoint_url=endpoint_url,
+            access_key_id=access_key_id,
+            secret_access_key=secret_access_key,
+            region_name=region_name,
+        ),  # type: ignore
     )
 
     # Database config

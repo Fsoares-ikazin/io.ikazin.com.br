@@ -28,6 +28,9 @@ hosting_config:
     s3api:
       bucket_name: ""
       endpoint_url: ""
+      access_key_id: ""
+      secret_access_key: ""
+      region_name: ""
 
 mailing_config:
   email_provider: "resend" # "resend" or "smtp"

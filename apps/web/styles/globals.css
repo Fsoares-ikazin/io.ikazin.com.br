@@ -2295,3 +2295,8 @@
   }
 }
 
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ikz-lime px-8 py-4 text-sm font-bold text-ikz-bg shadow-glow-lime transition-all hover:opacity-90 hover:shadow-glow-lime-lg;
+  }
+}

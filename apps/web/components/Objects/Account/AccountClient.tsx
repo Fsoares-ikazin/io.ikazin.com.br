@@ -40,7 +40,7 @@ const AccountClient = ({ orgslug, org_id, subpage }: AccountClientProps) => {
   const renderSubpage = () => {
     switch (subpage) {
       case 'general':
-        return <AccountGeneral />
+        return <AccountGeneral orgslug={orgslug} />
       case 'profile':
         return <AccountProfile />
       case 'security':
@@ -48,7 +48,7 @@ const AccountClient = ({ orgslug, org_id, subpage }: AccountClientProps) => {
       case 'purchases':
         return <AccountPurchases orgId={org_id} orgslug={orgslug} />
       default:
-        return <AccountGeneral />
+        return <AccountGeneral orgslug={orgslug} />
     }
   }
 

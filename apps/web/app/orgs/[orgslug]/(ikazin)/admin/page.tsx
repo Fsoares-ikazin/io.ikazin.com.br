@@ -3,12 +3,21 @@
 import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
+import IkazinModal from '@components/ikazin/ui/IkazinModal'
 import { Button } from '@components/ui/button'
 
 const PLAN_TIERS = ['basic', 'essentials', 'advanced', 'premium', 'none'] as const
 type PlanTier = (typeof PLAN_TIERS)[number]
 
 type PlanEntry = { id: number; email: string; plan_tier: string }
+
+const PLAN_RANK: Record<PlanTier, number> = {
+  none: 0,
+  basic: 1,
+  essentials: 2,
+  advanced: 3,
+  premium: 4,
+}
 
 export default function IkazinAdminPage({
   params,
@@ -29,6 +38,12 @@ export default function IkazinAdminPage({
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null)
   const [planList, setPlanList] = useState<PlanEntry[]>([])
   const [listLoading, setListLoading] = useState(false)
+  const [confirmDowngradeOpen, setConfirmDowngradeOpen] = useState(false)
+  const [pendingAssignment, setPendingAssignment] = useState<{
+    email: string
+    currentPlan: PlanTier
+    nextPlan: PlanTier
+  } | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') router.replace('/auth/login')
@@ -58,9 +73,7 @@ export default function IkazinAdminPage({
     }
   }
 
-  async function handleAssign(e: React.FormEvent) {
-    e.preventDefault()
-    if (!email.trim()) return
+  async function submitAssignment(targetEmail: string, targetPlan: PlanTier) {
     setLoading(true)
     setResult(null)
 
@@ -73,8 +86,8 @@ export default function IkazinAdminPage({
           ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         body: JSON.stringify({
-          email: email.trim(),
-          plan,
+          email: targetEmail,
+          plan: targetPlan,
           org_slug: orgSlug,
           source: 'admin_ui',
         }),
@@ -82,8 +95,10 @@ export default function IkazinAdminPage({
 
       const data = await res.json()
       if (res.ok) {
-        setResult({ ok: true, message: `Plano ${plan} atribuído para ${email}` })
+        setResult({ ok: true, message: `Plano ${targetPlan} atribuído para ${targetEmail}` })
         setEmail('')
+        setConfirmDowngradeOpen(false)
+        setPendingAssignment(null)
         loadPlanList()
       } else {
         setResult({ ok: false, message: data.detail ?? `Erro ${res.status}` })
@@ -94,6 +109,38 @@ export default function IkazinAdminPage({
       setLoading(false)
     }
   }
+
+  function getCurrentPlanForEmail(targetEmail: string): PlanTier {
+    const normalized = targetEmail.trim().toLowerCase()
+    const match = planList.find((entry) => entry.email.trim().toLowerCase() === normalized)
+    if (!match) return 'none'
+    return PLAN_TIERS.includes(match.plan_tier as PlanTier) ? (match.plan_tier as PlanTier) : 'none'
+  }
+
+  function isDowngrade(currentPlan: PlanTier, nextPlan: PlanTier) {
+    return PLAN_RANK[nextPlan] < PLAN_RANK[currentPlan]
+  }
+
+  async function handleAssign(e: React.FormEvent) {
+    e.preventDefault()
+    const normalizedEmail = email.trim()
+    if (!normalizedEmail) return
+
+    const currentPlan = getCurrentPlanForEmail(normalizedEmail)
+    if (isDowngrade(currentPlan, plan)) {
+      setPendingAssignment({
+        email: normalizedEmail,
+        currentPlan,
+        nextPlan: plan,
+      })
+      setConfirmDowngradeOpen(true)
+      return
+    }
+
+    await submitAssignment(normalizedEmail, plan)
+  }
+
+  const currentPlan = getCurrentPlanForEmail(email)
 
   if (status === 'loading') return null
 
@@ -125,6 +172,11 @@ export default function IkazinAdminPage({
               className="mt-1 block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
               placeholder="usuario@exemplo.com"
             />
+            {email.trim() ? (
+              <p className="mt-2 text-xs text-zinc-500">
+                Plano atual detectado: <span className="font-semibold capitalize text-zinc-300">{currentPlan}</span>
+              </p>
+            ) : null}
           </div>
 
           <div>
@@ -203,6 +255,60 @@ export default function IkazinAdminPage({
           )}
         </section>
       </div>
+
+      <IkazinModal
+        open={confirmDowngradeOpen}
+        onOpenChange={(open) => {
+          setConfirmDowngradeOpen(open)
+          if (!open) setPendingAssignment(null)
+        }}
+        title={pendingAssignment?.nextPlan === 'none' ? 'Remover acesso do usuario?' : 'Confirmar downgrade de plano'}
+        description={
+          pendingAssignment
+            ? `O usuario ${pendingAssignment.email} sera alterado de ${pendingAssignment.currentPlan} para ${pendingAssignment.nextPlan}.`
+            : 'Confirme a alteracao de plano.'
+        }
+        size="md"
+        closeOnBackdrop={false}
+        footer={
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setConfirmDowngradeOpen(false)
+                setPendingAssignment(null)
+              }}
+              className="h-11 rounded-xl border border-zinc-700 bg-zinc-900/70 px-5 text-sm font-semibold text-zinc-100 hover:bg-zinc-800"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              disabled={loading || !pendingAssignment}
+              onClick={() => pendingAssignment ? void submitAssignment(pendingAssignment.email, pendingAssignment.nextPlan) : undefined}
+              className="h-11 rounded-xl bg-emerald-500 px-5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400 disabled:opacity-60"
+            >
+              {loading ? 'Salvando...' : 'Confirmar alteracao'}
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-3 text-sm leading-7 text-zinc-300">
+          <p>
+            {pendingAssignment?.nextPlan === 'none'
+              ? 'Esta acao remove o acesso atual do usuario e afeta o fluxo de uso imediatamente.'
+              : 'Esta acao reduz o nivel de acesso atual do usuario e pode bloquear builds e materiais ja liberados.'}
+          </p>
+          {pendingAssignment ? (
+            <p>
+              Usuario: <span className="font-semibold text-zinc-100">{pendingAssignment.email}</span><br />
+              De: <span className="font-semibold capitalize text-zinc-100">{pendingAssignment.currentPlan}</span><br />
+              Para: <span className="font-semibold capitalize text-zinc-100">{pendingAssignment.nextPlan}</span>
+            </p>
+          ) : null}
+        </div>
+      </IkazinModal>
     </main>
   )
 }
