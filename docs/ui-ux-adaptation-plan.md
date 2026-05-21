@@ -381,19 +381,31 @@ Cada P0 e P1 deve ser validado em:
 
 ---
 
-## 6. Decisões pendentes que precisam de aprovação
+## 6. Decisões ratificadas (2026-05-20)
 
-Antes de implementar P1, ratificar:
+| # | Decisão | Valor | Motivo |
+|---|---------|-------|--------|
+| 1 | Lib de toast | **`sonner`** | ~6KB gzip + stack/swipe/promise nativos. Economiza 2.5h vs próprio. Estilizar via `tokens` em `<Toaster toastOptions={{ style }}>`. |
+| 2 | Lib de Modal | **Radix Dialog + wrapper `<IkazinModal>`** | A11y industrial-grade grátis (focus trap, ARIA, Esc, scroll lock). vaul fica reservado para bottom-sheets mobile específicos no futuro. |
+| 3 | MiniPlayer cross-session | **Só na mesma sessão** | Zero localStorage I/O, sem hydration mismatch. Usuário que volta no dia seguinte vê hero, não MiniPlayer órfão. |
+| 4 | Bottom nav mobile | **P2** (após primeiros 100 alunos) | 4 rotas cabem no topbar. Sem analytics real, decisão de posicionamento vira chute. Adia 6h, libera espaço para ⌘K + MiniPlayer no P1. |
+| 5 | Voz empty states | **Copy proposto em `benchmark.md` § 4.4 + revisão trimestral** | Voz "engenheiro pra engenheiro" alinha brand. Centralizar em `apps/web/lib/ikazin/copy.ts` para refac fácil. |
+| 6 | Avatar ring | **Maior tier desbloqueado historicamente** | Ring sobe nunca volta — progresso permanente. Backend: `user.details["ikazin_max_tier_ever"]` set no upgrade, nunca decrement. |
+| 7 | Light mode | **Nunca** | Dark forçado fica como em CLAUDE.md + brand-dna. -40% CSS, -50% QA visual. Engenheiro industrial usa workstation dark. |
 
-1. **Lib de toast**: criar próprio `IkazinToast` (4h) vs usar `sonner` estilizado (1.5h)?
-2. **Lib de Modal**: `<IkazinModal>` próprio sobre Radix vs usar `vaul`/`Dialog` direto?
-3. **Mini-player mobile**: aparece sempre que tem build pausado, ou só na mesma sessão?
-4. **Bottom nav mobile**: agora (P1) ou depois (P2)?
-5. **Voz dos empty states**: o copy proposto no `ui-ux-benchmark.md` (seção 4.4) está OK ou ajustar tom?
-6. **Avatar ring**: tier atual ou maior tier desbloqueado historicamente?
-7. **Light mode opcional**: nunca, ou P2/P3?
+### Impactos no roadmap
 
-Recomendação: aprovar 1-7 em uma única review antes de começar P1.
+- **P1.3 IkazinToast**: substituir por **`sonner` integration** (1.5h em vez de 4h). Economia: 2.5h.
+- **P1.5 IkazinModal**: confirmado wrapper sobre Radix Dialog. Spec em `components-spec.md` § 1.4 já reflete.
+- **P1.1 MiniPlayer**: state em React Context (não persistido). Reset on tab close.
+- **P1.12 Avatar ring**: requer migration backend adicionar coluna/campo `ikazin_max_tier_ever` (incluir em P1.12). +1h.
+- **P2.5 Mobile bottom nav**: mantém em P2, sem mudança.
+- **`apps/web/lib/ikazin/copy.ts`**: novo arquivo P1 — centraliza strings de empty states + saudações + narratives. ~1h.
+
+### Total revisado
+
+- P1 antes: ~50h
+- P1 depois das decisões: **~49h** (economia 2.5h sonner, custo +1h backend max_tier, +0.5h copy.ts = saldo -1h)
 
 ---
 
