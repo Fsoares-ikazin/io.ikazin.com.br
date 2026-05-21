@@ -1,14 +1,19 @@
 'use client'
 
-import { Lock, CheckCircle2, Clock } from 'lucide-react'
+import { CheckCircle2, Clock } from 'lucide-react'
+import IkazinBadge from './IkazinBadge'
+import { color, tier as tierToken } from '@/lib/ikazin/tokens'
+import type { BuildTier } from '@/lib/ikazin/tokens'
 
-export type BuildTier = 'basic' | 'essentials' | 'advanced' | 'premium'
+export type { BuildTier }
 
 export type BuildProgress = {
   percent: number
   second: number
   completed: boolean
 }
+
+export type BuildStatus = 'locked' | 'in_progress' | 'completed' | 'not_started'
 
 export type BuildCardProps = {
   id: string
@@ -20,20 +25,7 @@ export type BuildCardProps = {
   progress?: BuildProgress
   thumbnailUrl?: string
   durationSeconds?: number | null
-}
-
-const TIER_BADGE: Record<BuildTier, string> = {
-  basic:      'border-zinc-600 bg-zinc-800/70 text-zinc-300',
-  essentials: 'border-blue-700/70 bg-blue-950/60 text-blue-300',
-  advanced:   'border-amber-600/70 bg-amber-950/60 text-amber-300',
-  premium:    'border-purple-600/70 bg-purple-950/60 text-purple-300',
-}
-
-const TIER_LABEL: Record<BuildTier, string> = {
-  basic:      'Basic',
-  essentials: 'Essentials',
-  advanced:   'Advanced',
-  premium:    'Premium',
+  status?: BuildStatus
 }
 
 function formatDuration(seconds: number): string {
@@ -41,6 +33,13 @@ function formatDuration(seconds: number): string {
   const m = Math.floor((seconds % 3600) / 60)
   if (h > 0) return `${h}h ${m}min`
   return `${m}min`
+}
+
+function deriveStatus(locked: boolean, progress?: BuildProgress): BuildStatus {
+  if (locked) return 'locked'
+  if (progress?.completed) return 'completed'
+  if (progress && progress.percent > 0) return 'in_progress'
+  return 'not_started'
 }
 
 export default function BuildCard({
@@ -52,9 +51,12 @@ export default function BuildCard({
   progress,
   thumbnailUrl,
   durationSeconds,
+  status,
 }: BuildCardProps) {
   const pct = progress?.percent ?? 0
   const completed = progress?.completed ?? false
+  const finalStatus = status ?? deriveStatus(locked, progress)
+  const t = tierToken(tier)
 
   return (
     <article
@@ -81,36 +83,42 @@ export default function BuildCard({
         )}
 
         {/* Build number badge — top left */}
-        <span className="absolute left-2 top-2 rounded-md border border-emerald-500/40 bg-emerald-950/80 px-2 py-0.5 text-xs font-black text-emerald-400">
+        <span
+          className="absolute left-2 top-2 rounded-md border px-2 py-0.5 text-xs font-black"
+          style={{ borderColor: 'rgba(16,185,129,0.4)', background: 'rgba(6,78,59,0.8)', color: color.primary.text }}
+        >
           #{buildNumber}
         </span>
 
         {/* Tier badge — top right */}
-        <span className={`absolute right-2 top-2 rounded-md border px-2 py-0.5 text-xs font-bold uppercase tracking-wide ${TIER_BADGE[tier]}`}>
-          {TIER_LABEL[tier]}
-        </span>
+        <div className="absolute right-2 top-2">
+          <IkazinBadge variant="tier" tier={tier} />
+        </div>
 
         {/* Progress bar — bottom of thumbnail */}
         {pct > 0 && !locked && (
-          <div className="absolute bottom-0 left-0 h-1 w-full bg-zinc-800">
+          <div className="absolute bottom-0 left-0 h-1 w-full" style={{ background: color.border.subtle }}>
             <div
-              className="h-full bg-emerald-500 transition-all"
-              style={{ width: `${pct}%` }}
+              className="h-full transition-all duration-300 ease-out"
+              style={{ width: `${pct}%`, background: color.primary.DEFAULT, boxShadow: color.primary.glow }}
             />
           </div>
         )}
 
         {/* Lock overlay */}
-        {locked && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/60 backdrop-blur-[1px]">
-            <Lock className="h-6 w-6 text-zinc-400" />
+        {finalStatus === 'locked' && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/60 backdrop-blur-[1px]">
+            <IkazinBadge variant="status" status="locked" size="md" />
+            <span className="text-[10px] uppercase tracking-wider" style={{ color: t.textColor }}>
+              Plano {t.label}
+            </span>
           </div>
         )}
 
         {/* Completed checkmark */}
         {completed && !locked && (
           <div className="absolute bottom-2 right-2">
-            <CheckCircle2 className="h-5 w-5 text-emerald-400 drop-shadow" />
+            <CheckCircle2 className="h-5 w-5 drop-shadow" style={{ color: color.success }} />
           </div>
         )}
       </div>
@@ -125,7 +133,7 @@ export default function BuildCard({
           {(tags || []).map((tag) => (
             <span
               key={tag}
-              className="rounded-md bg-zinc-800 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400"
+              className="rounded-md bg-zinc-800 px-1.5 py-0.5 text-[10px] font-medium text-zinc-300"
             >
               {tag}
             </span>
@@ -133,7 +141,7 @@ export default function BuildCard({
         </div>
 
         {durationSeconds && (
-          <div className="mt-auto flex items-center gap-1 text-[11px] text-zinc-500">
+          <div className="mt-auto flex items-center gap-1 text-[11px] text-zinc-300">
             <Clock className="h-3 w-3" />
             {formatDuration(durationSeconds)}
           </div>

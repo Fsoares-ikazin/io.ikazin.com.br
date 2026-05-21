@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
-import BuildCard, { type BuildTier } from '@components/ikazin/ui/BuildCard'
+import BuildCard from '@components/ikazin/ui/BuildCard'
+import { tier as tierToken, type BuildTier } from '@/lib/ikazin/tokens'
 import { track } from '@/lib/ikazin/analytics'
 import { getPlatformUrl, getUriWithOrg } from '@services/config/config'
 
@@ -31,13 +32,6 @@ const TIERS: { value: BuildTier | 'all'; label: string }[] = [
   { value: 'advanced',   label: 'Advanced'   },
   { value: 'premium',    label: 'Premium'    },
 ]
-
-const TIER_HEADER_COLOR: Record<BuildTier, string> = {
-  basic:      'text-zinc-400 border-zinc-700',
-  essentials: 'text-blue-400 border-blue-800',
-  advanced:   'text-amber-400 border-amber-800',
-  premium:    'text-purple-400 border-purple-800',
-}
 
 const TIER_ORDER: BuildTier[] = ['basic', 'essentials', 'advanced', 'premium']
 
@@ -253,11 +247,14 @@ export default function CatalogoPage() {
         {/* Tier sections */}
         {!loading && !error && grouped.map(({ tier, builds: tierBuilds }) => (
           <section key={tier} className="mb-10">
-            <div className={`mb-4 flex items-center gap-3 border-b pb-2 ${TIER_HEADER_COLOR[tier]}`}>
+            <div
+              className="mb-4 flex items-center gap-3 border-b pb-2"
+              style={{ color: tierToken(tier).textColor, borderColor: tierToken(tier).color + '66' }}
+            >
               <h2 className="text-base font-bold uppercase tracking-widest">
                 {tier.charAt(0).toUpperCase() + tier.slice(1)}
               </h2>
-              <span className="text-sm opacity-60">
+              <span className="text-sm opacity-80">
                 Builds {tierBuilds[0]?.build_number}–{tierBuilds[tierBuilds.length - 1]?.build_number}
               </span>
             </div>

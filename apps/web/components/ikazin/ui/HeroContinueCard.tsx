@@ -5,8 +5,9 @@ import { Play, Clock3 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 
 import OnboardingBanner from '@components/ikazin/ui/OnboardingBanner'
+import IkazinBadge from '@components/ikazin/ui/IkazinBadge'
 import { Button } from '@components/ui/button'
-import { TIER_CONFIG, type BuildTier } from '@/lib/ikazin/constants'
+import { color, gradient, tier as tierToken, type BuildTier } from '@/lib/ikazin/tokens'
 import { getUriWithOrg } from '@services/config/config'
 
 type HeroBuild = {
@@ -49,46 +50,44 @@ export default function HeroContinueCard({ build, onPlay }: HeroContinueCardProp
 
   if (!build) return <OnboardingBanner />
 
-  const tier = TIER_CONFIG[build.tier]
+  const t = tierToken(build.tier)
   const remainingMinutes = estimateRemainingMinutes(build)
 
   return (
     <section className="relative flex min-h-[180px] w-full flex-col overflow-hidden rounded-[24px] border border-zinc-800 bg-zinc-900 md:min-h-[280px] lg:flex-row">
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,14,13,0.96)_0%,rgba(10,14,13,0.88)_42%,rgba(10,14,13,0.4)_68%,rgba(10,14,13,0.15)_100%)]" />
+      {/* Overlay horizontal — escurece da esquerda */}
+      <div className="absolute inset-0" style={{ background: gradient.heroOverlay }} />
+      {/* Gradient sutil por tier */}
+      <div className="absolute inset-0" style={{ background: gradient.tier(build.tier) }} />
 
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 py-5 sm:px-8 sm:py-7">
         <div>
-          <span
-            className="inline-flex rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em]"
-            style={{
-              borderColor: `${tier.color}66`,
-              backgroundColor: `${tier.color}1A`,
-              color: tier.color,
-            }}
-          >
-            {tier.label}
-          </span>
+          <IkazinBadge variant="tier" tier={build.tier} size="md" />
 
           <h1 className="mt-4 text-2xl font-bold tracking-tight text-zinc-100 sm:text-[28px]">
             {build.title}
           </h1>
 
-          <div className="mt-3 text-sm font-medium text-zinc-400">
+          <div className="mt-3 text-sm font-medium text-zinc-300">
             Build {build.buildNumber}
           </div>
 
           <div className="mt-4 max-w-xl">
-            <div className="h-2 overflow-hidden rounded-full bg-zinc-800">
+            <div className="h-2 overflow-hidden rounded-full" style={{ background: color.border.subtle }}>
               <div
-                className="h-full rounded-full bg-emerald-500 transition-all"
-                style={{ width: `${build.progress.percent}%` }}
+                className="h-full rounded-full transition-all duration-300 ease-out"
+                style={{
+                  width: `${build.progress.percent}%`,
+                  background: color.primary.DEFAULT,
+                  boxShadow: color.primary.glow,
+                }}
               />
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-zinc-400">
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-zinc-300">
               <span>{build.progress.percent}% concluído</span>
               {remainingMinutes ? (
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock3 className="h-4 w-4 text-emerald-400" />
+                  <Clock3 className="h-4 w-4" style={{ color: color.primary.text }} />
                   ~{remainingMinutes} min restantes
                 </span>
               ) : null}
@@ -114,24 +113,39 @@ export default function HeroContinueCard({ build, onPlay }: HeroContinueCardProp
       </div>
 
       <div className="relative z-10 flex items-center justify-center px-5 pb-5 sm:px-8 sm:pb-7 lg:w-[42%] lg:pl-0 lg:pr-8 lg:pt-7">
-        <div className="relative aspect-video w-full overflow-hidden rounded-[18px] border border-zinc-800 bg-[linear-gradient(135deg,rgba(20,26,24,0.9),rgba(39,39,42,0.85))] shadow-2xl">
+        <div
+          className="relative aspect-video w-full overflow-hidden rounded-[18px] border border-zinc-800 shadow-2xl"
+          style={{ background: `linear-gradient(135deg, ${color.surface}, ${color.surfaceRaised})` }}
+        >
           {build.thumbnailUrl ? (
             <img src={build.thumbnailUrl} alt={build.title} className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.24),_transparent_35%),linear-gradient(135deg,_rgba(20,26,24,1),_rgba(39,39,42,1))]">
+            <div
+              className="flex h-full w-full items-center justify-center"
+              style={{ background: `radial-gradient(circle at top right, ${t.bgSoft}, transparent 40%), linear-gradient(135deg, ${color.surface}, ${color.surfaceRaised})` }}
+            >
               <span className="text-5xl font-black tracking-tight text-zinc-700">
                 B{build.buildNumber}
               </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+          <div
+            className="absolute inset-0"
+            style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55), transparent 50%)' }}
+          />
           <button
             type="button"
             onClick={onPlay}
             className="absolute inset-0 flex items-center justify-center"
             aria-label="Play build"
           >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/95 text-zinc-950 shadow-[0_18px_45px_rgba(16,185,129,0.35)] transition-transform hover:scale-105">
+            <span
+              className="flex h-16 w-16 items-center justify-center rounded-full text-zinc-950 transition-transform hover:scale-105"
+              style={{
+                background: color.primary.DEFAULT,
+                boxShadow: `0 18px 45px ${color.primary.glow}`,
+              }}
+            >
               <Play className="ml-1 h-7 w-7 fill-current" />
             </span>
           </button>

@@ -8,7 +8,8 @@ import HeroContinueCard from '@components/ikazin/ui/HeroContinueCard'
 import HorizontalRow from '@components/ikazin/ui/HorizontalRow'
 import type { BuildCardProps, BuildTier } from '@components/ikazin/ui/BuildCard'
 import { track } from '@/lib/ikazin/analytics'
-import { TIER_CONFIG } from '@/lib/ikazin/constants'
+import { TIERS, color } from '@/lib/ikazin/tokens'
+import { greetingNow, progressNarrative, deriveProgressState } from '@/lib/ikazin/narratives'
 import { getPlatformUrl, getUriWithOrg } from '@services/config/config'
 
 type DashboardBuild = BuildCardProps & {
@@ -166,11 +167,16 @@ export default function DashboardPage({
     }
   }, [status, accessToken])
 
-  const planLabel = data?.plan_tier ? TIER_CONFIG[data.plan_tier].label.toUpperCase() : 'SEM PLANO'
+  const planLabel = data?.plan_tier ? TIERS[data.plan_tier].label.toUpperCase() : 'SEM PLANO'
+
+  const userName: string =
+    session?.data?.user?.first_name ||
+    session?.data?.user?.username ||
+    'engenheiro'
 
   if (status === 'loading' || loading) {
     return (
-      <main className="min-h-screen bg-[#0a0e0d] text-zinc-100">
+      <main className="min-h-screen text-zinc-100" style={{ background: color.bg }}>
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
           <HeroSkeleton />
           <RowSkeleton title="continue" />
@@ -183,7 +189,7 @@ export default function DashboardPage({
 
   if (error) {
     return (
-      <main className="min-h-screen bg-[#0a0e0d] text-zinc-100">
+      <main className="min-h-screen text-zinc-100" style={{ background: color.bg }}>
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-red-900/80 bg-red-950/40 px-5 py-4 text-sm text-red-300">
             {error}
@@ -199,9 +205,22 @@ export default function DashboardPage({
   const recentlyAdded = data?.recently_added ?? []
   const suggestedNext = data?.suggested_next ? [data.suggested_next] : []
 
+  const completedBuildNumbers = [...inProgress, ...planBuilds]
+    .filter((b) => b.progress?.completed)
+    .map((b) => b.buildNumber)
+  const progressState = deriveProgressState(completedBuildNumbers, data?.plan_tier ?? null)
+  const narrative = progressNarrative(progressState)
+
   return (
-    <main className="min-h-screen bg-[#0a0e0d] text-zinc-100">
+    <main className="min-h-screen text-zinc-100" style={{ background: color.bg }}>
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
+        <header>
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
+            {greetingNow(userName)}
+          </h1>
+          <p className="mt-1 text-sm text-zinc-300">{narrative}</p>
+        </header>
+
         {!data?.plan_tier ? (
           <section className="rounded-[20px] border border-amber-500/20 bg-amber-500/10 px-5 py-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

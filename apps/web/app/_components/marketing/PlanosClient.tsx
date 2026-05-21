@@ -155,9 +155,9 @@ export function PlanosClient() {
                 {tier.label}
               </div>
               <div className="mb-1 text-4xl font-black text-white">{tier.price}</div>
-              <div className="mb-0.5 text-xs text-gray-500">{t.priceNote}</div>
+              <div className="mb-0.5 text-xs text-zinc-300">{t.priceNote}</div>
               <div className="mb-1 text-sm font-semibold text-gray-400">{tier.builds}</div>
-              <div className="mb-5 text-xs italic text-gray-500">{tier.audience}</div>
+              <div className="mb-5 text-xs italic text-zinc-300">{tier.audience}</div>
               <ul className="mb-8 flex-1 space-y-2.5">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm text-gray-300">
@@ -200,7 +200,7 @@ export function PlanosClient() {
             </div>
             <div className="shrink-0 text-center">
               <div className="mb-1 text-4xl font-black text-white">$1,229</div>
-              <div className="mb-5 text-xs text-gray-500">{t.ppPerPerson}</div>
+              <div className="mb-5 text-xs text-zinc-300">{t.ppPerPerson}</div>
               <a
                 href="mailto:contato@ikazin.com.br"
                 className="block rounded-xl border border-amber-700 px-8 py-3 text-sm font-bold text-amber-400 transition-colors hover:bg-amber-900/20"
@@ -221,7 +221,7 @@ export function PlanosClient() {
               <details key={q} className="group rounded-2xl border border-ikz-border bg-ikz-surface">
                 <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white list-none">
                   {q}
-                  <ChevronRight size={16} className="text-gray-500 transition-transform group-open:rotate-90" />
+                  <ChevronRight size={16} className="text-zinc-300 transition-transform group-open:rotate-90" />
                 </summary>
                 <p className="px-6 pb-6 text-sm leading-relaxed text-gray-400">{a}</p>
               </details>

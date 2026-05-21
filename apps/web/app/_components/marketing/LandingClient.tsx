@@ -327,7 +327,7 @@ function VideoSection({ title, sub, playLabel }: { title: string; sub: string; p
           >
             <Play size={28} className="translate-x-0.5 text-white group-hover:text-ikz-cyan" fill="currentColor" />
           </button>
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">{playLabel}</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-300">{playLabel}</span>
           {/* Corner badge */}
           <div className="absolute bottom-4 right-4 rounded-lg border border-ikz-cyan/30 bg-ikz-bg/80 px-3 py-1.5 text-xs font-bold text-ikz-cyan backdrop-blur-sm">
             TIA Portal + Digital Twin
@@ -368,7 +368,7 @@ export function LandingClient() {
             {t.painStats.map((stat, i) => (
               <div key={i} className="rounded-xl border border-ikz-border bg-ikz-surface px-6 py-5 transition-all hover:-translate-y-0.5">
                 <div className="mb-1 text-3xl font-black text-red-400">{stat.number}</div>
-                <div className="text-xs text-gray-500 leading-snug">{stat.label}</div>
+                <div className="text-xs text-zinc-300 leading-snug">{stat.label}</div>
               </div>
             ))}
           </div>

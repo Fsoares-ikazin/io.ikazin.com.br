@@ -3,7 +3,8 @@
 import Link from 'next/link'
 
 import { Button } from '@components/ui/button'
-import { TIER_CONFIG, type BuildTier } from '@/lib/ikazin/constants'
+import IkazinBadge from '@components/ikazin/ui/IkazinBadge'
+import { color, type BuildTier } from '@/lib/ikazin/tokens'
 import { getUriWithOrg } from '@services/config/config'
 
 type NextBuildCompactCardProps = {
@@ -24,31 +25,20 @@ export default function NextBuildCompactCard({
 }: NextBuildCompactCardProps) {
   if (!nextBuild) return null
 
-  const tier = TIER_CONFIG[nextBuild.tier]
-
   return (
     <section
-      className={[
-        'rounded-[20px] border p-5 transition-colors',
+      className="rounded-[20px] border p-5 transition-colors"
+      style={
         emphasized
-          ? 'border-emerald-500/30 bg-emerald-500/10'
-          : 'border-zinc-800 bg-[#141a18]',
-      ].join(' ')}
+          ? { borderColor: 'rgba(16,185,129,0.3)', background: 'rgba(16,185,129,0.1)' }
+          : { borderColor: color.border.DEFAULT, background: color.surface }
+      }
     >
-      <p className="mb-3 text-sm font-medium text-zinc-400">A seguir:</p>
+      <p className="mb-3 text-sm font-medium text-zinc-300">A seguir:</p>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0">
-          <span
-            className="inline-flex rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em]"
-            style={{
-              borderColor: `${tier.color}55`,
-              backgroundColor: `${tier.color}12`,
-              color: tier.color,
-            }}
-          >
-            {tier.label}
-          </span>
+          <IkazinBadge variant="tier" tier={nextBuild.tier} size="md" />
           <h3 className="mt-3 text-lg font-semibold text-zinc-100">
             Build {nextBuild.build_number} — {nextBuild.title}
           </h3>

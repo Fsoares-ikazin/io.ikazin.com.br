@@ -42,7 +42,7 @@ export default function HorizontalRow({
       </div>
 
       {builds.length === 0 ? (
-        <p className="text-sm italic text-zinc-500">{emptyMessage}</p>
+        <p className="text-sm italic text-zinc-400">{emptyMessage}</p>
       ) : (
         <div className="relative">
           <button

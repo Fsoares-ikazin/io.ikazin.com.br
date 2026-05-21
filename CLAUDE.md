@@ -93,6 +93,13 @@ darkMode: forçado (sem toggle)
 | 2026-05-20 | **Paleta autoritativa: Emerald + Zinc** (não lime+cyan) | Código atual usa emerald — decisão de manter para evitar refactor. `docs/brand-dna.md` (lime+cyan) fica deprecated até reavaliação. Fonte da verdade: `apps/web/lib/ikazin/tokens.ts`. |
 | 2026-05-20 | **Tipografia: Plus Jakarta Sans + JetBrains Mono** | Jakarta para UI/headlines, JetBrains Mono para code/specs técnicas (PLC, snippets de blog). |
 | 2026-05-20 | **Design System 2.0 vive em `lib/ikazin/tokens.ts`** | Substitui `constants.ts` como fonte de verdade. Inclui tier text-colors com contraste WCAG AA. |
+| 2026-05-20 | **Toast: `sonner` (lib externa)** | ~6KB gzip, stack/swipe/promise nativos. Estilizar via tokens. |
+| 2026-05-20 | **Modal: Radix Dialog + wrapper `<IkazinModal>`** | A11y grátis (focus trap, ARIA, scroll lock). |
+| 2026-05-20 | **MiniPlayer: state em React Context (não persistido)** | Sem hydration mismatch. Reset on tab close. |
+| 2026-05-20 | **Bottom nav mobile fica em P2** | Sem analytics real, decisão de posicionamento vira chute. |
+| 2026-05-20 | **Avatar ring = maior tier histórico (`ikazin_max_tier_ever`)** | Progresso permanente. Backend nunca decrementa. |
+| 2026-05-20 | **Light mode: nunca** | Dark forçado é regra. -40% CSS, foco. |
+| 2026-05-20 | **Copy centralizado em `apps/web/lib/ikazin/copy.ts`** | Empty states + saudações + narratives. Voz "engenheiro pra engenheiro". |
 
 > **Nota sobre `docs/brand-dna.md`** — arquivo descreve paleta lime+cyan+slate associada ao novo logo 3D (2026-04-25). Decisão atual: **paleta brand-dna fica deprecated**. Se logo 3D entrar em produção e exigir lime+cyan, abrir RFC explícita antes de mexer em tokens. Site público (`_components/marketing/*`) atualmente usa `ikz-lime`/`ikz-cyan` — listado como P0 de migração no `docs/ui-ux-adaptation-plan.md`.
 
