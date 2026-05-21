@@ -56,32 +56,58 @@ URLs públicas continuam sem o prefixo `/orgs/default/`.
 ### Frontend
 ```
 apps/web/app/orgs/[orgslug]/(ikazin)/
-├── layout.tsx              # dark mode + Plus Jakarta Sans
+├── layout.tsx              # dark mode + Plus Jakarta Sans + analytics
 ├── dashboard/page.tsx      → /dashboard
 ├── catalogo/page.tsx       → /catalogo  (era /builds — conflito com LH resolvido)
-├── build/[id]/page.tsx     → /build/[id]
-└── welcome/page.tsx        → /welcome
+├── build/[id]/page.tsx     → /build/[id]  (player HLS + materiais + progresso)
+├── welcome/page.tsx        → /welcome    (wizard 3 steps → POST /ikazin/recommend)
+└── admin/page.tsx          → /admin      (superadmin: atribuir plano a usuário)
 
 apps/web/components/ikazin/ui/
 ├── BuildCard.tsx
-└── HeroContinueCard.tsx
+├── BuildVideoPlayer.tsx    # hls.js, resume, progress tracking, speed selector
+├── HeroContinueCard.tsx
+├── HorizontalRow.tsx       # Netflix-style horizontal scroll
+├── MaterialsList.tsx       # download real via presigned URL quando available=true
+├── NextBuildCompactCard.tsx
+├── OnboardingBanner.tsx
+└── IkazinAnalyticsProvider.tsx
 
 apps/web/lib/ikazin/
-└── constants.ts            # IKAZIN_DESIGN, TIER_CONFIG, getTierForBuild()
+├── constants.ts            # IKAZIN_DESIGN, TIER_CONFIG, getTierForBuild()
+└── analytics.ts            # PostHog wrapper
 ```
 
 ### Backend
 ```
 apps/api/src/routers/
-├── ikazin_builds.py        # /api/v1/ikazin/builds
-├── ikazin_progress.py      # /api/v1/ikazin/progress
-└── ikazin_downloads.py     # /api/v1/ikazin/downloads
+├── ikazin_builds.py        # /api/v1/ikazin/builds  + HLS proxy
+├── ikazin_progress.py      # /api/v1/ikazin/progress  (upsert + complete)
+├── ikazin_downloads.py     # /api/v1/ikazin/downloads (log + presigned URL)
+├── ikazin_dashboard.py     # /api/v1/ikazin/dashboard
+├── ikazin_leads.py         # /api/v1/ikazin/lead-magnet
+├── ikazin_recommendation.py# /api/v1/ikazin/recommend (GET + POST wizard)
+└── ikazin_admin.py         # /api/v1/ikazin/admin/activate + /plan
+
+apps/api/src/services/ikazin/
+├── builds.py               # plan tier logic, build serialization, dashboard
+├── recommendation.py       # recommend_build() pure function
+└── access.py               # assign_ikazin_plan, resolve_user, welcome_link
 
 apps/api/src/schemas/
 └── ikazin_build.py         # Pydantic schemas
 
 apps/api/migrations/ikazin/
-└── 001_initial.sql         # ikazin_builds, ikazin_progress_meta, ikazin_downloads
+├── 001_initial.sql         # cria tabelas com coluna `number` (legado)
+├── 002_seed_builds.sql     # renomeia number→build_number, add tags, seed 25 builds
+└── 003_progress_resume.sql # add completed, completed_at, last_watched_at
+```
+
+### Aplicar migrations (ordem obrigatória)
+```bash
+psql $DB_URL < migrations/ikazin/001_initial.sql
+psql $DB_URL < migrations/ikazin/002_seed_builds.sql
+psql $DB_URL < migrations/ikazin/003_progress_resume.sql
 ```
 
 ## Video baseline
@@ -102,3 +128,26 @@ Ikazin usará `MinIO/S3-compatible + HLS single bitrate` para lançamento.
   - `GET /api/v1/ikazin/builds/{id}/resume`
   - `POST /api/v1/ikazin/progress`
   - `PUT /api/v1/ikazin/progress/{id}/complete`
+
+## Bloqueios por ambiente (pré-lançamento)
+
+| Bloqueio | Detalhe | O que falta |
+|---------|---------|------------|
+| **HLS / player** | `playback_url` retorna `null` se não houver assets no bucket | Fazer upload dos HLS segments em `ikazin/builds/{n}/hls/` no MinIO |
+| **Downloads** | Retorna 503 se `content_delivery != "s3api"` | Configurar MinIO em `apps/api/.env` + upload dos arquivos .exe/.zip/.pdf |
+| **Lead magnet email** | Retorna 503 se SMTP não configurado | Preencher SMTP em `apps/api/.env` |
+| **Analytics** | `track()` silencioso sem `NEXT_PUBLIC_POSTHOG_KEY` | Criar projeto PostHog e setar env var |
+| **Welcome link pós-compra** | Retorna URL direta `/orgs/{slug}/welcome` (sem magic token) | Integrar com gateway de pagamento para acionar `POST /api/v1/ikazin/admin/activate` |
+| **Atribuição de plano** | Só via API superadmin (`/admin/activate`) ou UI em `/admin` | Integrar Hotmart/Stripe webhook → chamar endpoint de ativação |
+
+## Fluxo de ativação pós-pagamento (estrutura pronta)
+
+```
+Webhook pagamento → POST /api/v1/ikazin/admin/activate
+Body: { email: "user@email.com", plan: "essentials", source: "hotmart" }
+Resultado: user.details["ikazin_plan"] = "essentials"
+Dashboard libera builds automaticamente na próxima requisição
+```
+
+A URL de boas-vindas pode ser enviada por email manualmente ou via automação:
+`POST /activate` com `issue_welcome_link: true, org_slug: "default"` retorna a URL.

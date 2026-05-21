@@ -1,18 +1,25 @@
 'use client'
 
-import { use, useMemo, useState } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { track } from '@/lib/ikazin/analytics'
+import { useLHSession } from '@components/Contexts/LHSessionContext'
 import { Button } from '@components/ui/button'
 import { getUriWithOrg } from '@services/config/config'
 
-type StepKey = 'profile' | 'experience' | 'interest'
 type Choice = {
   id: string
   title: string
   description: string
+}
+
+type RecommendationPayload = {
+  build_id: string | null
+  build_number: number
+  title: string
+  reason: string
 }
 
 const PROFILE_OPTIONS: Choice[] = [
@@ -43,34 +50,6 @@ const BUILD_TITLES: Record<number, string> = {
   15: 'Motion Control na prática',
   16: 'Acoplamento eletrônico e movimento avançado',
   19: 'Robótica e integração industrial avançada',
-}
-
-function recommendBuild(profile?: string, experience?: string, interest?: string) {
-  if (profile === 'student' && experience === 'never' && interest === 'fundamentals') {
-    return { buildNumber: 1, reason: 'você está começando e quer fundamentos sólidos.' }
-  }
-  if (profile === 'student' && experience === 'never' && interest === 'drives') {
-    return { buildNumber: 7, reason: 'você quer entrar por drives sem perder a prática aplicada.' }
-  }
-  if (profile === 'student' && experience === 'basic') {
-    return { buildNumber: 3, reason: 'você já viu o básico e precisa ganhar estrutura de projeto.' }
-  }
-  if (profile === 'professional' && experience === 'intermediate' && interest === 'drives') {
-    return { buildNumber: 14, reason: 'seu foco está em drives e casos mais próximos da operação real.' }
-  }
-  if (profile === 'professional' && experience === 'intermediate' && interest === 'motion') {
-    return { buildNumber: 15, reason: 'você já domina a base e quer avançar em motion control.' }
-  }
-  if (profile === 'professional' && experience === 'advanced' && interest === 'motion') {
-    return { buildNumber: 16, reason: 'você já está em nível alto e quer movimento mais avançado.' }
-  }
-  if (profile === 'professional' && experience === 'advanced' && interest === 'robotics') {
-    return { buildNumber: 19, reason: 'robótica pede integração avançada e cenários mais sofisticados.' }
-  }
-  if (profile === 'manager') {
-    return { buildNumber: 14, reason: 'é o build mais vendável para acelerar o time com aplicação real.' }
-  }
-  return { buildNumber: 1, reason: 'ele dá a melhor base para começar a trilha.' }
 }
 
 function StepCard({
@@ -106,17 +85,78 @@ export default function WelcomePage({
 }) {
   const resolvedParams = use(params)
   const router = useRouter()
+  const session = useLHSession() as any
+  const status = session?.status ?? 'loading'
+  const accessToken = session?.data?.tokens?.access_token
+
   const [step, setStep] = useState(1)
   const [profile, setProfile] = useState<string>()
   const [experience, setExperience] = useState<string>()
   const [interest, setInterest] = useState<string>()
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [recommendation, setRecommendation] = useState<RecommendationPayload | null>(null)
 
-  const recommendation = useMemo(
-    () => recommendBuild(profile, experience, interest),
-    [profile, experience, interest]
-  )
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/auth/login')
+    }
+  }, [router, status])
+
+  const fallbackRecommendation = useMemo(() => {
+    const buildNumber =
+      profile === 'student' && experience === 'never' && interest === 'drives'
+        ? 7
+        : profile === 'student' && experience === 'basic'
+          ? 3
+          : profile === 'professional' && experience === 'intermediate' && interest === 'drives'
+            ? 14
+            : profile === 'professional' && experience === 'intermediate' && interest === 'motion'
+              ? 15
+              : profile === 'professional' && experience === 'advanced' && interest === 'motion'
+                ? 16
+                : profile === 'professional' && experience === 'advanced' && interest === 'robotics'
+                  ? 19
+                  : profile === 'manager'
+                    ? 14
+                    : 1
+
+    return {
+      build_id: null,
+      build_number: buildNumber,
+      title: BUILD_TITLES[buildNumber] ?? `Build ${buildNumber}`,
+      reason: 'ele dá a melhor base para começar a trilha.',
+    }
+  }, [experience, interest, profile])
+
+  useEffect(() => {
+    if (status !== 'authenticated') return
+    let alive = true
+
+    async function loadSavedRecommendation() {
+      try {
+        const response = await fetch('/api/v1/ikazin/recommend', {
+          credentials: 'include',
+          headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+        })
+        if (!response.ok) return
+        const payload = await response.json()
+        if (!alive || !payload?.completed || !payload?.recommendation) return
+
+        setProfile(payload.answers?.profile)
+        setExperience(payload.answers?.experience)
+        setInterest(payload.answers?.interest)
+        setRecommendation(payload.recommendation)
+        setDone(true)
+        setStep(3)
+      } catch {}
+    }
+
+    void loadSavedRecommendation()
+    return () => {
+      alive = false
+    }
+  }, [accessToken, status])
 
   async function finishWizard() {
     setSubmitting(true)
@@ -126,6 +166,31 @@ export default function WelcomePage({
       experience,
       interest,
     })
+
+    try {
+      const response = await fetch('/api/v1/ikazin/recommend', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+        body: JSON.stringify({
+          profile,
+          experience,
+          interest,
+        }),
+      })
+      const payload = await response.json().catch(() => null)
+      if (response.ok && payload?.recommendation) {
+        setRecommendation(payload.recommendation)
+      } else {
+        setRecommendation(fallbackRecommendation)
+      }
+    } catch {
+      setRecommendation(fallbackRecommendation)
+    }
+
     await new Promise((resolve) => window.setTimeout(resolve, 1500))
     setSubmitting(false)
     setDone(true)
@@ -136,6 +201,7 @@ export default function WelcomePage({
   }
 
   const dots = [1, 2, 3]
+  const resolvedRecommendation = recommendation ?? fallbackRecommendation
 
   return (
     <main className="min-h-screen bg-[#0a0e0d] text-zinc-100">
@@ -174,21 +240,19 @@ export default function WelcomePage({
             <div className="mt-5 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
               <div>
                 <h1 className="text-3xl font-bold tracking-tight text-zinc-100">
-                  Build {recommendation.buildNumber}
+                  Build {resolvedRecommendation.build_number}
                 </h1>
-                <p className="mt-2 text-lg text-zinc-300">
-                  {BUILD_TITLES[recommendation.buildNumber] ?? 'Build recomendado para sua jornada'}
-                </p>
+                <p className="mt-2 text-lg text-zinc-300">{resolvedRecommendation.title}</p>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400">
-                  Recomendamos o Build {recommendation.buildNumber} porque {recommendation.reason}
+                  Recomendamos o Build {resolvedRecommendation.build_number} porque {resolvedRecommendation.reason}
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button
                     asChild
                     className="h-11 rounded-xl bg-emerald-500 px-5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
                   >
-                    <Link href={getUriWithOrg(resolvedParams.orgslug, `/build/${recommendation.buildNumber}`)}>
-                      Começar Build {recommendation.buildNumber} →
+                    <Link href={getUriWithOrg(resolvedParams.orgslug, `/build/${resolvedRecommendation.build_number}`)}>
+                      Começar Build {resolvedRecommendation.build_number} →
                     </Link>
                   </Button>
                   <Button

@@ -1,0 +1,111 @@
+from __future__ import annotations
+
+import os
+
+import stripe
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from pydantic import BaseModel
+from sqlmodel import Session
+
+from src.core.events.database import get_db_session
+from src.db.users import PublicUser
+from src.security.auth import get_authenticated_user
+from src.services.ikazin.access import assign_ikazin_plan, resolve_user_for_ikazin_activation
+from src.services.ikazin.builds import VALID_TIER_NAMES
+
+router = APIRouter()
+
+_PRICE_IDS: dict[str, str] = {
+    "basic": os.getenv("STRIPE_PRICE_BASIC", ""),
+    "essentials": os.getenv("STRIPE_PRICE_ESSENTIALS", ""),
+    "advanced": os.getenv("STRIPE_PRICE_ADVANCED", ""),
+    "premium": os.getenv("STRIPE_PRICE_PREMIUM", ""),
+}
+
+
+def _client() -> stripe.StripeClient:
+    key = os.getenv("STRIPE_SECRET_KEY", "")
+    if not key:
+        raise HTTPException(status_code=503, detail="Stripe not configured")
+    return stripe.StripeClient(key)
+
+
+class CheckoutRequest(BaseModel):
+    plan: str
+
+
+@router.post("/checkout", summary="Create Stripe Checkout Session for an Ikazin plan")
+async def create_checkout_session(
+    payload: CheckoutRequest,
+    request: Request,
+    current_user: PublicUser = Depends(get_authenticated_user),
+) -> dict:
+    plan = payload.plan.strip().lower()
+    if plan not in VALID_TIER_NAMES:
+        raise HTTPException(status_code=400, detail=f"Invalid plan: {plan}")
+
+    price_id = _PRICE_IDS.get(plan, "")
+    if not price_id:
+        raise HTTPException(status_code=503, detail=f"Stripe price not configured for plan: {plan}")
+
+    client = _client()
+    base = str(request.base_url).rstrip("/")
+    success_url = f"{base}/orgs/default/welcome?plan={plan}&session_id={{CHECKOUT_SESSION_ID}}"
+    cancel_url = f"{base}/planos"
+
+    session = client.v1.checkout.sessions.create(
+        params={
+            "mode": "payment",
+            "line_items": [{"price": price_id, "quantity": 1}],
+            "customer_email": current_user.email,
+            "metadata": {"user_id": str(current_user.id), "ikazin_plan": plan},
+            "success_url": success_url,
+            "cancel_url": cancel_url,
+        }
+    )
+    return {"session_url": session.url}
+
+
+@router.post("/webhook", summary="Stripe webhook receiver", include_in_schema=False)
+async def stripe_webhook(
+    request: Request,
+    stripe_signature: str | None = Header(None, alias="stripe-signature"),
+    db_session: Session = Depends(get_db_session),
+) -> dict:
+    key = os.getenv("STRIPE_SECRET_KEY", "")
+    secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
+    if not key:
+        raise HTTPException(status_code=503, detail="Stripe not configured")
+
+    raw_body = await request.body()
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload=raw_body,
+            sig_header=stripe_signature or "",
+            secret=secret,
+        )
+    except stripe.SignatureVerificationError:
+        raise HTTPException(status_code=400, detail="Invalid Stripe signature")
+    except Exception:
+        raise HTTPException(status_code=400, detail="Webhook error")
+
+    if event["type"] == "checkout.session.completed":
+        obj = event["data"]["object"]
+        meta: dict = obj.get("metadata") or {}
+        uid = meta.get("user_id")
+        plan = meta.get("ikazin_plan")
+        if uid and plan:
+            try:
+                user = resolve_user_for_ikazin_activation(db_session, user_id=int(uid))
+                assign_ikazin_plan(
+                    db_session,
+                    user,
+                    plan=plan,
+                    source="stripe",
+                    metadata={"stripe_session_id": obj.get("id")},
+                )
+            except Exception:
+                pass  # never fail the webhook — plan activation is idempotent
+
+    return {"ok": True}

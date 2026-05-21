@@ -34,6 +34,9 @@ from src.routers import ikazin_dashboard as ikazin_dashboard_router
 from src.routers import ikazin_progress as ikazin_progress_router
 from src.routers import ikazin_downloads as ikazin_downloads_router
 from src.routers import ikazin_leads as ikazin_leads_router
+from src.routers import ikazin_admin as ikazin_admin_router
+from src.routers import ikazin_recommendation as ikazin_recommendation_router
+from src.routers import ikazin_stripe as ikazin_stripe_router
 from src.core.ee_hooks import register_ee_routers
 from src.services.dev.dev import isDevModeEnabledOrRaise
 from src.routers.utils import router as utils_router
@@ -347,4 +350,21 @@ v1_router.include_router(
     ikazin_leads_router.router,
     prefix="/ikazin",
     tags=["ikazin", "ikazin-leads"],
+)
+v1_router.include_router(
+    ikazin_recommendation_router.router,
+    prefix="/ikazin/recommend",
+    tags=["ikazin", "ikazin-recommendation"],
+    dependencies=[Depends(get_current_user)],
+)
+v1_router.include_router(
+    ikazin_admin_router.router,
+    prefix="/ikazin/admin",
+    tags=["ikazin", "ikazin-admin"],
+    dependencies=[Depends(get_current_user)],
+)
+v1_router.include_router(
+    ikazin_stripe_router.router,
+    prefix="/ikazin/stripe",
+    tags=["ikazin", "ikazin-stripe"],
 )

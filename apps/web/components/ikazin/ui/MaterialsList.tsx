@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Archive, Microchip, Code2, FileText, Download } from 'lucide-react'
 
 import { Button } from '@components/ui/button'
@@ -21,6 +22,7 @@ type MaterialsListProps = {
   buildId?: string
   materials: MaterialItem[]
   compact?: boolean
+  accessToken?: string
 }
 
 const ICONS = {
@@ -31,15 +33,44 @@ const ICONS = {
 } as const
 
 const TOOLTIP_TEXT = 'Disponivel apos configurar storage'
+const BULK_TOOLTIP_TEXT = 'Download em lote em breve'
+
+async function requestSignedDownload(
+  buildId: string,
+  fileType: MaterialItem['type'],
+  accessToken?: string
+) {
+  const response = await fetch(
+    `/api/v1/ikazin/downloads/${buildId}?file_type=${encodeURIComponent(fileType)}`,
+    {
+      credentials: 'include',
+      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+    }
+  )
+
+  const payload = await response.json().catch(() => ({}))
+  if (!response.ok || !payload?.url) {
+    throw new Error(payload?.detail ?? `HTTP ${response.status}`)
+  }
+
+  track('download_started', {
+    build_id: buildId,
+    file_type: fileType,
+    mocked: false,
+  })
+  window.open(payload.url, '_blank', 'noopener,noreferrer')
+}
 
 function DisabledDownloadButton({
   label,
   buildId,
   fileType,
+  tooltipText = TOOLTIP_TEXT,
 }: {
   label: string
   buildId?: string
   fileType?: MaterialItem['type'] | 'all'
+  tooltipText?: string
 }) {
   return (
     <TooltipProvider delayDuration={100}>
@@ -67,14 +98,37 @@ function DisabledDownloadButton({
           </span>
         </TooltipTrigger>
         <TooltipContent side="top" className="border-zinc-800 bg-zinc-950 text-xs text-zinc-200">
-          {TOOLTIP_TEXT}
+          {tooltipText}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )
 }
 
-export default function MaterialsList({ buildId, materials, compact = false }: MaterialsListProps) {
+export default function MaterialsList({
+  buildId,
+  materials,
+  compact = false,
+  accessToken,
+}: MaterialsListProps) {
+  const [downloadingType, setDownloadingType] = useState<string | null>(null)
+  const [downloadError, setDownloadError] = useState<string | null>(null)
+  const downloadableMaterials = materials.filter((item) => item.available && item.type !== 'scl')
+
+  async function handleDownload(fileType: MaterialItem['type']) {
+    if (!buildId) return
+    setDownloadingType(fileType)
+    setDownloadError(null)
+
+    try {
+      await requestSignedDownload(buildId, fileType, accessToken)
+    } catch (error) {
+      setDownloadError(error instanceof Error ? error.message : 'Nao foi possivel preparar o download')
+    } finally {
+      setDownloadingType(null)
+    }
+  }
+
   return (
     <div className="rounded-[20px] border border-zinc-800 bg-[#141a18] p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -82,8 +136,21 @@ export default function MaterialsList({ buildId, materials, compact = false }: M
           <h2 className="text-base font-semibold text-zinc-100">Materiais</h2>
           <p className="mt-1 text-sm text-zinc-500">Arquivos deste build</p>
         </div>
-        {!compact ? <DisabledDownloadButton label="Baixar tudo" buildId={buildId} fileType="all" /> : null}
+        {!compact ? (
+          <DisabledDownloadButton
+            label="Baixar tudo"
+            buildId={buildId}
+            fileType="all"
+            tooltipText={downloadableMaterials.length ? BULK_TOOLTIP_TEXT : TOOLTIP_TEXT}
+          />
+        ) : null}
       </div>
+
+      {downloadError ? (
+        <div className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
+          {downloadError}
+        </div>
+      ) : null}
 
       <div className="space-y-3">
         {materials.map((item) => {
@@ -104,7 +171,19 @@ export default function MaterialsList({ buildId, materials, compact = false }: M
                 </div>
               </div>
 
-              <DisabledDownloadButton label="Download" buildId={buildId} fileType={item.type} />
+              {item.available && item.type !== 'scl' && buildId ? (
+                <Button
+                  type="button"
+                  onClick={() => void handleDownload(item.type)}
+                  disabled={downloadingType === item.type}
+                  variant="ghost"
+                  className="h-9 rounded-xl border border-zinc-800 bg-zinc-900/70 px-3 text-xs font-semibold text-zinc-100 hover:bg-zinc-800"
+                >
+                  {downloadingType === item.type ? 'Preparando...' : 'Download'}
+                </Button>
+              ) : (
+                <DisabledDownloadButton label="Download" buildId={buildId} fileType={item.type} />
+              )}
             </div>
           )
         })}
@@ -112,14 +191,23 @@ export default function MaterialsList({ buildId, materials, compact = false }: M
 
       {compact ? (
         <div className="mt-4">
-          <DisabledDownloadButton label="Baixar tudo" buildId={buildId} fileType="all" />
+          <DisabledDownloadButton
+            label="Baixar tudo"
+            buildId={buildId}
+            fileType="all"
+            tooltipText={downloadableMaterials.length ? BULK_TOOLTIP_TEXT : TOOLTIP_TEXT}
+          />
         </div>
       ) : null}
     </div>
   )
 }
 
-export function StickyDownloadBar() {
+export function StickyDownloadBar({
+  hasDownloadableMaterials,
+}: {
+  hasDownloadableMaterials?: boolean
+}) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-[#0a0e0d]/95 p-4 backdrop-blur lg:hidden">
       <div className="mx-auto max-w-7xl">
@@ -138,7 +226,7 @@ export function StickyDownloadBar() {
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="border-zinc-800 bg-zinc-950 text-xs text-zinc-200">
-              {TOOLTIP_TEXT}
+              {hasDownloadableMaterials ? BULK_TOOLTIP_TEXT : TOOLTIP_TEXT}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

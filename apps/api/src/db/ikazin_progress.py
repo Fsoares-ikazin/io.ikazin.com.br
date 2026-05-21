@@ -13,3 +13,6 @@ class IkazinProgressMeta(SQLModel, table=True):
     percent: int = 0
     last_position_seconds: int = 0
     updated_at: Optional[datetime] = Field(default=None)
+    last_watched_at: Optional[datetime] = Field(default=None)
+    completed: bool = False
+    completed_at: Optional[datetime] = Field(default=None)

@@ -167,7 +167,7 @@ export function PlanosClient() {
                 ))}
               </ul>
               <Link
-                href="/auth/signup"
+                href={`/checkout?plan=${tier.label.toLowerCase()}`}
                 className={`block rounded-xl py-3 text-center text-sm font-bold transition-opacity hover:opacity-90 ${
                   tier.style.cta === 'primary'
                     ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg'
