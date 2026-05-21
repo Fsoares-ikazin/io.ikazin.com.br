@@ -1,5 +1,7 @@
 # Deploy Guide — io.ikazin.com.br
 
+> Para um guia mais completo de VPS própria, sizing, storage, proxy, backup e escala, veja [deploy-vps.md](/home/phtech/dev/plataforma-ikazin/io.ikazin.com.br/docs/deploy-vps.md).
+
 ## Arquitetura
 
 ```
