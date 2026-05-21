@@ -6,9 +6,12 @@ import { useRouter } from 'next/navigation'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
 import HeroContinueCard from '@components/ikazin/ui/HeroContinueCard'
 import HorizontalRow from '@components/ikazin/ui/HorizontalRow'
+import RecommendationCard from '@components/ikazin/ui/RecommendationCard'
+import { ProgressCircle } from '@components/ikazin/ui/IkazinProgress'
 import type { BuildCardProps, BuildTier } from '@components/ikazin/ui/BuildCard'
 import { track } from '@/lib/ikazin/analytics'
 import { TIERS, color } from '@/lib/ikazin/tokens'
+import { copy } from '@/lib/ikazin/copy'
 import { greetingNow, progressNarrative, deriveProgressState } from '@/lib/ikazin/narratives'
 import { getPlatformUrl, getUriWithOrg } from '@services/config/config'
 
@@ -203,8 +206,6 @@ export default function DashboardPage({
   const inProgress = data?.in_progress ?? []
   const planBuilds = data?.plan_builds ?? []
   const recentlyAdded = data?.recently_added ?? []
-  const suggestedNext = data?.suggested_next ? [data.suggested_next] : []
-
   const completedBuildNumbers = [...inProgress, ...planBuilds]
     .filter((b) => b.progress?.completed)
     .map((b) => b.buildNumber)
@@ -214,11 +215,24 @@ export default function DashboardPage({
   return (
     <main className="min-h-screen text-zinc-100" style={{ background: color.bg }}>
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <header>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
-            {greetingNow(userName)}
-          </h1>
-          <p className="mt-1 text-sm text-zinc-300">{narrative}</p>
+        <header className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl">
+              {greetingNow(userName)}
+            </h1>
+            <p className="mt-1 text-sm text-zinc-300">{narrative}</p>
+          </div>
+          {progressState.tier && progressState.totalInTier > 0 && (
+            <div className="hidden sm:block">
+              <ProgressCircle
+                value={(progressState.completedInTier / progressState.totalInTier) * 100}
+                size={72}
+                strokeWidth={6}
+                tier={progressState.tier}
+                label={`${progressState.completedInTier}/${progressState.totalInTier}`}
+              />
+            </div>
+          )}
         </header>
 
         {!data?.plan_tier ? (
@@ -267,28 +281,40 @@ export default function DashboardPage({
           }}
         />
 
+        {data?.suggested_next ? (
+          <RecommendationCard
+            build={{
+              id: data.suggested_next.id,
+              buildNumber: data.suggested_next.buildNumber,
+              title: data.suggested_next.title,
+              tier: data.suggested_next.tier,
+              thumbnailUrl: data.suggested_next.thumbnailUrl,
+            }}
+            reason={
+              lastAccessed
+                ? `Continuação natural depois de "${lastAccessed.title}".`
+                : 'Comece pela peça que destrava sua trilha.'
+            }
+            href={getUriWithOrg(resolvedParams.orgslug, `/build/${data.suggested_next.buildNumber}`)}
+          />
+        ) : null}
+
         <HorizontalRow
           title="Continue assistindo"
           builds={inProgress}
-          emptyMessage="Você ainda não começou nenhum build."
+          emptyMessage={copy.empty.horizontalRow.noProgress}
         />
 
         <HorizontalRow
           title={`Seu plano: ${planLabel}`}
           builds={planBuilds}
-          emptyMessage="Nenhum build disponível no seu plano."
+          emptyMessage={copy.empty.horizontalRow.generic}
         />
 
         <HorizontalRow
           title="Recém-adicionados"
           builds={recentlyAdded}
           emptyMessage="Nenhum build novo por enquanto."
-        />
-
-        <HorizontalRow
-          title="Próximo passo"
-          builds={suggestedNext}
-          emptyMessage="Você já percorreu todos os builds disponíveis no seu plano."
         />
       </div>
     </main>

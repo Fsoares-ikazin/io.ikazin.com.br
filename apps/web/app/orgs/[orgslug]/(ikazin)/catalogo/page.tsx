@@ -5,7 +5,11 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
 import BuildCard from '@components/ikazin/ui/BuildCard'
-import { tier as tierToken, type BuildTier } from '@/lib/ikazin/tokens'
+import EmptyState from '@components/ikazin/ui/EmptyState'
+import TierSectionHeader from '@components/ikazin/ui/TierSectionHeader'
+import BuildCardSkeleton from '@components/ikazin/ui/BuildCardSkeleton'
+import { TIERS, type BuildTier } from '@/lib/ikazin/tokens'
+import { copy } from '@/lib/ikazin/copy'
 import { track } from '@/lib/ikazin/analytics'
 import { getPlatformUrl, getUriWithOrg } from '@services/config/config'
 
@@ -34,23 +38,6 @@ const TIERS: { value: BuildTier | 'all'; label: string }[] = [
 ]
 
 const TIER_ORDER: BuildTier[] = ['basic', 'essentials', 'advanced', 'premium']
-
-// ─── Skeleton ────────────────────────────────────────────────────────────────
-
-function BuildSkeleton() {
-  return (
-    <div className="overflow-hidden rounded-xl border border-ikz-border bg-ikz-surface animate-pulse">
-      <div className="aspect-video w-full bg-zinc-800" />
-      <div className="p-3 flex flex-col gap-2">
-        <div className="h-4 w-3/4 rounded bg-zinc-800" />
-        <div className="flex gap-1">
-          <div className="h-3 w-10 rounded bg-zinc-800" />
-          <div className="h-3 w-12 rounded bg-zinc-800" />
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
@@ -225,78 +212,71 @@ export default function CatalogoPage() {
         {/* Skeleton grid */}
         {loading && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 25 }).map((_, i) => (
-              <BuildSkeleton key={i} />
+            {Array.from({ length: 12 }).map((_, i) => (
+              <BuildCardSkeleton key={i} inGrid />
             ))}
           </div>
         )}
 
         {/* Empty state */}
         {!loading && !error && filtered.length === 0 && (
-          <div className="flex flex-col items-center gap-4 py-20 text-center">
-            <p className="text-ikz-text-muted">Nenhum build com esses filtros.</p>
-            <button
-              onClick={clearFilters}
-              className="rounded-lg border border-ikz-border bg-ikz-surface px-4 py-2 text-sm text-ikz-text hover:border-emerald-500/50"
-            >
-              Limpar filtros
-            </button>
-          </div>
+          <EmptyState
+            title="Nenhum build com esses filtros"
+            description="Tente outro termo ou limpe os filtros."
+            cta={{ label: 'Limpar filtros', onClick: clearFilters }}
+            className="my-12"
+          />
         )}
 
         {/* Tier sections */}
-        {!loading && !error && grouped.map(({ tier, builds: tierBuilds }) => (
-          <section key={tier} className="mb-10">
-            <div
-              className="mb-4 flex items-center gap-3 border-b pb-2"
-              style={{ color: tierToken(tier).textColor, borderColor: tierToken(tier).color + '66' }}
-            >
-              <h2 className="text-base font-bold uppercase tracking-widest">
-                {tier.charAt(0).toUpperCase() + tier.slice(1)}
-              </h2>
-              <span className="text-sm opacity-80">
-                Builds {tierBuilds[0]?.build_number}–{tierBuilds[tierBuilds.length - 1]?.build_number}
-              </span>
-            </div>
+        {!loading && !error && grouped.map(({ tier, builds: tierBuilds }) => {
+          const [from, to] = TIERS[tier].range
+          return (
+            <section key={tier} className="mb-10">
+              <TierSectionHeader
+                tier={tier}
+                count={tierBuilds.length}
+                rangeLabel={`Builds ${from}–${to}`}
+              />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {tierBuilds.map((b) => (
-                <div
-                  key={b.id}
-                  onClick={() => {
-                    track('build_opened', {
-                      build_id: b.id,
-                      build_number: b.build_number,
-                      tier: b.tier,
-                      locked: b.locked,
-                      source_row: 'catalogo',
-                    })
-                    if (!b.locked) router.push(getUriWithOrg(orgslug, `/build/${b.build_number}`))
-                    else router.push(pricingHref)
-                  }}
-                >
-                  <BuildCard
-                    id={b.id}
-                    buildNumber={b.build_number}
-                    title={b.title}
-                    tier={b.tier}
-                    tags={b.tags}
-                    locked={b.locked}
-                    progress={b.progress}
-                    thumbnailUrl={undefined}
-                    durationSeconds={b.duration_seconds}
-                  />
-                  {b.locked && (
-                    <p className="mt-1 text-center text-xs text-zinc-500">
-                      Upgrade para{' '}
-                      <span className="font-semibold capitalize text-zinc-400">{b.tier}</span>
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        ))}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {tierBuilds.map((b) => (
+                  <div
+                    key={b.id}
+                    onClick={() => {
+                      track('build_opened', {
+                        build_id: b.id,
+                        build_number: b.build_number,
+                        tier: b.tier,
+                        locked: b.locked,
+                        source_row: 'catalogo',
+                      })
+                      if (!b.locked) router.push(getUriWithOrg(orgslug, `/build/${b.build_number}`))
+                      else router.push(pricingHref)
+                    }}
+                  >
+                    <BuildCard
+                      id={b.id}
+                      buildNumber={b.build_number}
+                      title={b.title}
+                      tier={b.tier}
+                      tags={b.tags}
+                      locked={b.locked}
+                      progress={b.progress}
+                      thumbnailUrl={undefined}
+                      durationSeconds={b.duration_seconds}
+                    />
+                    {b.locked && (
+                      <p className="mt-1 text-center text-xs text-zinc-400">
+                        {copy.tier.locked(TIERS[b.tier].label)}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        })}
 
       </div>
     </div>
