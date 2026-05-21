@@ -12,29 +12,29 @@ import { trackPublicMarketingEvent } from './PublicMarketingTracker'
 
 const copy = {
   en: {
-    nav: { plans: 'Plans', blog: 'Blog', cta: 'Access Platform' },
+    nav: { plans: 'Plans', audience: 'Who it’s for', blog: 'Blog', login: 'Sign in', cta: 'Start now' },
     title: 'Technical Blog',
     sub: 'Deep-dives on Virtual Commissioning, Digital Twin and industrial automation.',
     featured: 'Featured',
     readMore: 'Read article',
     allPosts: 'All articles',
     tags: { all: 'All', vc: 'Virtual Commissioning', dt: 'Digital Twin', plc: 'PLC / TIA Portal', drives: 'Drives & Motion' },
-    newsletter: { title: 'Get new articles in your inbox', sub: 'No spam. Only technical content about industrial automation.', cta: 'Subscribe', placeholder: 'your@email.com' },
-    newsletterSuccess: 'Subscribed. Check your inbox soon.',
-    newsletterError: 'Could not subscribe right now.',
+    newsletter: { title: 'Get the Build 14 guide for free', sub: 'We will send the SINAMICS S120 placeholder guide to your inbox.', cta: 'Receive guide', placeholder: 'your@email.com' },
+    newsletterSuccess: 'Guide sent. Check your inbox.',
+    newsletterError: 'Could not send the guide right now.',
     footerCopy: 'All rights reserved.',
   },
   pt: {
-    nav: { plans: 'Planos', blog: 'Blog', cta: 'Acessar Plataforma' },
+    nav: { plans: 'Planos', audience: 'Para quem é', blog: 'Blog', login: 'Entrar', cta: 'Começar agora' },
     title: 'Blog Técnico',
     sub: 'Conteúdo profundo sobre Comissionamento Virtual, Gêmeo Digital e automação industrial.',
     featured: 'Destaque',
     readMore: 'Ler artigo',
     allPosts: 'Todos os artigos',
     tags: { all: 'Todos', vc: 'Comissionamento Virtual', dt: 'Gêmeo Digital', plc: 'PLC / TIA Portal', drives: 'Drives & Motion' },
-    newsletter: { title: 'Receba novos artigos no seu e-mail', sub: 'Sem spam. Só conteúdo técnico sobre automação industrial.', cta: 'Assinar', placeholder: 'seu@email.com' },
-    newsletterSuccess: 'Inscricao recebida. Em breve voce recebe os proximos artigos.',
-    newsletterError: 'Nao foi possivel assinar agora.',
+    newsletter: { title: 'Receba o guia do Build 14 gratuitamente', sub: 'Vamos enviar o placeholder do guia SINAMICS S120 para o seu email.', cta: 'Receber guia', placeholder: 'seu@email.com' },
+    newsletterSuccess: 'Guia enviado. Confira sua caixa de entrada.',
+    newsletterError: 'Nao foi possivel enviar o guia agora.',
     footerCopy: 'Todos os direitos reservados.',
   },
 }
@@ -67,22 +67,25 @@ export function BlogClient() {
     setNewsletterState('loading')
 
     try {
-      const response = await fetch('/api/marketing/newsletter', {
+      const response = await fetch('/api/lead-magnet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           lang,
-          source: 'blog_index',
+          source: 'blog_index_lead_magnet',
           path: typeof window !== 'undefined' ? window.location.pathname : '/blog',
+          build_number: 14,
+          title: 'SINAMICS S120',
         }),
       })
 
-      if (!response.ok) throw new Error('Newsletter subscription failed')
+      if (!response.ok) throw new Error('Lead magnet delivery failed')
 
-      trackPublicMarketingEvent('newsletter_submit', {
+      trackPublicMarketingEvent('lead_magnet_submit', {
         source: 'blog_index',
         lang,
+        build_number: 14,
       })
       setNewsletterState('success')
       setEmail('')

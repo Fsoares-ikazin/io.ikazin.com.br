@@ -1,6 +1,6 @@
 import { useOrg } from '@components/Contexts/OrgContext'
 import { getUriWithOrg } from '@services/config/config'
-import { Books, SquaresFour, ChatsCircle, Headphones, Cube, ShoppingBag } from '@phosphor-icons/react'
+import { Books, SquaresFour, ChatsCircle, Headphones, Cube, ShoppingBag, HouseLine } from '@phosphor-icons/react'
 import Link from 'next/link'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +23,12 @@ function MenuLinks(props: { orgslug: string; primaryColor?: string }) {
   return (
     <div className='pl-1'>
       <ul className="flex space-x-5">
+        <LinkItem
+          link="/dashboard"
+          type="dashboard"
+          orgslug={props.orgslug}
+          primaryColor={props.primaryColor}
+        ></LinkItem>
         {isCoursesEnabled && (
           <LinkItem
             link="/courses"
@@ -88,6 +94,13 @@ const LinkItem = (props: any) => {
           <>
             <Books size={20} weight="fill" />{' '}
             <span>{t('courses.courses')}</span>
+          </>
+        )}
+
+        {props.type == 'dashboard' && (
+          <>
+            <HouseLine size={20} weight="fill" />{' '}
+            <span>Dashboard</span>
           </>
         )}
 

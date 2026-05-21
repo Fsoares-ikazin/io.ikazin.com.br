@@ -9,7 +9,7 @@ import { MarketingNav } from './MarketingNav'
 
 const copy = {
   en: {
-    nav: { plans: 'Plans', blog: 'Blog', cta: 'Access Platform' },
+    nav: { plans: 'Plans', audience: 'Who it’s for', blog: 'Blog', login: 'Sign in', cta: 'Start now' },
     badge: '25 Builds · 5 Levels · 100% Online',
     painBadge: 'The problem nobody talks about',
     painTitle: 'You train on paper. Industry runs on PLC.',
@@ -58,7 +58,7 @@ const copy = {
     footerTerms: 'Terms',
   },
   pt: {
-    nav: { plans: 'Planos', blog: 'Blog', cta: 'Acessar Plataforma' },
+    nav: { plans: 'Planos', audience: 'Para quem é', blog: 'Blog', login: 'Entrar', cta: 'Começar agora' },
     badge: '25 Builds · 5 Níveis · 100% Online',
     painBadge: 'O problema que ninguém fala',
     painTitle: 'Você treina no papel. A indústria roda no PLC.',
@@ -426,7 +426,7 @@ export function LandingClient() {
       </section>
 
       {/* Tier Cards */}
-      <section id="builds" className="px-6 py-20 border-t border-ikz-border">
+      <section id="para-quem-e" className="px-6 py-20 border-t border-ikz-border">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-3 text-center text-2xl font-black tracking-tight text-white">{t.tiersTitle}</h2>
           <p className="mb-12 text-center text-gray-400">{t.tiersSub}</p>

@@ -1,18 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Clock, Calendar, Tag, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Clock, Calendar, ChevronRight } from 'lucide-react'
 import { useMarketingLang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 import type { BlogPost, ContentBlock, Lang } from '../../_data/blog-posts'
 import { posts } from '../../_data/blog-posts'
 import { trackPublicMarketingEvent } from './PublicMarketingTracker'
+import BlogBuildCTA from './BlogBuildCTA'
 
 // ─── Copy ──────────────────────────────────────────────────────────────────────
 
 const copy = {
   en: {
-    nav: { plans: 'Plans', blog: 'Blog', cta: 'Access Platform' },
+    nav: { plans: 'Plans', audience: 'Who it’s for', blog: 'Blog', login: 'Sign in', cta: 'Start now' },
     back: 'Back to blog',
     readMin: 'min read',
     related: 'Related articles',
@@ -27,7 +28,7 @@ const copy = {
     footerCopy: 'All rights reserved.',
   },
   pt: {
-    nav: { plans: 'Planos', blog: 'Blog', cta: 'Acessar Plataforma' },
+    nav: { plans: 'Planos', audience: 'Para quem é', blog: 'Blog', login: 'Entrar', cta: 'Começar agora' },
     back: 'Voltar ao blog',
     readMin: 'min de leitura',
     related: 'Artigos relacionados',
@@ -48,6 +49,24 @@ const tagColors: Record<string, string> = {
   plc: 'bg-ikz-lime/10 text-ikz-lime',
   drives: 'bg-[rgba(168,85,247,0.12)] text-purple-400',
   dt: 'bg-[rgba(251,146,60,0.12)] text-orange-400',
+}
+
+const buildMap: Record<string, { buildNumber: number; title: string; tier: 'basic' | 'essentials' | 'advanced' | 'premium'; duration: string }> = {
+  'sinamics-s120-speed-position': { buildNumber: 14, title: 'SINAMICS S120 - velocidade e posicao', tier: 'advanced', duration: '42 min' },
+  'sinamics-s120-velocidade-posicao': { buildNumber: 14, title: 'SINAMICS S120 - velocidade e posicao', tier: 'advanced', duration: '42 min' },
+  'tia-portal-digital-twin-realvirtual': { buildNumber: 14, title: 'TIA Portal + gemeo digital RealVirtual', tier: 'advanced', duration: '42 min' },
+  'tia-portal-gemeo-digital-realvirtual': { buildNumber: 14, title: 'TIA Portal + gemeo digital RealVirtual', tier: 'advanced', duration: '42 min' },
+  'plc-state-machine': { buildNumber: 2, title: 'Maquina de estados para CLP', tier: 'basic', duration: '28 min' },
+  'clp-maquina-de-estados': { buildNumber: 2, title: 'Maquina de estados para CLP', tier: 'basic', duration: '28 min' },
+  'rotary-knife-electronic-gearing': { buildNumber: 16, title: 'Faca rotativa com acoplamento eletronico', tier: 'advanced', duration: '47 min' },
+  'faca-rotativa-acoplamento-eletronico': { buildNumber: 16, title: 'Faca rotativa com acoplamento eletronico', tier: 'advanced', duration: '47 min' },
+}
+
+const fallbackBuild = {
+  buildNumber: 1,
+  title: 'Fundamentos PLC com simulacao',
+  tier: 'basic' as const,
+  duration: '24 min',
 }
 
 function formatDate(dateStr: string, lang: Lang) {
@@ -162,6 +181,36 @@ export function BlogPostClient({ slug }: Props) {
         </div>
       ) : (
         <>
+          {(() => {
+            const buildInfo = buildMap[slug] || buildMap[post.slug.pt] || buildMap[post.slug.en] || fallbackBuild
+            let paragraphCount = 0
+            let inlineCtaInserted = false
+            const articleBlocks = post.content[lang].flatMap((block, i) => {
+              const rendered = renderBlock(block, i)
+              if (block.type === 'p') {
+                paragraphCount += 1
+              }
+              if (paragraphCount === 3 && !inlineCtaInserted) {
+                inlineCtaInserted = true
+                return [
+                  rendered,
+                  (
+                    <BlogBuildCTA
+                      key={`inline-cta-${slug}`}
+                      slug={post.slug[lang]}
+                      buildNumber={buildInfo.buildNumber}
+                      title={buildInfo.title}
+                      tier={buildInfo.tier}
+                      duration={buildInfo.duration}
+                    />
+                  ),
+                ]
+              }
+              return [rendered]
+            })
+
+            return (
+              <>
           {/* Article header */}
           <header className="border-b border-ikz-border px-6 py-12">
             <div className="mx-auto max-w-3xl">
@@ -205,24 +254,19 @@ export function BlogPostClient({ slug }: Props) {
 
           {/* Article body */}
           <main className="mx-auto max-w-3xl px-6 py-12">
-            {post.content[lang].map((block, i) => renderBlock(block, i))}
+            {articleBlocks}
           </main>
 
           {/* Mid-article CTA */}
           <section className="mx-auto max-w-3xl px-6 mb-12">
-            <div className="rounded-2xl border border-ikz-lime/30 bg-ikz-lime/5 p-8 flex flex-col md:flex-row md:items-center gap-6">
-              <div className="flex-1">
-                <h3 className="text-xl font-black text-white mb-2">{t.cta.title}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{t.cta.sub}</p>
-              </div>
-              <Link
-                href={post.cta.href}
-                onClick={() => trackPublicMarketingEvent('blog_cta_click', { slug: post.slug[lang], href: post.cta.href })}
-                className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-ikz-lime shadow-glow-lime px-6 py-3 text-sm font-bold text-ikz-bg hover:opacity-90 hover:shadow-glow-lime-lg transition-all"
-              >
-                {post.cta.label[lang] || t.cta.btn} <ChevronRight size={14} />
-              </Link>
-            </div>
+            <BlogBuildCTA
+              slug={post.slug[lang]}
+              buildNumber={buildInfo.buildNumber}
+              title={buildInfo.title}
+              tier={buildInfo.tier}
+              duration={buildInfo.duration}
+              variant="footer"
+            />
           </section>
 
           {/* Related posts */}
@@ -253,6 +297,9 @@ export function BlogPostClient({ slug }: Props) {
               </div>
             </section>
           )}
+              </>
+            )
+          })()}
         </>
       )}
 

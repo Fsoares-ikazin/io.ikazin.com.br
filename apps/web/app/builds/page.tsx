@@ -114,8 +114,10 @@ export default function BuildsPage() {
         onLangChange={setLang}
         copy={{
           plans: lang === 'en' ? 'Plans' : 'Planos',
+          audience: lang === 'en' ? 'Who it’s for' : 'Para quem é',
           blog: 'Blog',
-          cta: lang === 'en' ? 'Access Platform' : 'Acessar Plataforma',
+          login: lang === 'en' ? 'Sign in' : 'Entrar',
+          cta: lang === 'en' ? 'Start now' : 'Começar agora',
         }}
       />
 

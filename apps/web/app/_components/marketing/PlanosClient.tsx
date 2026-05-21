@@ -9,7 +9,7 @@ import { MarketingNav } from './MarketingNav'
 
 const copy = {
   en: {
-    nav: { back: 'Back', cta: 'Access Platform' },
+    nav: { back: 'Back', audience: 'Who it’s for', blog: 'Blog', login: 'Sign in', cta: 'Start now' },
     title: 'Choose your level of mastery',
     sub: 'From fundamentals to SIMOTION D. Start where you are, reach where you need to be.',
     badge: 'One-time payment · Lifetime access',
@@ -31,7 +31,7 @@ const copy = {
     contactTitle: 'Questions? Get in touch.',
   },
   pt: {
-    nav: { back: 'Voltar', cta: 'Acessar Plataforma' },
+    nav: { back: 'Voltar', audience: 'Para quem é', blog: 'Blog', login: 'Entrar', cta: 'Começar agora' },
     title: 'Escolha seu nível de domínio',
     sub: 'Do fundamentos ao SIMOTION D. Comece onde você está, chegue onde precisa.',
     badge: 'Pagamento único · Acesso vitalício',
@@ -117,7 +117,17 @@ export function PlanosClient() {
 
   return (
     <div className="min-h-screen bg-ikz-bg text-gray-100">
-      <MarketingNav lang={lang} onLangChange={setLang} copy={{ plans: lang === 'en' ? 'Plans' : 'Planos', blog: 'Blog', cta: t.nav.cta }} />
+      <MarketingNav
+        lang={lang}
+        onLangChange={setLang}
+        copy={{
+          plans: lang === 'en' ? 'Plans' : 'Planos',
+          audience: t.nav.audience,
+          blog: t.nav.blog,
+          login: t.nav.login,
+          cta: t.nav.cta,
+        }}
+      />
 
       {/* Header */}
       <section className="px-6 py-20 text-center">

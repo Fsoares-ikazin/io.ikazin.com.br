@@ -8,7 +8,9 @@ import { LanguageToggle, type Lang } from './LanguageToggle'
 
 interface NavCopy {
   plans: string
+  audience: string
   blog: string
+  login: string
   cta: string
 }
 
@@ -43,13 +45,19 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
         {/* Desktop nav */}
         <div className="hidden items-center gap-8 text-sm font-medium text-gray-400 md:flex">
           <Link href="/planos" className="hover:text-white transition-colors">{copy.plans}</Link>
-          <Link href="/builds" className="hover:text-white transition-colors">{lang === 'en' ? 'Builds' : 'Simulações'}</Link>
+          <Link href="/#para-quem-e" className="hover:text-white transition-colors">{copy.audience}</Link>
           <Link href="/blog" className="hover:text-white transition-colors">{copy.blog}</Link>
         </div>
 
         {/* Right actions */}
         <div className="flex items-center gap-3">
           <LanguageToggle lang={lang} onChange={onLangChange} />
+          <Link
+            href="/auth/login"
+            className="hidden text-sm font-medium text-gray-400 transition-colors hover:text-white md:inline-flex"
+          >
+            {copy.login}
+          </Link>
           <Link
             href="/auth/login"
             className="hidden items-center gap-1.5 rounded-lg bg-ikz-cyan px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:flex"
@@ -73,11 +81,18 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
           <Link href="/planos" className="block text-gray-300 hover:text-white text-sm font-medium py-1" onClick={() => setMobileOpen(false)}>
             {copy.plans}
           </Link>
-          <Link href="/builds" className="block text-gray-300 hover:text-white text-sm font-medium py-1" onClick={() => setMobileOpen(false)}>
-            {lang === 'en' ? 'Builds' : 'Simulações'}
+          <Link href="/#para-quem-e" className="block text-gray-300 hover:text-white text-sm font-medium py-1" onClick={() => setMobileOpen(false)}>
+            {copy.audience}
           </Link>
           <Link href="/blog" className="block text-gray-300 hover:text-white text-sm font-medium py-1" onClick={() => setMobileOpen(false)}>
             {copy.blog}
+          </Link>
+          <Link
+            href="/auth/login"
+            className="block text-gray-300 hover:text-white text-sm font-medium py-1"
+            onClick={() => setMobileOpen(false)}
+          >
+            {copy.login}
           </Link>
           <Link
             href="/auth/login"

@@ -1,0 +1,50 @@
+flowchart LR
+    subgraph Student["Aluno"]
+        A1["Visitante"] --> A2["Login"]
+        A2 --> A3{"Tem ikazin_plan?"}
+        A3 -- "Não" --> A4["Dashboard com SEM PLANO"]
+        A3 -- "Sim" --> A5["/orgs/[orgslug]/dashboard"]
+        A5 --> A6["HeroContinueCard ou OnboardingBanner"]
+        A5 --> A7["Abrir catálogo"]
+        A5 --> A8["Abrir último build"]
+        A7 --> A9["/catalogo"]
+        A9 --> A10["Seleciona build"]
+        A10 --> A11["/build/[id]"]
+        A8 --> A11
+        A11 --> A12["Player HLS / MinIO"]
+        A12 --> A13["GET /resume"]
+        A12 --> A14["POST /progress a cada 10s"]
+        A12 --> A15["PUT /complete ao finalizar"]
+        A11 --> A16["Próximo build"]
+        A11 --> A17["Materiais placeholder"]
+    end
+
+    subgraph OrgAdmin["Admin da Organização"]
+        B1["Usuário autenticado"] --> B2{"dashboard.action_access?"}
+        B2 -- "Não" --> B3["Área do aluno"]
+        B2 -- "Sim" --> B4["/orgs/[orgslug]/dash"]
+        B4 --> B5["Home admin"]
+        B4 --> B6["Cursos"]
+        B4 --> B7["Usuários e papéis"]
+        B4 --> B8["Configurações da org"]
+        B4 --> B9["Pagamentos"]
+        B4 --> B10["Analytics"]
+    end
+
+    subgraph Superadmin["Superadmin"]
+        C1["Superadmin"] --> C2["/admin/login"]
+        C2 --> C3["/admin"]
+        C3 --> C4["Usuários"]
+        C3 --> C5["Organizações"]
+        C3 --> C6["Analytics global"]
+    end
+
+    subgraph Commerce["Plano e desbloqueio"]
+        D1["Usuário autenticado"] --> D2["details.ikazin_plan ou profile.ikazin_plan"]
+        D2 --> D3{"Plano válido?"}
+        D3 -- "Não" --> D4["0 builds liberados"]
+        D3 -- "basic" --> D5["Libera builds 1-8"]
+        D3 -- "essentials" --> D6["Libera builds 1-13"]
+        D3 -- "advanced" --> D7["Libera builds 1-18"]
+        D3 -- "premium" --> D8["Libera builds 1-25"]
+    end

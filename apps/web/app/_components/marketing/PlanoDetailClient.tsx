@@ -199,7 +199,7 @@ function DemoVideo({ title }: { title: string }) {
 
 const copy = {
   en: {
-    nav: { plans: 'Plans', blog: 'Blog', cta: 'Access Platform' },
+    nav: { plans: 'Plans', audience: 'Who it’s for', blog: 'Blog', login: 'Sign in', cta: 'Start now' },
     back: 'All Plans',
     outcomes: 'What you will be able to do',
     buildsTitle: 'Builds included',
@@ -212,7 +212,7 @@ const copy = {
     contactCta: 'Request Training',
   },
   pt: {
-    nav: { plans: 'Planos', blog: 'Blog', cta: 'Acessar Plataforma' },
+    nav: { plans: 'Planos', audience: 'Para quem é', blog: 'Blog', login: 'Entrar', cta: 'Começar agora' },
     back: 'Todos os Planos',
     outcomes: 'O que você vai conseguir fazer',
     buildsTitle: 'Builds incluídos',

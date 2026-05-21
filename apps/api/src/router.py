@@ -29,6 +29,11 @@ from src.routers.boards import boards as boards_router_module
 from src.routers.playgrounds import playgrounds as playgrounds_router_module
 from src.routers.playgrounds import playgrounds_generator as playgrounds_generator_router
 from src.routers import builds as builds_router_module
+from src.routers import ikazin_builds as ikazin_builds_router
+from src.routers import ikazin_dashboard as ikazin_dashboard_router
+from src.routers import ikazin_progress as ikazin_progress_router
+from src.routers import ikazin_downloads as ikazin_downloads_router
+from src.routers import ikazin_leads as ikazin_leads_router
 from src.core.ee_hooks import register_ee_routers
 from src.services.dev.dev import isDevModeEnabledOrRaise
 from src.routers.utils import router as utils_router
@@ -311,4 +316,35 @@ v1_router.include_router(
     builds_router_module.router,
     prefix="/builds",
     tags=["builds"],
+)
+
+# ─── Ikazin Routes (isolated — never modify above) ───────────────────────────
+v1_router.include_router(
+    ikazin_builds_router.router,
+    prefix="/ikazin/builds",
+    tags=["ikazin", "ikazin-builds"],
+    dependencies=[Depends(get_current_user)],
+)
+v1_router.include_router(
+    ikazin_dashboard_router.router,
+    prefix="/ikazin/dashboard",
+    tags=["ikazin", "ikazin-dashboard"],
+    dependencies=[Depends(get_current_user)],
+)
+v1_router.include_router(
+    ikazin_progress_router.router,
+    prefix="/ikazin/progress",
+    tags=["ikazin", "ikazin-progress"],
+    dependencies=[Depends(get_current_user)],
+)
+v1_router.include_router(
+    ikazin_downloads_router.router,
+    prefix="/ikazin/downloads",
+    tags=["ikazin", "ikazin-downloads"],
+    dependencies=[Depends(get_current_user)],
+)
+v1_router.include_router(
+    ikazin_leads_router.router,
+    prefix="/ikazin",
+    tags=["ikazin", "ikazin-leads"],
 )
