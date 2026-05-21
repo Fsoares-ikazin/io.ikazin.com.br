@@ -90,6 +90,11 @@ darkMode: forçado (sem toggle)
 | 2026-05-20 | Páginas em `orgs/[orgslug]/(ikazin)/` | `proxy.ts` reescreve todos paths para `/orgs/{slug}/path` |
 | 2026-05-20 | URL `/catalogo` (não `/builds`) | `/builds` já existe no LH — conflito de path Next.js |
 | 2026-05-20 | Vídeo via `MinIO + HLS single bitrate` | Lançamento rápido sem custo de Vimeo/Stream |
+| 2026-05-20 | **Paleta autoritativa: Emerald + Zinc** (não lime+cyan) | Código atual usa emerald — decisão de manter para evitar refactor. `docs/brand-dna.md` (lime+cyan) fica deprecated até reavaliação. Fonte da verdade: `apps/web/lib/ikazin/tokens.ts`. |
+| 2026-05-20 | **Tipografia: Plus Jakarta Sans + JetBrains Mono** | Jakarta para UI/headlines, JetBrains Mono para code/specs técnicas (PLC, snippets de blog). |
+| 2026-05-20 | **Design System 2.0 vive em `lib/ikazin/tokens.ts`** | Substitui `constants.ts` como fonte de verdade. Inclui tier text-colors com contraste WCAG AA. |
+
+> **Nota sobre `docs/brand-dna.md`** — arquivo descreve paleta lime+cyan+slate associada ao novo logo 3D (2026-04-25). Decisão atual: **paleta brand-dna fica deprecated**. Se logo 3D entrar em produção e exigir lime+cyan, abrir RFC explícita antes de mexer em tokens. Site público (`_components/marketing/*`) atualmente usa `ikz-lime`/`ikz-cyan` — listado como P0 de migração no `docs/ui-ux-adaptation-plan.md`.
 
 ## Para subir o ambiente
 
