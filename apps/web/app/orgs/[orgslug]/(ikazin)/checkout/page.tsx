@@ -15,7 +15,8 @@ const PLAN_LABELS: Record<Plan, string> = {
 }
 
 export default function CheckoutPage({ params }: { params: Promise<{ orgslug: string }> }) {
-  use(params) // resolve params (orgslug not needed, but required by Next.js)
+  const resolvedParams = use(params)
+  const orgslug = resolvedParams.orgslug
   const router = useRouter()
   const searchParams = useSearchParams()
   const session = useLHSession() as any
@@ -29,11 +30,12 @@ export default function CheckoutPage({ params }: { params: Promise<{ orgslug: st
       return
     }
 
-    // session not yet hydrated
+    // session not yet hydrated or still loading
     if (session === undefined || session === null) return
+    if (session.status === 'loading') return
 
     if (!session?.data?.tokens?.access_token) {
-      const next = encodeURIComponent(`/checkout?plan=${plan}`)
+      const next = encodeURIComponent(`/orgs/${orgslug}/checkout?plan=${plan}`)
       router.replace(`/auth/login?next=${next}`)
       return
     }
