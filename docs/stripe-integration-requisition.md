@@ -26,7 +26,7 @@ Criar **4 produtos**, um por plano, cada um com **dois preços** (BRL e USD), mo
 ### 2.1 Plano BASIC
 
 | Campo | Valor |
-|-------|-------|
+|-------|-------|   
 | Nome do produto | `Ikazin — BASIC` |
 | Descrição | Builds 1–8: lógica booleana, FSM, sensores, drives G120. Acesso vitalício. |
 | Preço BRL | **R$ 399,00** — `one_time` — moeda `brl` |

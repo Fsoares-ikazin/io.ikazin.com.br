@@ -31,6 +31,7 @@ const nextConfig = {
       },
     ]
   },
+  allowedDevOrigins: ['io.phtechsolucoes.com.br'],
   reactStrictMode: false,
   output: 'standalone',
   images: {
