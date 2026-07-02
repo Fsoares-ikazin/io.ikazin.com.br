@@ -350,15 +350,15 @@
     --chart-5: 204 15% 40%;
     --radius: 0.75rem;
 
-    /* IKAZIN.IO brand tokens (HSL triplets) */
-    --ikz-bg: 215 25% 6%;
-    --ikz-surface: 215 18% 11%;
-    --ikz-slate: 215 19% 28%;
-    --ikz-lime: 86 67% 64%;
-    --ikz-cyan: 184 50% 49%;
-    --ikz-text: 213 27% 92%;
-    --ikz-text-muted: 213 11% 58%;
-    --ikz-border: 213 12% 15%;
+    /* IKAZIN.IO brand tokens (HSL triplets) — Emerald + Zinc palette */
+    --ikz-bg: 160 17% 5%;
+    --ikz-surface: 160 11% 9%;
+    --ikz-slate: 160 8% 25%;
+    --ikz-lime: 160 84% 39%;
+    --ikz-cyan: 158 64% 52%;
+    --ikz-text: 240 5% 96%;
+    --ikz-text-muted: 240 4% 60%;
+    --ikz-border: 240 4% 16%;
 
     /* Z-Index Layering System */
     --z-behind: -10;
@@ -413,14 +413,14 @@
     --chart-5: 204 15% 40%;
 
     /* IKAZIN.IO brand tokens (mirror :root) */
-    --ikz-bg: 215 25% 6%;
-    --ikz-surface: 215 18% 11%;
-    --ikz-slate: 215 19% 28%;
-    --ikz-lime: 86 67% 64%;
-    --ikz-cyan: 184 50% 49%;
-    --ikz-text: 213 27% 92%;
-    --ikz-text-muted: 213 11% 58%;
-    --ikz-border: 213 12% 15%;
+    --ikz-bg: 160 17% 5%;
+    --ikz-surface: 160 11% 9%;
+    --ikz-slate: 160 8% 25%;
+    --ikz-lime: 160 84% 39%;
+    --ikz-cyan: 158 64% 52%;
+    --ikz-text: 240 5% 96%;
+    --ikz-text-muted: 240 4% 60%;
+    --ikz-border: 240 4% 16%;
   }
 }
 

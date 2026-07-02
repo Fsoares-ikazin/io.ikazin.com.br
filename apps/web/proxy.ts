@@ -34,7 +34,7 @@ async function getInstanceInfo(): Promise<InstanceInfo> {
   } catch {
     // Backend unavailable — use defaults
   }
-  return { multi_org_enabled: false, default_org_slug: 'default', mode: 'oss' as const, frontend_domain: 'localhost:3000', top_domain: 'localhost' }
+  return { multi_org_enabled: false, default_org_slug: 'default', mode: 'oss' as const, frontend_domain: 'io.phtechsolucoes.com.br', top_domain: 'phtechsolucoes.com.br' }
 }
 
 // Set instance info cookies on a response so client-side can read them synchronously
@@ -413,8 +413,12 @@ export default async function proxy(req: NextRequest) {
       orgslug = default_org as string
     }
 
+    // Skip rewrite if path already starts with /orgs/ to avoid double prefix
+    const rewritePath_multi = pathname.startsWith('/orgs/')
+      ? pathname
+      : `/orgs/${orgslug}${pathname}`
     const response = NextResponse.rewrite(
-      new URL(`/orgs/${orgslug}${pathname}`, req.url)
+      new URL(rewritePath_multi, req.url)
     )
 
     // Set the cookie with the orgslug value (both old and new names)
@@ -440,8 +444,12 @@ export default async function proxy(req: NextRequest) {
     // Get the default organization slug
     const LEARNHOUSE_TOP_DOMAIN = instanceInfo.top_domain
     const orgslug = default_org as string
+    // Skip rewrite if path already starts with /orgs/ to avoid double prefix
+    const rewritePath = pathname.startsWith('/orgs/')
+      ? pathname
+      : `/orgs/${orgslug}${pathname}`
     const response = NextResponse.rewrite(
-      new URL(`/orgs/${orgslug}${pathname}`, req.url)
+      new URL(rewritePath, req.url)
     )
 
     // Set the cookie with the orgslug value (both old and new names)

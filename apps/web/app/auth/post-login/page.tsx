@@ -32,10 +32,8 @@ function roleHasDashboardAccess(role: any): boolean {
 
 function shouldGoToDashboard(sessionData: any, orgslug: string | null): boolean {
   if (sessionData?.user?.is_superadmin === true) return true
-
   const roles = sessionData?.roles
   if (!Array.isArray(roles)) return false
-
   return roles.some((role: any) => (
     roleBelongsToCurrentOrg(role, orgslug) && roleHasDashboardAccess(role)
   ))
@@ -50,6 +48,18 @@ export default function PostLoginPage() {
     if (session.status !== 'authenticated') {
       window.location.replace('/login')
       return
+    }
+
+    // Respect ?next= query param (set by checkout → login flow)
+    const params = new URLSearchParams(window.location.search)
+    const nextParam = params.get('next')
+    if (nextParam) {
+      const decoded = decodeURIComponent(nextParam)
+      // Security: only allow same-origin relative paths, never external URLs
+      if (decoded.startsWith('/')) {
+        window.location.replace(decoded)
+        return
+      }
     }
 
     const orgslug = getCookieValue('learnhouse_current_orgslug') || getCookieValue('learnhouse_orgslug')

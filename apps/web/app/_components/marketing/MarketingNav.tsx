@@ -29,13 +29,13 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/logo.png"
+            src="/logo-64.png"
             alt="Ikazin.io Logo"
             width={40}
             height={40}
             className="h-10 w-auto"
-            style={{ filter: 'drop-shadow(0 0 6px hsl(var(--ikz-cyan) / 0.45))' }}
             priority
+            style={{ filter: 'drop-shadow(0 0 6px hsl(var(--ikz-cyan) / 0.45))' }}
           />
           <span className="text-lg font-black tracking-tight text-ikz-cyan">
             Ikazin.io

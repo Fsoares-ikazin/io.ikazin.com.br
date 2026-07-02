@@ -8,7 +8,7 @@ import BuildCard from '@components/ikazin/ui/BuildCard'
 import EmptyState from '@components/ikazin/ui/EmptyState'
 import TierSectionHeader from '@components/ikazin/ui/TierSectionHeader'
 import BuildCardSkeleton from '@components/ikazin/ui/BuildCardSkeleton'
-import { TIERS, type BuildTier } from '@/lib/ikazin/tokens'
+import { TIERS as TIER_TOKENS, type BuildTier } from '@/lib/ikazin/tokens'
 import { copy } from '@/lib/ikazin/copy'
 import { track } from '@/lib/ikazin/analytics'
 import { getPlatformUrl, getUriWithOrg } from '@services/config/config'
@@ -233,7 +233,7 @@ export default function CatalogoPage() {
 
         {/* Tier sections */}
         {!loading && !error && grouped.map(({ tier, builds: tierBuilds }) => {
-          const [from, to] = TIERS[tier].range
+          const [from, to] = TIER_TOKENS[tier].range
           return (
             <section key={tier} className="mb-10">
               <TierSectionHeader
@@ -271,7 +271,7 @@ export default function CatalogoPage() {
                     />
                     {b.locked && (
                       <p className="mt-1 text-center text-xs text-zinc-400">
-                        {copy.tier.locked(TIERS[b.tier].label)}
+                        {copy.tier.locked(TIER_TOKENS[b.tier].label)}
                       </p>
                     )}
                   </div>

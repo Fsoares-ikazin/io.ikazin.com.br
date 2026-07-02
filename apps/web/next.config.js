@@ -12,6 +12,13 @@ const nextConfig = {
         source: '/umami/api/send',
         destination: `https://eu.umami.is/api/send`,
       },
+      // Proxy API calls to Python backend.
+      // Server-side: Next.js rewrites to backend at localhost:1338 (network_mode:host).
+      // Client-side: uses NEXT_PUBLIC_LEARNHOUSE_API_URL tunnel URL.
+      {
+        source: '/api/v1/:path*',
+        destination: `http://localhost:1338/api/v1/:path*`,
+      },
     ]
   },
   async headers() {

@@ -151,8 +151,12 @@ const deriveAPIUrl = (): string => {
 
 // For direct usage, these call the getters
 export const getAPIUrl = () => {
-  // On custom domains (client-side), use relative path to go through Next.js proxy
-  // This ensures cookies work correctly (same-origin)
+  // Browser: always use relative path to go through Next.js rewrite proxy.
+  // This ensures cookies work (same-origin) and avoids cross-origin issues.
+  if (typeof window !== 'undefined') {
+    return '/api/v1/'
+  }
+  // Server-side (middleware, RSC): absolute URL required for fetch()
   if (isOnCustomDomain()) {
     return '/api/v1/'
   }

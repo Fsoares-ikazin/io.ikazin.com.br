@@ -18,31 +18,59 @@ import { getLEARNHOUSE_TOP_DOMAIN_VAL } from '@services/config/config'
 import { useTranslation } from 'react-i18next'
 import { PasswordStrengthIndicator, validatePasswordStrength } from '@components/Auth/PasswordStrengthIndicator'
 
+// Mapeamento de erros da API para português
+const API_ERROR_PT: Record<string, string> = {
+  'Email already exists': 'Este e-mail já está cadastrado.',
+  'Username already exists': 'Este nome de usuário já está em uso.',
+  'Invalid email': 'E-mail inválido.',
+  'Password too weak': 'Senha muito fraca. Use letras maiúsculas, minúsculas, números e símbolos.',
+  'Organization not found': 'Organização não encontrada.',
+}
+
+function traduzirErro(detail: string | undefined): string {
+  if (!detail) return 'Algo deu errado. Tente novamente.'
+  // Tenta match exato
+  if (API_ERROR_PT[detail]) return API_ERROR_PT[detail]
+  // Tenta match parcial
+  for (const [en, pt] of Object.entries(API_ERROR_PT)) {
+    if (detail.toLowerCase().includes(en.toLowerCase())) return pt
+  }
+  return detail
+}
+
 const validate = (values: any, t: any) => {
   const errors: any = {}
 
   if (!values.email) {
-    errors.email = t('validation.required')
+    errors.email = 'Digite seu e-mail.'
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-    errors.email = t('validation.invalid_email')
+    errors.email = 'Formato de e-mail inválido.'
   }
 
   if (!values.password) {
-    errors.password = t('validation.required')
+    errors.password = 'Digite uma senha.'
+  } else if (values.password.length < 8) {
+    errors.password = 'A senha deve ter pelo menos 8 caracteres.'
   } else {
     const passwordValidation = validatePasswordStrength(values.password)
     if (!passwordValidation.isValid) {
-      errors.password = t('auth.password_requirements_not_met')
+      errors.password = 'A senha precisa ter: maiúscula, minúscula, número e símbolo.'
     }
   }
 
   if (!values.username) {
-    errors.username = t('validation.required')
+    errors.username = 'Escolha um nome de usuário.'
   } else if (values.username.length < 4) {
-    errors.username = t('validation.username_min_length')
+    errors.username = 'Mínimo 4 caracteres.'
+  } else if (values.username.length > 20) {
+    errors.username = 'Máximo 20 caracteres.'
+  } else if (!/^[a-zA-Z0-9_-]+$/.test(values.username)) {
+    errors.username = 'Apenas letras, números, traço e underline.'
   }
 
-  // Bio is optional - no validation required
+  if (!values.first_name) {
+    errors.first_name = 'Digite seu nome.'
+  }
 
   return errors
 }
@@ -82,10 +110,10 @@ function OpenSignUpComponent() {
         res.status == 404 ||
         res.status == 409
       ) {
-        setError(message.detail)
+        setError(traduzirErro(message.detail))
         setIsSubmitting(false)
       } else {
-        setError(t('common.something_went_wrong'))
+        setError('Erro de conexão. Verifique sua internet e tente novamente.')
         setIsSubmitting(false)
       }
     },

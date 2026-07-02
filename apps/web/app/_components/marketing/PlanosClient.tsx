@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import { Users, ChevronRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 import { TierCard } from '@components/ikazin/marketing/TierCard'
+import { useLHSession } from '@components/Contexts/LHSessionContext'
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -113,8 +115,23 @@ const tierData: Record<Lang, TierData[]> = {
 
 export function PlanosClient() {
   const [lang, setLang] = useMarketingLang()
+  const session = useLHSession() as any
   const t = copy[lang]
   const tiers = tierData[lang]
+
+  // Check if user already has an active Ikazin plan
+  const userPlan: string | null =
+    session?.data?.user?.details?.ikazin_plan ??
+    session?.data?.user?.profile?.ikazin_plan ??
+    null
+
+  // Track page view for analytics
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const { track } = require('@/lib/ikazin/analytics')
+      track('planos_viewed', { has_plan: !!userPlan, plan: userPlan ?? 'none' })
+    }
+  }, [userPlan])
 
   return (
     <div className="min-h-screen bg-ikz-bg text-gray-100">
@@ -137,18 +154,46 @@ export function PlanosClient() {
         <p className="text-sm font-semibold text-ikz-cyan">{t.badge}</p>
       </section>
 
+      {/* User's current plan banner */}
+      {userPlan && (
+        <section className="px-6 pb-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-emerald-200">
+                  Seu plano atual: <span className="font-bold uppercase">{userPlan}</span>
+                </p>
+                <p className="text-xs text-emerald-300/70">
+                  Você já tem acesso aos builds deste plano e de todos os tiers inferiores.
+                </p>
+              </div>
+              <Link
+                href="/dashboard"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-emerald-500 px-5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 shrink-0"
+              >
+                Ir para Dashboard
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Tier grid */}
       <section className="px-6 pb-20">
         <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {tiers.map((tier) => (
-            <TierCard
-              key={tier.label}
-              tier={tier}
-              ctaPrefix={t.ctaPrefix}
-              priceNote={t.priceNote}
-              mostPopular={t.mostPopular}
-            />
-          ))}
+          {tiers.map((tier) => {
+            const tierSlug = tier.label.toLowerCase()
+            const isCurrentPlan = userPlan === tierSlug
+            return (
+              <TierCard
+                key={tier.label}
+                tier={tier}
+                ctaPrefix={isCurrentPlan ? 'Seu plano' : t.ctaPrefix}
+                priceNote={t.priceNote}
+                mostPopular={t.mostPopular}
+              />
+            )
+          })}
         </div>
       </section>
 

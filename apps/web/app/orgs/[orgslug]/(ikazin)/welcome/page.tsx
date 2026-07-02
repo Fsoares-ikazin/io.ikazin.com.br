@@ -2,12 +2,27 @@
 
 import { use, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { track } from '@/lib/ikazin/analytics'
 import { useLHSession } from '@components/Contexts/LHSessionContext'
 import { Button } from '@components/ui/button'
+import { TIERS, type BuildTier } from '@/lib/ikazin/tokens'
 import { getUriWithOrg } from '@services/config/config'
+
+const PLAN_LABELS: Record<string, string> = {
+  basic: 'BASIC',
+  essentials: 'ESSENTIALS',
+  advanced: 'ADVANCED',
+  premium: 'PREMIUM',
+}
+
+const PLAN_TIER_RANGES: Record<string, string> = {
+  basic: 'Builds 1–8',
+  essentials: 'Builds 1–13',
+  advanced: 'Builds 1–18',
+  premium: 'Builds 1–25',
+}
 
 type Choice = {
   id: string
@@ -85,9 +100,15 @@ export default function WelcomePage({
 }) {
   const resolvedParams = use(params)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const session = useLHSession() as any
   const status = session?.status ?? 'loading'
   const accessToken = session?.data?.tokens?.access_token
+
+  // Post-purchase confirmation: Stripe redirects here with ?plan=X&session_id=Y
+  const purchasePlan = searchParams.get('plan')
+  const purchaseSessionId = searchParams.get('session_id')
+  const isPostPurchase = !!(purchasePlan && PLAN_LABELS[purchasePlan])
 
   const [step, setStep] = useState(1)
   const [profile, setProfile] = useState<string>()
@@ -96,12 +117,53 @@ export default function WelcomePage({
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [recommendation, setRecommendation] = useState<RecommendationPayload | null>(null)
+  const [purchaseChecked, setPurchaseChecked] = useState(false)
+  const [planActive, setPlanActive] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.replace('/auth/login')
     }
   }, [router, status])
+
+  // Check if plan activation completed (post-Stripe purchase)
+  useEffect(() => {
+    if (!isPostPurchase || status !== 'authenticated') return
+
+    let alive = true
+    let attempts = 0
+    const maxAttempts = 10
+
+    async function checkPlan() {
+      while (alive && attempts < maxAttempts) {
+        try {
+          const res = await fetch('/api/v1/ikazin/dashboard', {
+            credentials: 'include',
+            headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+          })
+          if (res.ok) {
+            const data = await res.json()
+            if (data.plan_tier && data.plan_tier === purchasePlan) {
+              if (alive) {
+                setPlanActive(true)
+                setPurchaseChecked(true)
+                track('purchase_confirmed', { plan: purchasePlan, session_id: purchaseSessionId })
+              }
+              return
+            }
+          }
+        } catch { /* retry */ }
+        attempts++
+        if (alive && attempts < maxAttempts) {
+          await new Promise(r => setTimeout(r, 2000))
+        }
+      }
+      if (alive) setPurchaseChecked(true)
+    }
+
+    checkPlan()
+    return () => { alive = false }
+  }, [isPostPurchase, status, accessToken, purchasePlan, purchaseSessionId])
 
   const fallbackRecommendation = useMemo(() => {
     const buildNumber =
@@ -206,6 +268,46 @@ export default function WelcomePage({
   return (
     <main className="min-h-screen bg-[#0a0e0d] text-zinc-100">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        {/* Post-purchase confirmation banner */}
+        {isPostPurchase && (
+          <section className="mb-8 rounded-[20px] border border-emerald-500/30 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_50%),linear-gradient(135deg,_rgba(20,26,24,0.98),_rgba(10,14,13,1))] p-6 sm:p-8">
+            {!purchaseChecked ? (
+              <div className="flex items-center gap-3">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
+                <p className="text-sm text-emerald-200">Confirmando seu pagamento...</p>
+              </div>
+            ) : planActive ? (
+              <>
+                <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-400">
+                  ✓ Pagamento confirmado
+                </div>
+                <h2 className="mt-2 text-2xl font-bold text-white">
+                  Plano {PLAN_LABELS[purchasePlan] ?? purchasePlan} ativo!
+                </h2>
+                <p className="mt-2 text-sm text-zinc-300">
+                  Você tem acesso a {PLAN_TIER_RANGES[purchasePlan] ?? `todos os builds do plano ${purchasePlan}`}.
+                  Escolha um caminho para começar.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-400">
+                  Processando pagamento...
+                </div>
+                <h2 className="mt-2 text-xl font-bold text-white">
+                  Seu pagamento está sendo processado
+                </h2>
+                <p className="mt-2 text-sm text-zinc-300">
+                  O Stripe confirmou seu pagamento. A ativação do plano {PLAN_LABELS[purchasePlan] ?? purchasePlan} leva
+                  alguns segundos. Enquanto isso, escolha seu perfil abaixo.
+                </p>
+                <p className="mt-1 text-xs text-zinc-500">
+                  Se o plano não aparecer ativo em instantes, entre em contato: contato@ikazin.com.br
+                </p>
+              </>
+            )}
+          </section>
+        )}
         <div className="mb-8 flex items-center justify-between gap-4">
           <div className="flex gap-2">
             {dots.map((dot) => (

@@ -302,8 +302,6 @@ function BuildPreviewStrip({ previewTitle, previewCta }: { previewTitle: string;
 
 // ─── VideoSection ─────────────────────────────────────────────────────────────
 
-const YOUTUBE_PLACEHOLDER = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-
 function VideoSection({ title, sub, playLabel }: { title: string; sub: string; playLabel: string }) {
   return (
     <section className="px-6 py-20">
@@ -319,9 +317,8 @@ function VideoSection({ title, sub, playLabel }: { title: string; sub: string; p
               Digital Twin · TIA Portal V18
             </span>
           </div>
-          {/* Play button → YouTube */}
+          {/* Play button — demo video coming soon */}
           <button
-            onClick={() => window.open(YOUTUBE_PLACEHOLDER, '_blank')}
             aria-label={playLabel}
             className="group flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 backdrop-blur-sm transition-all hover:scale-110 hover:border-ikz-cyan hover:bg-ikz-cyan/15"
           >

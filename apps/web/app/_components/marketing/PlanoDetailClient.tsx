@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Check, ChevronRight, Play, ArrowLeft, Award, Zap, BookOpen } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
 import { BuildListItem } from '@components/ikazin/marketing/BuildListItem'
+import { track } from '@/lib/ikazin/analytics'
+import { useLHSession } from '@components/Contexts/LHSessionContext'
 
 // ─── Plan definitions ─────────────────────────────────────────────────────────
 
@@ -233,6 +235,17 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
   const [lang, setLang] = useMarketingLang()
   const t = copy[lang]
   const plan = plans[slug]
+  const session = useLHSession() as any
+  const isAuth = session?.status === 'authenticated'
+
+  function checkoutHref(planSlug: string) {
+    const cp = `/checkout?plan=${planSlug}`
+    return isAuth ? cp : `/auth/login?next=${encodeURIComponent(cp)}`
+  }
+
+  useEffect(() => {
+    track('plan_detail_viewed', { plan_slug: slug })
+  }, [slug])
 
   if (!plan) {
     return (
@@ -281,7 +294,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
                   {t.contactCta} <ChevronRight size={16} />
                 </Link>
               ) : (
-                <Link href={`/checkout?plan=${slug}`} className="btn-primary">
+                <Link href={checkoutHref(slug)} className="btn-primary">
                   {t.buyNow} <ChevronRight size={16} />
                 </Link>
               )}
@@ -348,7 +361,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
               {t.contactCta} <ChevronRight size={16} />
             </Link>
           ) : (
-            <Link href={`/checkout?plan=${slug}`} className="btn-primary px-10 text-base">
+            <Link href={checkoutHref(slug)} className="btn-primary px-10 text-base">
               {t.buyNow} <ChevronRight size={16} />
             </Link>
           )}

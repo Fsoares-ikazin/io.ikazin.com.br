@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Check } from 'lucide-react'
+import { useLHSession } from '@components/Contexts/LHSessionContext'
 
 export type TierCardData = {
   label: string
@@ -23,6 +24,16 @@ type TierCardProps = {
 }
 
 export function TierCard({ tier, ctaPrefix, priceNote, mostPopular }: TierCardProps) {
+  const session = useLHSession() as any
+  const isAuth = session?.status === 'authenticated'
+  const planSlug = tier.label.toLowerCase()
+  const checkoutPath = `/checkout?plan=${planSlug}`
+  // If not authenticated, go directly to login with next=checkout so post-login
+  // redirects straight to the Stripe checkout page — no double-redirect.
+  const href = isAuth
+    ? checkoutPath
+    : `/auth/login?next=${encodeURIComponent(checkoutPath)}`
+
   return (
     <div
       className={[
@@ -56,7 +67,7 @@ export function TierCard({ tier, ctaPrefix, priceNote, mostPopular }: TierCardPr
       </ul>
 
       <Link
-        href={`/orgs/${process.env.NEXT_PUBLIC_LEARNHOUSE_DEFAULT_ORG || 'ikazin'}/checkout?plan=${tier.label.toLowerCase()}`}
+        href={href}
         className={[
           'block rounded-xl py-3 text-center text-sm font-bold transition-opacity hover:opacity-90',
           tier.style.cta === 'primary'
