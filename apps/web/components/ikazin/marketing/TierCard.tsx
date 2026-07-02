@@ -56,7 +56,7 @@ export function TierCard({ tier, ctaPrefix, priceNote, mostPopular }: TierCardPr
       </ul>
 
       <Link
-        href={`/checkout?plan=${tier.label.toLowerCase()}`}
+        href={`/orgs/${process.env.NEXT_PUBLIC_LEARNHOUSE_DEFAULT_ORG || 'ikazin'}/checkout?plan=${tier.label.toLowerCase()}`}
         className={[
           'block rounded-xl py-3 text-center text-sm font-bold transition-opacity hover:opacity-90',
           tier.style.cta === 'primary'

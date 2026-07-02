@@ -59,7 +59,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
             {copy.login}
           </Link>
           <Link
-            href="/auth/login"
+            href="/planos"
             className="hidden items-center gap-1.5 rounded-lg bg-ikz-cyan px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 md:flex"
           >
             {copy.cta} <ChevronRight size={14} />
@@ -95,7 +95,7 @@ export function MarketingNav({ lang, onLangChange, copy }: MarketingNavProps) {
             {copy.login}
           </Link>
           <Link
-            href="/auth/login"
+            href="/planos"
             className="block w-full text-center rounded-lg bg-ikz-cyan px-4 py-2.5 text-sm font-semibold text-white"
             onClick={() => setMobileOpen(false)}
           >

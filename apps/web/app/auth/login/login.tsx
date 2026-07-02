@@ -9,7 +9,7 @@ import { useFormik } from 'formik'
 import React, { useState, useEffect } from 'react'
 import { AlertTriangle, Lock, Mail, Shield, X, Clock } from 'lucide-react'
 import { checkSSOEnabled, redirectToSSOLogin } from '@services/auth/sso'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@components/Contexts/AuthContext'
 import { getLEARNHOUSE_TOP_DOMAIN_VAL, getDeploymentMode } from '@services/config/config'
@@ -25,6 +25,7 @@ interface LoginClientProps {
 const LoginClient = (props: LoginClientProps) => {
   const { t } = useTranslation()
   const { signIn } = useAuth()
+  const searchParams = useSearchParams()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [ssoEnabled, setSsoEnabled] = useState(false)
   const [ssoLoading, setSsoLoading] = useState(false)
@@ -152,7 +153,10 @@ const LoginClient = (props: LoginClientProps) => {
       }
 
       // Use absolute URL with current origin for custom domain support
-      const callbackUrl = `${window.location.origin}/auth/post-login`;
+      const nextParam = searchParams.get('next');
+      const callbackUrl = nextParam
+        ? `${window.location.origin}${decodeURIComponent(nextParam)}`
+        : `${window.location.origin}/auth/post-login`;
 
       const res = await signIn('credentials', {
         redirect: false,
