@@ -271,7 +271,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ orgslug: st
           </div>
           <div className="mt-4 flex flex-wrap gap-2 text-xs text-zinc-400">
             <span className="flex items-center gap-1"><Lock size={12} className="text-emerald-400" /> SSL seguro</span>
-            <span className="flex items-center gap-1"><ShieldCheck size={12} className="text-emerald-400" /> Pagamento Stripe</span>
+            <span className="flex items-center gap-1"><ShieldCheck size={12} className="text-emerald-400" /> Pagamento via Stripe</span>
             <span className="flex items-center gap-1"><Zap size={12} className="text-emerald-400" /> Acesso imediato</span>
           </div>
         </div>

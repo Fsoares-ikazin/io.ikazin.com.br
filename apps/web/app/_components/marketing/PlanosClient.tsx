@@ -188,9 +188,10 @@ export function PlanosClient() {
               <TierCard
                 key={tier.label}
                 tier={tier}
-                ctaPrefix={isCurrentPlan ? 'Seu plano' : t.ctaPrefix}
+                ctaPrefix={t.ctaPrefix}
                 priceNote={t.priceNote}
                 mostPopular={t.mostPopular}
+                isCurrentPlan={isCurrentPlan}
               />
             )
           })}

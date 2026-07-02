@@ -312,7 +312,7 @@ export default function DashboardPage({
         />
 
         <HorizontalRow
-          title="Recém-adicionados"
+          title="Adicionados recentemente"
           builds={recentlyAdded}
           emptyMessage="Nenhum build novo por enquanto."
         />

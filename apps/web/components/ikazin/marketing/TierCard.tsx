@@ -21,18 +21,19 @@ type TierCardProps = {
   ctaPrefix: string
   priceNote: string
   mostPopular: string
+  isCurrentPlan?: boolean
 }
 
-export function TierCard({ tier, ctaPrefix, priceNote, mostPopular }: TierCardProps) {
+export function TierCard({ tier, ctaPrefix, priceNote, mostPopular, isCurrentPlan }: TierCardProps) {
   const session = useLHSession() as any
   const isAuth = session?.status === 'authenticated'
   const planSlug = tier.label.toLowerCase()
-  const checkoutPath = `/checkout?plan=${planSlug}`
-  // If not authenticated, go directly to login with next=checkout so post-login
-  // redirects straight to the Stripe checkout page — no double-redirect.
-  const href = isAuth
-    ? checkoutPath
-    : `/auth/login?next=${encodeURIComponent(checkoutPath)}`
+  // If user already owns this plan, go to dashboard — no re-purchase
+  const href = isCurrentPlan
+    ? '/dashboard'
+    : isAuth
+      ? `/checkout?plan=${planSlug}`
+      : `/auth/login?next=${encodeURIComponent(`/checkout?plan=${planSlug}`)}`
 
   return (
     <div
@@ -70,12 +71,14 @@ export function TierCard({ tier, ctaPrefix, priceNote, mostPopular }: TierCardPr
         href={href}
         className={[
           'block rounded-xl py-3 text-center text-sm font-bold transition-opacity hover:opacity-90',
-          tier.style.cta === 'primary'
-            ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg'
-            : 'border border-ikz-border text-gray-300 hover:border-gray-600',
+          isCurrentPlan
+            ? 'border border-emerald-500/50 bg-emerald-500/10 text-emerald-400 cursor-default'
+            : tier.style.cta === 'primary'
+              ? 'bg-ikz-lime text-ikz-bg shadow-glow-lime hover:shadow-glow-lime-lg'
+              : 'border border-ikz-border text-gray-300 hover:border-gray-600',
         ].join(' ')}
       >
-        {ctaPrefix} {tier.label}
+        {isCurrentPlan ? 'Seu plano' : ctaPrefix} {tier.label}
       </Link>
     </div>
   )
