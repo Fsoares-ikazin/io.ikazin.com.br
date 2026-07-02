@@ -94,7 +94,7 @@ const tierData: Record<Lang, TierData[]> = {
       style: { badge: 'bg-gray-800 text-gray-400', border: 'border-gray-800', cta: 'outline' },
     },
     {
-      label: 'ESSENTIALS', price: 'R$699', builds: 'Builds 9–13', audience: 'Operadores, técnicos sênior e supervisores',
+      label: 'ESSENTIALS', price: 'R$699', builds: 'Builds 9–13', audience: 'Operadores, técnicos seniores e supervisores',
       features: ['Desvio giratório multi-eixo', 'Máquina de filme stretch com HMI', 'Linha Flow Pack — sincronismo de esteira', 'Controle PID de nível (P, PI, PID)', 'Ball & Beam — sistema instável avançado'],
       style: { badge: 'bg-blue-900/50 text-blue-400', border: 'border-blue-900/50', cta: 'outline' },
     },

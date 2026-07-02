@@ -6,7 +6,7 @@ import { useLHSession } from '@components/Contexts/LHSessionContext'
 import { track } from '@/lib/ikazin/analytics'
 import { signup } from '@services/auth/auth'
 import { useAuth } from '@components/Contexts/AuthContext'
-import { Lock, ShieldCheck, Zap, ChevronRight, AlertTriangle } from 'lucide-react'
+import { Lock, ShieldCheck, Zap, ChevronRight, AlertTriangle, Eye, EyeOff } from 'lucide-react'
 
 const VALID_PLANS = ['basic', 'essentials', 'advanced', 'premium'] as const
 type Plan = (typeof VALID_PLANS)[number]
@@ -38,6 +38,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ orgslug: st
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [showPw, setShowPw] = useState(false)
 
   type PlanInfo = { id: string | null; err: string | null }
 
@@ -102,9 +103,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ orgslug: st
       password,
       username,
       first_name: name.trim(),
-      last_name: '',
-      bio: '',
-    })
+    } as any)
 
     const body = await res.json().catch(() => ({}))
     // Parse FastAPI errors: string, or array of {type, loc, msg, input}
@@ -327,20 +326,25 @@ export default function CheckoutPage({ params }: { params: Promise<{ orgslug: st
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
-                placeholder="voce@email.com"
+                placeholder="você@email.com"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300">Senha</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
-                placeholder="Mínimo 8 caracteres"
-                autoComplete="new-password"
-              />
+              <div className="relative mt-1">
+                <input
+                  type={showPw ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                  placeholder="Mínimo 8 caracteres"
+                  autoComplete="new-password"
+                />
+                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
+                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
             <button
               type="submit"
@@ -368,20 +372,25 @@ export default function CheckoutPage({ params }: { params: Promise<{ orgslug: st
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
-                placeholder="voce@email.com"
+                placeholder="você@email.com"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-zinc-300">Senha</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
-                placeholder="Sua senha"
-                autoComplete="current-password"
-              />
+              <div className="relative mt-1">
+                <input
+                  type={showPw ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3.5 py-2.5 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                  placeholder="Sua senha"
+                  autoComplete="current-password"
+                />
+                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
+                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
             <button
               type="submit"

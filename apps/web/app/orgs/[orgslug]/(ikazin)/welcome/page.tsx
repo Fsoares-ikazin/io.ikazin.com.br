@@ -39,7 +39,7 @@ type RecommendationPayload = {
 
 const PROFILE_OPTIONS: Choice[] = [
   { id: 'student', title: 'Estudante / Estagiário', description: 'Quer entrar na automação com base sólida.' },
-  { id: 'professional', title: 'Profissional em ativo', description: 'Precisa aplicar PLC e motion no chão de fábrica.' },
+  { id: 'professional', title: 'Profissional atuante', description: 'Precisa aplicar PLC e motion no chão de fábrica.' },
   { id: 'manager', title: 'Gestor de equipe', description: 'Quer acelerar o time com uma trilha prática.' },
 ]
 
@@ -58,7 +58,7 @@ const INTEREST_OPTIONS: Choice[] = [
 ]
 
 const BUILD_TITLES: Record<number, string> = {
-  1: 'Primeiros passos com PLC e Digital Twin',
+  1: 'Primeiros passos com PLC e Gêmeo Digital',
   3: 'Estruturas de lógica para sair do básico',
   7: 'Introdução prática a drives Siemens',
   14: 'SINAMICS e aplicações industriais reais',
@@ -132,7 +132,7 @@ export default function WelcomePage({
 
     let alive = true
     let attempts = 0
-    const maxAttempts = 10
+    const maxAttempts = 20
 
     async function checkPlan() {
       while (alive && attempts < maxAttempts) {
@@ -292,18 +292,29 @@ export default function WelcomePage({
             ) : (
               <>
                 <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-400">
-                  Processando pagamento...
+                  Verificando pagamento...
                 </div>
                 <h2 className="mt-2 text-xl font-bold text-white">
-                  Seu pagamento está sendo processado
+                  Confirmando sua compra
                 </h2>
                 <p className="mt-2 text-sm text-zinc-300">
                   O Stripe confirmou seu pagamento. A ativação do plano {PLAN_LABELS[purchasePlan] ?? purchasePlan} leva
                   alguns segundos. Enquanto isso, escolha seu perfil abaixo.
                 </p>
-                <p className="mt-1 text-xs text-zinc-500">
-                  Se o plano não aparecer ativo em instantes, entre em contato: contato@ikazin.com.br
-                </p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => { setPurchaseChecked(false); /* re-triggers polling */ }}
+                    className="inline-flex h-10 items-center justify-center rounded-xl bg-amber-500 px-4 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-400"
+                  >
+                    Verificar novamente
+                  </button>
+                  <a
+                    href="mailto:contato@ikazin.com.br"
+                    className="inline-flex h-10 items-center justify-center rounded-xl border border-zinc-700 px-4 text-sm text-zinc-300 transition-colors hover:border-zinc-500"
+                  >
+                    Falar com suporte
+                  </a>
+                </div>
               </>
             )}
           </section>

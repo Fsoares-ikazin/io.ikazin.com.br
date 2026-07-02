@@ -40,7 +40,7 @@ export const copy = {
     blogEmpty: {
       title: 'Sem artigos publicados ainda',
       description:
-        'O blog técnico estreia em breve. Inscreva-se na newsletter para o aviso.',
+        'O blog técnico estreia em breve. Inscreva-se na newsletter para receber o aviso.',
     },
     horizontalRow: {
       generic: 'Nenhum build disponível nesta seção.',
@@ -54,8 +54,8 @@ export const copy = {
     materialsDownloadFailed:
       'Falha ao baixar o material. Verifique sua conexão.',
     videoLoadFailed:
-      'Não consegui carregar o vídeo. Tente recarregar a página.',
-    genericFetch: 'Algo deu errado. Tente recarregar a página.',
+      'Falha ao carregar o vídeo. Tente atualizar a página.',
+    genericFetch: 'Algo deu errado. Tente atualizar a página.',
   },
 
   success: {

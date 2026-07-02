@@ -65,7 +65,7 @@ const validate = (values: any, t: any) => {
   } else if (values.username.length > 20) {
     errors.username = 'Máximo 20 caracteres.'
   } else if (!/^[a-zA-Z0-9_-]+$/.test(values.username)) {
-    errors.username = 'Apenas letras, números, traço e underline.'
+    errors.username = 'Apenas letras, números, traço e sublinhado.'
   }
 
   if (!values.first_name) {

@@ -1,9 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { Cpu, Box, Award, ChevronRight, Zap, Play, AlertTriangle, TrendingUp } from 'lucide-react'
 import { useMarketingLang, type Lang } from './LanguageToggle'
 import { MarketingNav } from './MarketingNav'
+import { track } from '@/lib/ikazin/analytics'
 
 // ─── Copy ─────────────────────────────────────────────────────────────────────
 
@@ -68,7 +70,7 @@ const copy = {
       { number: '40h+', label: 'de tempo médio perdido depurando lógica que nunca foi simulada antes do startup' },
       { number: 'R$60k', label: 'custo médio de uma parada de produção causada por erros de lógica no startup' },
     ],
-    headline: 'Feche o gap.',
+    headline: 'Feche a distância.',
     headlineAccent: 'Programe PLCs reais. Sem precisar de hardware.',
     sub: '25 builds progressivos com Gêmeo Digital. Da lógica booleana à robótica SIMOTION D. Simule, depure e valide antes da máquina existir.',
     ctaPrimary: 'Ver Planos',
@@ -164,9 +166,9 @@ const tierData: Record<Lang, TierCopy[]> = {
     {
       label: 'ESSENTIALS', slug: 'essentials', price: 'R$699',
       builds: 'Builds 9–13',
-      audience: 'Técnicos sênior e supervisores',
+      audience: 'Técnicos seniores e supervisores',
       tagline: 'Máquinas reais. PID completo. Complexidade industrial.',
-      features: ['Aplicações industriais reais', 'Controle PID completo', 'Linhas de embalagem e envolvimento'],
+      features: ['Aplicações industriais reais', 'Controle PID completo', 'Linhas de embalagem e enrolamento'],
     },
     {
       label: 'ADVANCED', slug: 'advanced', price: 'R$899',
@@ -179,7 +181,7 @@ const tierData: Record<Lang, TierCopy[]> = {
     {
       label: 'PREMIUM', slug: 'premium', price: 'R$1.199',
       builds: 'Builds 19–25',
-      audience: 'Engenheiros sênior e integradores',
+      audience: 'Engenheiros seniores e integradores',
       tagline: 'Robótica, CNC G-code e SIMOTION D. Kit completo de construtor de máquinas.',
       features: ['Robôs SCARA e Delta', 'CNC G-code 2D/3D', 'SIMOTION D workbench completo'],
     },
@@ -302,7 +304,7 @@ function BuildPreviewStrip({ previewTitle, previewCta }: { previewTitle: string;
 
 // ─── VideoSection ─────────────────────────────────────────────────────────────
 
-function VideoSection({ title, sub, playLabel }: { title: string; sub: string; playLabel: string }) {
+function VideoSection({ title, sub, playLabel, lang }: { title: string; sub: string; playLabel: string; lang: Lang }) {
   return (
     <section className="px-6 py-20">
       <div className="mx-auto max-w-5xl">
@@ -317,10 +319,15 @@ function VideoSection({ title, sub, playLabel }: { title: string; sub: string; p
               Digital Twin · TIA Portal V18
             </span>
           </div>
-          {/* Play button — demo video coming soon */}
+          {/* Play button — demo video */}
           <button
             aria-label={playLabel}
             className="group flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 backdrop-blur-sm transition-all hover:scale-110 hover:border-ikz-cyan hover:bg-ikz-cyan/15"
+            onClick={() => {
+              track('demo_video_played', { lang })
+              // Scroll to pricing section as video CTA fallback
+              document.getElementById('tiers-section')?.scrollIntoView({ behavior: 'smooth' })
+            }}
           >
             <Play size={28} className="translate-x-0.5 text-white group-hover:text-ikz-cyan" fill="currentColor" />
           </button>
@@ -341,6 +348,10 @@ export function LandingClient() {
   const [lang, setLang] = useMarketingLang()
   const t = copy[lang]
   const tiers = tierData[lang]
+
+  useEffect(() => {
+    track('landing_viewed', { language: lang })
+  }, [lang])
 
   return (
     <div className="min-h-screen bg-ikz-bg text-gray-100">
@@ -391,7 +402,7 @@ export function LandingClient() {
             <Link href="/planos" className="btn-primary">
               {t.ctaPrimary} <ChevronRight size={16} />
             </Link>
-            <Link href="#builds" className="rounded-xl border border-ikz-border px-8 py-4 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:text-white">
+            <Link href="/catalogo" className="rounded-xl border border-ikz-border px-8 py-4 text-sm font-semibold text-gray-300 transition-colors hover:border-gray-600 hover:text-white">
               {t.ctaSecondary}
             </Link>
           </div>
@@ -399,7 +410,7 @@ export function LandingClient() {
       </section>
 
       {/* Video demo */}
-      <VideoSection title={t.videoTitle} sub={t.videoSub} playLabel={t.videoPlay} />
+      <VideoSection title={t.videoTitle} sub={t.videoSub} playLabel={t.videoPlay} lang={lang} />
 
       {/* Pillars */}
       <section className="px-6 py-20 border-t border-ikz-border">
@@ -423,7 +434,7 @@ export function LandingClient() {
       </section>
 
       {/* Tier Cards */}
-      <section id="para-quem-e" className="px-6 py-20 border-t border-ikz-border">
+      <section id="tiers-section" className="px-6 py-20 border-t border-ikz-border">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-3 text-center text-2xl font-black tracking-tight text-white">{t.tiersTitle}</h2>
           <p className="mb-12 text-center text-gray-400">{t.tiersSub}</p>

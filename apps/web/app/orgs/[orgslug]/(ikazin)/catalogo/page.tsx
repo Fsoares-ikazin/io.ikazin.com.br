@@ -136,7 +136,7 @@ export default function CatalogoPage() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Catálogo de Builds</h1>
           <p className="mt-1 text-sm text-ikz-text-muted">
-            {builds.length} builds · PLC + Digital Twin Siemens
+            {builds.length} builds · PLC + Gêmeo Digital Siemens
           </p>
         </div>
 

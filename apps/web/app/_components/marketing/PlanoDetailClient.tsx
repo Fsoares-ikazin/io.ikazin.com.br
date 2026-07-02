@@ -67,7 +67,7 @@ const plans: Record<string, PlanDetail> = {
     },
     audience: {
       en: 'Operators moving into programming roles, senior technicians, supervisors who need to understand and validate logic.',
-      pt: 'Operadores migrando para funções de programação, técnicos sênior, supervisores que precisam entender e validar a lógica.',
+      pt: 'Operadores migrando para funções de programação, técnicos seniores, supervisores que precisam entender e validar a lógica.',
     },
     builds: [
       { number: 9, title: 'Full PID Control Loop', description: 'Temperature and pressure PID from scratch: tuning, anti-windup, bumpless transfer', tags: ['PID', 'Control', 'Tuning'] },
@@ -90,7 +90,7 @@ const plans: Record<string, PlanDetail> = {
     tagline: { en: 'The level Siemens integrators actually need', pt: 'O nível que integradores Siemens realmente precisam' },
     description: {
       en: 'Enter the world of SINAMICS S120 multi-axis drives. Electronic gearing, Rotary Knife, winder tension control and position synchronization — the applications that separate junior from senior engineers.',
-      pt: 'Entre no mundo dos drives multi-eixo SINAMICS S120. Acoplamento eletrônico, Rotary Knife, controle de tensão em enroladores e sincronização de posição — as aplicações que separam engenheiros júnior de sênior.',
+      pt: 'Entre no mundo dos drives multi-eixo SINAMICS S120. Acoplamento eletrônico, Rotary Knife, controle de tensão em enroladores e sincronização de posição — as aplicações que separam engenheiros júnior de seniores.',
     },
     audience: {
       en: 'Engineers targeting Siemens drive specialist roles, motion control applications, integration projects requiring S120.',
@@ -117,11 +117,11 @@ const plans: Record<string, PlanDetail> = {
     tagline: { en: 'Robotics, CNC and SIMOTION D', pt: 'Robótica, CNC e SIMOTION D' },
     description: {
       en: 'The complete journey. SCARA and Delta robots, full CNC G-code programming and the SIMOTION D workbench — the toolset required for OEM machine builders and senior integration engineers.',
-      pt: 'A jornada completa. Robôs SCARA e Delta, programação CNC G-code completa e o workbench SIMOTION D — o conjunto de ferramentas exigido por construtores de máquinas OEM e engenheiros de integração sênior.',
+      pt: 'A jornada completa. Robôs SCARA e Delta, programação CNC G-code completa e o workbench SIMOTION D — o conjunto de ferramentas exigido por construtores de máquinas OEM e engenheiros de integração seniores.',
     },
     audience: {
       en: 'Senior engineers, OEM machine builders, integration leads targeting complex motion and robotics applications.',
-      pt: 'Engenheiros sênior, construtores de máquinas OEM, líderes de integração visando aplicações complexas de motion e robótica.',
+      pt: 'Engenheiros seniores, construtores de máquinas OEM, líderes de integração visando aplicações complexas de motion e robótica.',
     },
     builds: [
       { number: 19, title: 'SCARA Robot Kinematics', description: 'Forward/inverse kinematics, workspace mapping and pick-and-place programming in TIA Portal', tags: ['SCARA', 'Kinematics', 'Robot'] },
@@ -209,7 +209,7 @@ const copy = {
     buyNow: 'Enroll Now',
     oneTime: 'One-time payment',
     lifetime: 'Lifetime access',
-    demoTitle: 'Preview demo',
+    demoTitle: 'Demonstration',
     coming: 'Video coming soon',
     audience: 'Who is this for',
     contactCta: 'Request Training',
@@ -222,7 +222,7 @@ const copy = {
     buyNow: 'Matricular Agora',
     oneTime: 'Pagamento único',
     lifetime: 'Acesso vitalício',
-    demoTitle: 'Preview demo',
+    demoTitle: 'Demonstração',
     coming: 'Vídeo em breve',
     audience: 'Para quem é',
     contactCta: 'Solicitar Treinamento',
@@ -252,7 +252,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
       <div className="min-h-screen bg-ikz-bg text-gray-100">
         <MarketingNav lang={lang} onLangChange={setLang} copy={t.nav} />
         <div className="flex flex-col items-center justify-center py-40">
-          <p className="text-gray-400">Plan not found.</p>
+          <p className="text-gray-400">{lang === 'pt' ? 'Plano não encontrado.' : 'Plan not found.'}</p>
           <Link href="/planos" className="mt-4 text-ikz-cyan hover:underline">{t.back}</Link>
         </div>
       </div>
@@ -290,7 +290,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
               <div className="mb-2 text-4xl font-black text-white">{plan.price[lang]}</div>
               <div className="mb-8 text-xs text-gray-500">{plan.priceNote[lang]}</div>
               {isPremiumPlus ? (
-                <Link href="/planos#contact" className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-8 py-4 text-sm font-bold text-white hover:opacity-90 transition-opacity">
+                <Link href="mailto:contato@ikazin.com.br" className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-8 py-4 text-sm font-bold text-white hover:opacity-90 transition-opacity">
                   {t.contactCta} <ChevronRight size={16} />
                 </Link>
               ) : (
@@ -357,7 +357,7 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
           <h2 className="mb-3 text-2xl font-black text-white">{plan.tagline[lang]}</h2>
           <div className="mb-6 text-3xl font-black text-white">{plan.price[lang]}</div>
           {isPremiumPlus ? (
-            <Link href="/planos#contact" className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-10 py-4 text-base font-bold text-white hover:opacity-90 transition-opacity">
+            <Link href="mailto:contato@ikazin.com.br" className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-10 py-4 text-base font-bold text-white hover:opacity-90 transition-opacity">
               {t.contactCta} <ChevronRight size={16} />
             </Link>
           ) : (
@@ -373,8 +373,8 @@ export function PlanoDetailClient({ slug }: { slug: string }) {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row">
           <span>© {new Date().getFullYear()} Ikazin.io. {lang === 'en' ? 'All rights reserved.' : 'Todos os direitos reservados.'}</span>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-gray-400 transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-gray-400 transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-gray-400 transition-colors">{lang === 'pt' ? 'Privacidade' : 'Privacy'}</Link>
+            <Link href="/terms" className="hover:text-gray-400 transition-colors">{lang === 'pt' ? 'Termos' : 'Terms'}</Link>
           </div>
         </div>
       </footer>
